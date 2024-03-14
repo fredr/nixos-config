@@ -91,10 +91,7 @@
     isNormalUser = true;
     description = "fredr";
     extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [
-      firefox
-      slack
-    ];
+    packages = with pkgs; [];
   };
 
   # Allow unfree packages
@@ -102,16 +99,7 @@
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    neovim
-    git
-    alacritty
-  ];
-
-  programs.neovim = {
-    enable = true;
-    defaultEditor = true;
-  };
+  environment.systemPackages = with pkgs; [];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.

@@ -15,7 +15,16 @@
     tree
     btop
     lsof
+
+    slack
   ];
+
+  programs.firefox.enable = true;
+
+  programs.neovim = {
+    enable = true;
+    defaultEditor = true;
+  };
 
   programs.git = {
     enable = true;
@@ -45,6 +54,7 @@
     shellAliases = {
       ll = "ls -l";
       nixup = "sudo nixos-rebuild switch";
+      gst = "git status";
     };
   
     history.size = 10000;
