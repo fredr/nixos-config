@@ -30,6 +30,10 @@
     enable = true;
     userName = "fredr";
     userEmail = "fredrik@enestad.com";
+
+    extraConfig = {
+      init.defaultBranch = "main";
+    };
   };
 
   programs.alacritty = {
@@ -42,6 +46,9 @@
 	draw_bold_text_with_bright_colors = true;
       };
       scrolling.multiplier = 5;
+      key_bindings = [
+	{ key = "N"; mods = "Control|Shift"; action = "SpawnNewInstance"; }
+      ];
     };
   };
 
@@ -53,7 +60,7 @@
 
     shellAliases = {
       ll = "ls -l";
-      nixup = "sudo nixos-rebuild switch";
+      nixrebuild = "sudo nixos-rebuild switch";
       gst = "git status";
     };
   
