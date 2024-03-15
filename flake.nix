@@ -13,13 +13,13 @@
     nixosConfigurations.slimnix = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
-	./configuration.nix
+	./hosts/slimnix/configuration.nix
 	home-manager.nixosModules.home-manager
 	{
           home-manager.useGlobalPkgs = true;
 	  home-manager.useUserPackages = true;
 
-	  home-manager.users.fredr = import ./home.nix;
+	  home-manager.users.fredr = import ./home-manager/home.nix;
 	}
       ];
     };
