@@ -52,6 +52,14 @@
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
 
+  programs.sway.enable = true;
+  # home manager handles the package
+  programs.sway.package = null;
+
+  # Polkit needed for sway
+  # see https://nixos.wiki/wiki/Sway
+  security.polkit.enable = true;
+
   # Configure keymap in X11
   services.xserver = {
     layout = "se";

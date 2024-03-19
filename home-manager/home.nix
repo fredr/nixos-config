@@ -2,6 +2,7 @@
 
 {
   imports = [
+    ./sway.nix
     ./git.nix
     ./alacritty.nix
     ./neovim.nix
