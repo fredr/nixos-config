@@ -1,7 +1,3 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
 { config, pkgs, ... }:
 
 {
@@ -19,10 +15,6 @@
 
   networking.hostName = "slimnix"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Enable networking
   networking.networkmanager.enable = true;
@@ -47,14 +39,7 @@
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;
-
-  # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
-
-  programs.sway.enable = true;
-  # home manager handles the package
-  programs.sway.package = null;
+  services.xserver.displayManager.startx.enable = true;
 
   # Polkit needed for sway
   # see https://nixos.wiki/wiki/Sway
@@ -93,6 +78,9 @@
   # services.xserver.libinput.enable = true;
 
   programs.zsh.enable = true;
+  programs.zsh.loginShellInit = ''
+    [ "$(tty)" = "/dev/tty1" ] && exec sway
+  '';
   users.defaultUserShell = pkgs.zsh;
 
   users.users.fredr = {
