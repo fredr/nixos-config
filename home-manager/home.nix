@@ -26,8 +26,6 @@
     slack
   ];
 
-  services.gnome-keyring.enable = true;
-
   home.stateVersion = "23.11";
 
   # Home manager manages home manager

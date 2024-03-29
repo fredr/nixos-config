@@ -41,6 +41,8 @@
   services.xserver.enable = true;
   services.xserver.displayManager.startx.enable = true;
 
+  services.gnome.gnome-keyring.enable = true;
+
   # Polkit needed for sway
   # see https://nixos.wiki/wiki/Sway
   security.polkit.enable = true;

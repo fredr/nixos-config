@@ -7,6 +7,12 @@
 
   wayland.windowManager.sway = {
     enable = true;
+
+    extraSessionCommands = ''
+      eval $(gnome-keyring-daemon --daemonize)
+      export SSH_AUTH_SOCK
+    '';
+
     config = rec {
       modifier = "Mod4";
       terminal = "alacritty"; 
