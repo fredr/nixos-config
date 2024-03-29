@@ -1,7 +1,6 @@
-{ config, pkgs, ... }:
-
-{
+{ config, pkgs, inputs, ... }: {
   imports = [
+    ./firefox.nix
     ./sway.nix
     ./git.nix
     ./alacritty.nix
@@ -26,8 +25,6 @@
 
     slack
   ];
-
-  programs.firefox.enable = true;
 
   home.stateVersion = "23.11";
 
