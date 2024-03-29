@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, ... }: {
+{ config, pkgs, ... }: {
   imports = [
     ./firefox.nix
     ./sway.nix
@@ -25,6 +25,8 @@
 
     slack
   ];
+
+  services.gnome-keyring.enable = true;
 
   home.stateVersion = "23.11";
 
