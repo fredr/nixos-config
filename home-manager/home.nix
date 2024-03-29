@@ -1,4 +1,9 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, inputs, ... }:
+let
+  inherit (inputs.nix-colors.lib-contrib { inherit pkgs; }) gtkThemeFromScheme;
+  colorscheme = inputs.nix-colors.colorSchemes.ayu-dark;
+in
+{
   imports = [
     ./firefox.nix
     ./sway.nix
@@ -24,7 +29,33 @@
     lsof
 
     slack
+
+    dconf
   ];
+
+  gtk = {
+    enable = true;
+
+    theme = {
+      name = colorscheme.slug;
+      package = gtkThemeFromScheme { scheme = colorscheme; };
+    };
+
+    iconTheme = {
+      name = "Papirus";
+      package = pkgs.papirus-icon-theme;
+    };
+
+    gtk3.extraConfig = {
+      gtk-application-prefer-dark-theme = 1;
+    };
+
+    gtk4.extraConfig = {
+      gtk-application-prefer-dark-theme = 1;
+    };
+  };
+
+  dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
 
   home.stateVersion = "23.11";
 
