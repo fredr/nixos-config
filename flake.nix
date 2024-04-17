@@ -21,10 +21,15 @@
     };
   in
   {
-    nixosConfigurations.slimnix = nixpkgs.lib.nixosSystem {
+    nixosConfigurations.slimnix = let
+	host = {
+            hostname = "slimnix";
+            pubKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJypu216HqvuovQMbSesFBOOp+NEA/egmhS32pE7CRjw";
+	};
+    in nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
 
-      specialArgs = { inherit inputs; };
+      specialArgs = { inherit inputs host; };
 
       modules = [
 	./hosts/slimnix/configuration.nix
@@ -34,7 +39,7 @@
           home-manager.useGlobalPkgs = true;
 	  home-manager.useUserPackages = true;
 
-	  home-manager.extraSpecialArgs = { inherit inputs; };
+	  home-manager.extraSpecialArgs = { inherit inputs host; };
 
 	  home-manager.users.fredr = import ./home-manager/home.nix;
 

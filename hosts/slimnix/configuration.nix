@@ -1,5 +1,4 @@
-{ config, pkgs, ... }:
-
+{ config, pkgs, host, ... }:
 {
   imports =
     [ # Include the results of the hardware scan.
@@ -13,7 +12,7 @@
   # Enable flakes
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-  networking.hostName = "slimnix"; # Define your hostname.
+  networking.hostName = host.hostname;
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Enable networking
