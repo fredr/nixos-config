@@ -31,7 +31,11 @@ in
     slack
 
     dconf
+
+    font-awesome
   ];
+
+  fonts.fontconfig.enable = true;
 
   gtk = {
     enable = true;

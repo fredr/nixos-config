@@ -17,6 +17,10 @@
   };
 
   programs.swaylock.enable = true;
+  programs.waybar = {
+    enable = true;
+    package = pkgs.waybar;
+  };
 
   services.swayidle.enable = true;
 
@@ -45,6 +49,8 @@
       right = "l";
 
       menu = "'${pkgs.rofi}/bin/rofi -modi drun,window,run -show drun'";
+
+      bars = [{ command = "${pkgs.waybar}/bin/waybar"; }];
 
       gaps = {
         smartGaps = true;
