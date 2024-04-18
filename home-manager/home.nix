@@ -33,6 +33,9 @@ in
     dconf
 
     font-awesome
+    powerline-fonts
+    powerline-symbols
+    nerdfonts
   ];
 
   fonts.fontconfig.enable = true;
