@@ -11,6 +11,7 @@ in
     ./alacritty.nix
     ./neovim.nix
     ./zsh.nix
+    ./gcloud.nix
   ];
 
   home.username = "fredr";
