@@ -32,7 +32,8 @@
       specialArgs = { inherit inputs host; };
 
       modules = [
-	./hosts/slimnix/configuration.nix
+        ./modules/configuration.nix
+	./hosts/slimnix
 	nur.nixosModules.nur
 	home-manager.nixosModules.home-manager
 	{
