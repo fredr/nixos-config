@@ -36,6 +36,9 @@ in
     powerline-fonts
     powerline-symbols
     nerdfonts
+
+    kubectl
+    kubectx
   ];
 
   fonts.fontconfig.enable = true;
