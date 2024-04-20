@@ -6,7 +6,7 @@ in
 {
   imports = [
     ./firefox.nix
-    ./sway.nix
+    ./sway
     ./git.nix
     ./alacritty.nix
     ./neovim.nix
