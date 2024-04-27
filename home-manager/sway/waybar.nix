@@ -11,7 +11,7 @@
 	spacing = 4;
 	modules-left = [ "sway/workspaces" "sway/mode" "sway/scratchpad" ];
 	modules-center = [ "sway/window" ];
-	modules-right = [ "mpd" "idle_inhibitor" "custom/k8s" "network" "cpu" "memory" "backlight" "sway/language" "battery" "battery#bat2" "clock" "tray" ];
+	modules-right = [ "idle_inhibitor" "custom/k8s" "network" "cpu" "memory" "backlight" "sway/language" "battery" "battery#bat2" "clock" "tray" ];
 
        "sway/mode" = {
            format = "<span style=\"italic\">{}</span>";
@@ -22,32 +22,6 @@
            format-icons = ["" ""];
            tooltip = true;
            tooltip-format = "{app}: {title}";
-       };
-       "mpd" = {
-           format = "{stateIcon} {consumeIcon}{randomIcon}{repeatIcon}{singleIcon}{artist} - {album} - {title} ({elapsedTime:%M:%S}/{totalTime:%M:%S}) ⸨{songPosition}|{queueLength}⸩ {volume}% ";
-           format-disconnected = "Disconnected ";
-           format-stopped = "{consumeIcon}{randomIcon}{repeatIcon}{singleIcon}Stopped ";
-           unknown-tag = "N/A";
-           interval = 2;
-           consume-icons = {
-               on = " ";
-           };
-           random-icons = {
-               off = "<span color=\"#f53c3c\"></span> ";
-               on = " ";
-           };
-           repeat-icons = {
-               on = " ";
-           };
-           single-icons = {
-               on = "1 ";
-           };
-           state-icons = {
-               paused = "";
-               playing = "";
-           };
-           tooltip-format = "MPD (connected)";
-           tooltip-format-disconnected = "MPD (disconnected)";
        };
        idle_inhibitor = {
            format = "{icon}";

@@ -9,7 +9,7 @@ in
     ./sway
     ./git.nix
     ./alacritty.nix
-    ./neovim.nix
+    ./neovim
     ./zsh.nix
     ./gcloud.nix
   ];
