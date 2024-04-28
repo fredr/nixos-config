@@ -1,4 +1,9 @@
 { pkgs, ... }: {
+  home.packages = with pkgs; [
+    nixd
+    lua-language-server
+  ];
+
   programs.neovim = {
     enable = true;
     defaultEditor = true;
@@ -28,7 +33,16 @@
       nvim-treesitter-context
 
 
-      nvim-lspconfig
+      {
+          plugin = nvim-lspconfig;
+          config = ''
+              lua << EOF
+              require('lspconfig').lua_ls.setup{}
+              require('lspconfig').nixd.setup{}
+              EOF
+          '';
+      }
+
       nvim-cmp
       cmp-nvim-lsp
       cmp-path
@@ -42,6 +56,8 @@
       plenary-nvim
 
       nordic-nvim
+
+      vim-nix
     ];
 
     extraLuaConfig = builtins.readFile(./init.lua);
