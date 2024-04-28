@@ -12,15 +12,24 @@
     nur.url = github:nix-community/NUR;
 
     nix-colors.url = github:misterio77/nix-colors;
+
+    fenix = {
+      url = github:nix-community/fenix;
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { nixpkgs, nur, home-manager, ... }@inputs:
+  outputs = { nixpkgs, nur, fenix, home-manager, ... }@inputs:
   let
     pkgs = import nixpkgs {
-      overlays = [ nur.overlays ];
+      overlays = [
+	nur.overlays
+	fenix.overlays.default
+      ];
     };
   in
   {
+    packages.x86_64-linux.default = fenix.packages.x86_64-linux.minimal.toolchain;
     nixosConfigurations.slimnix = let
 	host = {
             hostname = "slimnix";
@@ -46,6 +55,7 @@
 
 	  nixpkgs.overlays = [
             nur.overlay
+	    fenix.overlays.default
 	  ];
 	}
       ];

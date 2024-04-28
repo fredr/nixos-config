@@ -37,7 +37,19 @@
           plugin = nvim-lspconfig;
           config = ''
               lua << EOF
-              require('lspconfig').lua_ls.setup{}
+              require('lspconfig').rust_analyzer.setup{}
+              require('lspconfig').lua_ls.setup{
+                settings = {
+                  Lua = {
+                    diagnostics = {
+                      globals = { "vim" },
+                    },
+                    telemetry = {
+                      enable = false,
+                    },
+                  },
+                },
+              }
               require('lspconfig').nixd.setup{}
               EOF
           '';

@@ -1,3 +1,5 @@
+-- lua vim config
+
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 

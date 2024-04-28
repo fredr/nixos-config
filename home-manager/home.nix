@@ -40,6 +40,17 @@ in
 
     kubectl
     kubectx
+
+
+    (fenix.stable.withComponents [
+      "cargo"
+      "clippy"
+      "llvm-tools"
+      "rust-src"
+      "rustc"
+      "rustfmt"
+    ])
+    rust-analyzer
   ];
 
   fonts.fontconfig.enable = true;
