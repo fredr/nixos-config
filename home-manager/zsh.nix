@@ -10,7 +10,7 @@
       nixrebuild = "sudo nixos-rebuild switch";
       gst = "git status";
     };
-  
+
     history.size = 10000;
     history.path = "${config.xdg.dataHome}/zsh/history";
   };

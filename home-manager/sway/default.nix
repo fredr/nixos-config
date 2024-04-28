@@ -23,56 +23,58 @@
   programs.swaylock.enable = true;
   services.swayidle.enable = true;
 
-  wayland.windowManager.sway = let
-    mod = "Mod4";
-  in {
-    enable = true;
+  wayland.windowManager.sway =
+    let
+      mod = "Mod4";
+    in
+    {
+      enable = true;
 
-    extraSessionCommands = ''
-      eval $(gnome-keyring-daemon --daemonize)
-      export SSH_AUTH_SOCK
-    '';
+      extraSessionCommands = ''
+        eval $(gnome-keyring-daemon --daemonize)
+        export SSH_AUTH_SOCK
+      '';
 
-    extraConfig = ''
-      set $windowswitcher 'rofi -show window'
-      bindsym ${mod}+Tab exec $windowswitcher
-    '';
+      extraConfig = ''
+        set $windowswitcher 'rofi -show window'
+        bindsym ${mod}+Tab exec $windowswitcher
+      '';
 
-    config = rec {
-      modifier = mod;
-      terminal = "alacritty"; 
+      config = rec {
+        modifier = mod;
+        terminal = "alacritty";
 
-      left = "h";
-      down = "j";
-      up = "k";
-      right = "l";
+        left = "h";
+        down = "j";
+        up = "k";
+        right = "l";
 
-      menu = "'${pkgs.rofi}/bin/rofi -modi drun,window,run -show drun'";
+        menu = "'${pkgs.rofi}/bin/rofi -modi drun,window,run -show drun'";
 
-      bars = [{ command = "${pkgs.waybar}/bin/waybar"; }];
+        bars = [{ command = "${pkgs.waybar}/bin/waybar"; }];
 
-      gaps = {
-        smartGaps = true;
-        inner = 2;
-        outer = 4;
-      };
+        gaps = {
+          smartGaps = true;
+          inner = 2;
+          outer = 4;
+        };
 
-      input = {
-        "type:touchpad" = {
-          natural_scroll = "enabled";
-	};
-        "*" = {
-	  xkb_layout = "us,se";
-	  xkb_variant = "intl,";
-	  xkb_options = "grp:alt_space_toggle";
+        input = {
+          "type:touchpad" = {
+            natural_scroll = "enabled";
+          };
+          "*" = {
+            xkb_layout = "us,se";
+            xkb_variant = "intl,";
+            xkb_options = "grp:alt_space_toggle";
+          };
+        };
+
+        output = {
+          eDP-1 = {
+            scale = "1";
+          };
         };
       };
-
-      output = {
-        eDP-1 = {
-          scale = "1";
-	};
-      };
     };
-  };
 }
