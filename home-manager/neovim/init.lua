@@ -52,6 +52,9 @@ vim.o.scrolloff = 10
 
 -- [[ Basic Keymaps ]]
 
+-- turn off highlight from search
+vim.keymap.set('n', '<esc><esc>', ':nohlsearch<cr>', { silent = true })
+
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
