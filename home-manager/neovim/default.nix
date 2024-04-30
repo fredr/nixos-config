@@ -67,6 +67,13 @@
       nordic-nvim
 
       vim-nix
+      {
+        plugin = crates-nvim;
+        type = "lua";
+        config = ''
+          require('crates').setup()
+        '';
+      }
     ];
 
     extraLuaConfig = builtins.readFile (./init.lua);
