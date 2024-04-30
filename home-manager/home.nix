@@ -12,6 +12,7 @@ in
     ./neovim
     ./zsh.nix
     ./gcloud.nix
+    ./rust.nix
   ];
 
   home.username = "fredr";
@@ -40,17 +41,6 @@ in
 
     kubectl
     kubectx
-
-
-    (fenix.stable.withComponents [
-      "cargo"
-      "clippy"
-      "llvm-tools"
-      "rust-src"
-      "rustc"
-      "rustfmt"
-    ])
-    rust-analyzer
   ];
 
   fonts.fontconfig.enable = true;

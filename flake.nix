@@ -20,16 +20,7 @@
   };
 
   outputs = { nixpkgs, nur, fenix, home-manager, ... }@inputs:
-    let
-      pkgs = import nixpkgs {
-        overlays = [
-          nur.overlays
-          fenix.overlays.default
-        ];
-      };
-    in
     {
-      packages.x86_64-linux.default = fenix.packages.x86_64-linux.minimal.toolchain;
       nixosConfigurations.slimnix =
         let
           host = {
@@ -45,7 +36,6 @@
           modules = [
             ./modules/configuration.nix
             ./hosts/slimnix
-            nur.nixosModules.nur
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
