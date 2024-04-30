@@ -39,6 +39,18 @@ end
 
 require('lspconfig').rust_analyzer.setup {
   on_attach = on_attach,
+  settings = {
+    cargo = {
+      allFeatures = true,
+      autoreload = true,
+      runBuildScripts = true,
+    },
+    checkOnSave = {
+      command = "clippy",
+      enable = true,
+      extraArgs = { "--target-dir", "/home/fredr/rust-analyzer/rust-analyzer-check" },
+    },
+  },
 }
 
 require('lspconfig').lua_ls.setup {
