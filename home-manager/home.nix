@@ -41,6 +41,11 @@ in
 
     kubectl
     kubectx
+
+    gcc
+    openssl
+    gnumake
+    protobuf
   ];
 
   fonts.fontconfig.enable = true;
