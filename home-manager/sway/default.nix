@@ -40,7 +40,7 @@
         bindsym ${mod}+Tab exec $windowswitcher
       '';
 
-      config = rec {
+      config = {
         modifier = mod;
         terminal = "alacritty";
 

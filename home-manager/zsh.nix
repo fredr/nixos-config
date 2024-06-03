@@ -12,10 +12,10 @@
     };
 
     initExtra = ''
-      export PATH=$PATH:/home/fredr/go/bin:/home/fredr/.cargo/bin
+      export PATH=$PATH:/home/fredr/go/bin
+      export PATH=$PATH:/home/fredr/.cargo/bin
 
       export ENCORE_RUNTIMES_PATH=/home/fredr/projects/encore/runtimes
-
       export ENCORE_GOROOT=/home/fredr/projects/go/dist/linux_amd64/encore-go
     '';
 

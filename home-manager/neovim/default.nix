@@ -37,13 +37,13 @@
       {
         plugin = nvim-lspconfig;
         type = "lua";
-        config = builtins.readFile (./lspconfig.lua);
+        config = builtins.readFile ./lspconfig.lua;
       }
 
       {
         plugin = nvim-cmp;
         type = "lua";
-        config = builtins.readFile (./cmp.lua);
+        config = builtins.readFile ./cmp.lua;
       }
       cmp-nvim-lsp
       cmp-path
@@ -53,13 +53,13 @@
       {
         plugin = which-key-nvim;
         type = "lua";
-        config = builtins.readFile (./which-key.lua);
+        config = builtins.readFile ./which-key.lua;
       }
 
       {
         plugin = telescope-nvim;
         type = "lua";
-        config = builtins.readFile (./telescope.lua);
+        config = builtins.readFile ./telescope.lua;
       }
       telescope-file-browser-nvim
       plenary-nvim
@@ -76,6 +76,6 @@
       }
     ];
 
-    extraLuaConfig = builtins.readFile (./init.lua);
+    extraLuaConfig = builtins.readFile ./init.lua;
   };
 }
