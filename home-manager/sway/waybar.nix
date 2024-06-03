@@ -59,8 +59,6 @@
           format-charging = "{capacity}% ";
           format-plugged = "{capacity}% ";
           format-alt = "{time} {icon}";
-          format-good = ""; # An empty format will hide the module
-          format-full = "";
           format-icons = [ "" "" "" "" "" ];
         };
         "battery#bat2" = {
