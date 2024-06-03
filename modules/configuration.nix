@@ -1,4 +1,4 @@
-{ config, pkgs, host, ... }:
+{ pkgs, host, ... }:
 {
   imports = [
     ./gc.nix
@@ -45,9 +45,9 @@
   security.polkit.enable = true;
 
   # Configure keymap in X11
-  services.xserver = {
+  services.xserver.xkb = {
     layout = "se";
-    xkbVariant = "";
+    variant = "";
   };
 
   # Configure console keymap
@@ -77,12 +77,12 @@
     isNormalUser = true;
     description = "fredr";
     extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [ ];
+    packages = [ ];
   };
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  environment.systemPackages = with pkgs; [ ];
+  environment.systemPackages = [ ];
 }
 

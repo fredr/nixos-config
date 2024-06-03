@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, ... }:
+{ pkgs, inputs, ... }:
 let
   inherit (inputs.nix-colors.lib-contrib { inherit pkgs; }) gtkThemeFromScheme;
   colorscheme = inputs.nix-colors.colorSchemes.ayu-dark;
@@ -31,6 +31,7 @@ in
     lsof
 
     slack
+    discord
 
     dconf
 
@@ -46,7 +47,12 @@ in
     openssl
     gnumake
     protobuf
+
+    go
+    nodejs_22
   ];
+
+  programs.atuin.enable = true;
 
   fonts.fontconfig.enable = true;
 
@@ -74,7 +80,7 @@ in
 
   dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
 
-  home.stateVersion = "23.11";
+  home.stateVersion = "24.05";
 
   # Home manager manages home manager
   programs.home-manager.enable = true;
