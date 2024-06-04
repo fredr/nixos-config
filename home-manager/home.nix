@@ -53,6 +53,12 @@ in
   ];
 
   programs.atuin.enable = true;
+  programs.atuin.settings = {
+    filter_mode = "session";
+    style = "compact";
+    show_preview = true;
+    enter_accept = false;
+  };
 
   fonts.fontconfig.enable = true;
 
