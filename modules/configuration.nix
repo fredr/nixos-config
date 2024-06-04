@@ -34,6 +34,8 @@
     LC_TIME = "sv_SE.UTF-8";
   };
 
+  services.fwupd.enable = true;
+
   # Enable the X11 windowing system.
   services.xserver.enable = true;
   services.xserver.displayManager.startx.enable = true;
