@@ -5,6 +5,16 @@
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
 
+    oh-my-zsh = {
+      enable = true;
+
+      plugins = [
+        "git-prompt"
+      ];
+
+      theme = "dst";
+    };
+
     shellAliases = {
       ll = "ls -l";
       nixrebuild = "sudo nixos-rebuild switch";
@@ -17,6 +27,9 @@
 
       export ENCORE_RUNTIMES_PATH=/home/fredr/projects/encore/runtimes
       export ENCORE_GOROOT=/home/fredr/projects/go/dist/linux_amd64/encore-go
+
+      # disable right prompt (clock in dst)
+      unset RPROMPT
     '';
 
     history.size = 10000;
