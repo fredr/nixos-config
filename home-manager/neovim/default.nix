@@ -1,5 +1,6 @@
 { pkgs, ... }: {
   home.packages = with pkgs; [
+    gopls
     nixd
     nixpkgs-fmt
     lua-language-server
