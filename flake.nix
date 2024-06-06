@@ -43,7 +43,7 @@
 
               home-manager.extraSpecialArgs = { inherit inputs host; };
 
-              home-manager.users.fredr = import ./home-manager/home.nix;
+              home-manager.users.fredr = import ./home-manager;
 
               nixpkgs.overlays = [
                 nur.overlay
