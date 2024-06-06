@@ -71,6 +71,7 @@
     pulse.enable = true;
   };
 
+  programs.thunar.enable = true;
   programs.zsh.enable = true;
   programs.zsh.loginShellInit = ''
     [ "$(tty)" = "/dev/tty1" ] && exec sway

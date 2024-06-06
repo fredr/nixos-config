@@ -25,8 +25,8 @@
       export PATH=$PATH:/home/fredr/go/bin
       export PATH=$PATH:/home/fredr/.cargo/bin
 
-      export ENCORE_RUNTIMES_PATH=/home/fredr/projects/encore/runtimes
-      export ENCORE_GOROOT=/home/fredr/projects/go/dist/linux_amd64/encore-go
+      export ENCORE_RUNTIMES_PATH=/home/fredr/projects/encoredev/encore/runtimes
+      export ENCORE_GOROOT=/home/fredr/projects/encoredev/go/dist/linux_amd64/encore-go
 
       # disable right prompt (clock in dst)
       unset RPROMPT

@@ -52,6 +52,8 @@ in
     nodejs_22
 
     drm_info
+
+    gimp
   ];
 
   programs.atuin.enable = true;
