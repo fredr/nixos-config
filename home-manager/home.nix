@@ -50,6 +50,8 @@ in
 
     go
     nodejs_22
+
+    drm_info
   ];
 
   programs.atuin.enable = true;

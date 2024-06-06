@@ -1,6 +1,7 @@
 { pkgs, ... }: {
   home.packages = with pkgs; [
     wl-clipboard
+    nwg-displays
   ];
 
   imports = [
@@ -41,6 +42,8 @@
       '';
 
       config = {
+        defaultWorkspace = "workspace number 1";
+
         modifier = mod;
         terminal = "alacritty";
 
