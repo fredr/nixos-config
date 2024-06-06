@@ -42,6 +42,7 @@ in
 
     kubectl
     kubectx
+    dive
 
     gcc
     openssl
@@ -55,6 +56,11 @@ in
 
     gimp
   ];
+
+  home.file.".config/dive/config.yaml".text = ''
+    container-engine: podman
+    source: podman
+  '';
 
   programs.atuin.enable = true;
   programs.atuin.settings = {
