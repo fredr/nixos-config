@@ -20,6 +20,20 @@
   };
 
   outputs = { nixpkgs, nur, fenix, home-manager, ... }@inputs:
+    let
+      home-manager-conf = { host, ... }: {
+        home-manager.useGlobalPkgs = true;
+        home-manager.useUserPackages = true;
+        home-manager.extraSpecialArgs = { inherit inputs host; };
+        home-manager.users.fredr = import ./home-manager;
+      };
+      overlays = {
+        nixpkgs.overlays = [
+          nur.overlay
+          fenix.overlays.default
+        ];
+      };
+    in
     {
       nixosConfigurations.flatnix =
         let
@@ -37,19 +51,8 @@
             ./modules/configuration.nix
             ./hosts/flatnix
             home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-
-              home-manager.extraSpecialArgs = { inherit inputs host; };
-
-              home-manager.users.fredr = import ./home-manager;
-
-              nixpkgs.overlays = [
-                nur.overlay
-                fenix.overlays.default
-              ];
-            }
+            home-manager-conf
+            overlays
           ];
         };
 
@@ -69,19 +72,8 @@
             ./modules/configuration.nix
             ./hosts/slimnix
             home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-
-              home-manager.extraSpecialArgs = { inherit inputs host; };
-
-              home-manager.users.fredr = import ./home-manager/home.nix;
-
-              nixpkgs.overlays = [
-                nur.overlay
-                fenix.overlays.default
-              ];
-            }
+            home-manager-conf
+            overlays
           ];
         };
     };
