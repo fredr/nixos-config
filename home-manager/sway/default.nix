@@ -22,6 +22,7 @@
   };
 
   programs.swaylock.enable = true;
+
   services.swayidle.enable = true;
 
   wayland.windowManager.sway =
@@ -39,6 +40,9 @@
       extraConfig = ''
         set $windowswitcher 'rofi -show window'
         bindsym ${mod}+Tab exec $windowswitcher
+
+        # Lock screen
+        bindsym ${mod}+Shift+Escape exec swaynag -t warning -m 'Lock system?' -B 'Yes' 'swaylock -f -c 000000; pkill swaynag'
       '';
 
       config = {

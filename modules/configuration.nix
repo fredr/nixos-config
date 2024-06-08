@@ -48,6 +48,9 @@
   # see https://nixos.wiki/wiki/Sway
   security.polkit.enable = true;
 
+  # needed for sway installed via home manager to enable swaylock
+  security.pam.services.swaylock = { };
+
   # Configure keymap in X11
   services.xserver.xkb = {
     layout = "se";
