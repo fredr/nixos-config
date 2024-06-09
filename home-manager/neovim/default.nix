@@ -4,11 +4,15 @@
     nixd
     nixpkgs-fmt
     lua-language-server
+    # pick neovim from unstable to get 0.10
+    unstable.neovim-unwrapped
   ];
 
   programs.neovim = {
     enable = true;
     defaultEditor = true;
+
+    package = pkgs.unstable.neovim-unwrapped;
 
     plugins = with pkgs.vimPlugins; [
       vim-fugitive

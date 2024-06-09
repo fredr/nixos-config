@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     home-manager = {
       url = "github:nix-community/home-manager/release-24.05";
@@ -19,18 +20,27 @@
     };
   };
 
-  outputs = { nixpkgs, nur, fenix, home-manager, ... }@inputs:
+
+  outputs = { nixpkgs, nixpkgs-unstable, nur, fenix, home-manager, ... }@inputs:
     let
+      system = "x86_64-linux";
       home-manager-conf = { host, ... }: {
         home-manager.useGlobalPkgs = true;
         home-manager.useUserPackages = true;
         home-manager.extraSpecialArgs = { inherit inputs host; };
         home-manager.users.fredr = import ./home-manager;
       };
+      unstable-packages = final: _prev: {
+        unstable = import inputs.nixpkgs-unstable {
+          system = final.system;
+          config.allowUnfree = true;
+        };
+      };
       overlays = {
         nixpkgs.overlays = [
           nur.overlay
           fenix.overlays.default
+          unstable-packages
         ];
       };
     in
@@ -43,7 +53,7 @@
           };
         in
         nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
+          system = system;
 
           specialArgs = { inherit inputs host; };
 
@@ -64,7 +74,7 @@
           };
         in
         nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
+          system = system;
 
           specialArgs = { inherit inputs host; };
 
