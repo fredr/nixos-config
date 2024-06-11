@@ -38,6 +38,7 @@
       nvim-treesitter-textobjects
       nvim-treesitter-context
 
+      rust-vim
 
       {
         plugin = nvim-lspconfig;
@@ -67,6 +68,7 @@
         config = builtins.readFile ./telescope.lua;
       }
       telescope-file-browser-nvim
+      telescope-fzf-native-nvim
       plenary-nvim
 
       nordic-nvim

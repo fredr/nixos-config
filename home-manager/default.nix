@@ -55,6 +55,7 @@ in
     drm_info
 
     gimp
+    obsidian
   ];
 
   home.file.".config/dive/config.yaml".text = ''
