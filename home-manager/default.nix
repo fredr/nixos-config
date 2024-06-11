@@ -71,6 +71,12 @@ in
     enter_accept = false;
   };
 
+  programs.gh = {
+    enable = true;
+    settings.git_protocol = "ssh";
+    settings.editor = "nvim";
+  };
+
   fonts.fontconfig.enable = true;
 
   gtk = {
