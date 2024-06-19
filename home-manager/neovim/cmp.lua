@@ -48,6 +48,7 @@ cmp.setup {
   },
   sources = {
     { name = 'nvim_lsp' },
+    { name = 'cmp-vsnip' },
     { name = 'luasnip' },
     { name = 'path' },
   },

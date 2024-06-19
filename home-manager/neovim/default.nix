@@ -55,6 +55,7 @@
       cmp-path
       luasnip
       cmp_luasnip
+      cmp-vsnip
 
       {
         plugin = which-key-nvim;

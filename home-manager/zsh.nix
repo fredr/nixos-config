@@ -19,6 +19,7 @@
       ll = "ls -l";
       nixrebuild = "sudo nixos-rebuild switch";
       gst = "git status";
+      gg = "git grep -n --untracked -I";
     };
 
     initExtra = ''

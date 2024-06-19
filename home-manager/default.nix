@@ -43,11 +43,14 @@ in
     kubectl
     kubectx
     dive
+    websocat
+    dig
 
     gcc
     openssl
     gnumake
     protobuf
+    cmake
 
     go
     nodejs_22
@@ -56,6 +59,7 @@ in
 
     gimp
     obsidian
+    pavucontrol
   ];
 
   home.file.".config/dive/config.yaml".text = ''

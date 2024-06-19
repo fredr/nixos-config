@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ pkgs, lib, ... }: {
   home.packages = with pkgs; [
     wl-clipboard
     nwg-displays
@@ -37,13 +37,7 @@
         export SSH_AUTH_SOCK
       '';
 
-      extraConfig = ''
-        set $windowswitcher 'rofi -show window'
-        bindsym ${mod}+Tab exec $windowswitcher
-
-        # Lock screen
-        bindsym ${mod}+Shift+Escape exec swaynag -t warning -m 'Lock system?' -B 'Yes' 'swaylock -f -c 000000; pkill swaynag'
-      '';
+      wrapperFeatures.gtk = true;
 
       config = {
         defaultWorkspace = "workspace number 1";
@@ -55,6 +49,11 @@
         down = "j";
         up = "k";
         right = "l";
+
+        keybindings = lib.mkOptionDefault {
+          "${mod}+Tab" = "exec rofi -show window";
+          "${mod}+Shift+Escape" = "exec swaynag -t warning -m 'Lock system?' -B 'Yes' 'swaylock -f -c 000000; pkill swaynag'";
+        };
 
         menu = "'${pkgs.rofi}/bin/rofi -modi drun,window,run -show drun'";
 
@@ -84,4 +83,12 @@
         };
       };
     };
+
+  xdg.portal = {
+    enable = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-wlr pkgs.xdg-desktop-portal-gtk ];
+    config.sway.default = [ "wlr" "gtk" ];
+  };
 }
+
+

@@ -21,7 +21,7 @@
   };
 
 
-  outputs = { nixpkgs, nixpkgs-unstable, nur, fenix, home-manager, ... }@inputs:
+  outputs = { nixpkgs, nur, fenix, home-manager, ... }@inputs:
     let
       system = "x86_64-linux";
       home-manager-conf = { host, ... }: {
