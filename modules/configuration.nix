@@ -81,6 +81,23 @@
   '';
   users.defaultUserShell = pkgs.zsh;
 
+  xdg.portal = {
+    enable = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-wlr pkgs.xdg-desktop-portal-gtk ];
+    config.sway = {
+      default = [ "wlr" "gtk" ];
+    };
+    wlr = {
+      enable = true;
+      settings = {
+        screencast = {
+          chooser_type = "simple";
+          chooser_cmd = "${pkgs.slurp}/bin/slurp -f %o -ro";
+        };
+      };
+    };
+  };
+
   users.users.fredr = {
     isNormalUser = true;
     description = "fredr";
