@@ -81,3 +81,7 @@ require('lspconfig').lua_ls.setup {
 require('lspconfig').nixd.setup {
   on_attach = on_attach,
 }
+
+require("typescript-tools").setup {
+  on_attach = on_attach,
+}

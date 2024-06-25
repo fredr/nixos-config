@@ -39,6 +39,7 @@
       nvim-treesitter-context
 
       rust-vim
+      typescript-tools-nvim
 
       {
         plugin = nvim-lspconfig;
