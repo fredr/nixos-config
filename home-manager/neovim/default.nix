@@ -18,6 +18,13 @@
       vim-fugitive
       vim-rhubarb
       vim-sleuth
+      {
+        plugin = fidget-nvim;
+        type = "lua";
+        config = ''
+          require("fidget").setup {}
+        '';
+      }
 
       (nvim-treesitter.withPlugins (
         plugins: with plugins; [
@@ -39,6 +46,7 @@
       nvim-treesitter-context
 
       rust-vim
+      rustaceanvim
       typescript-tools-nvim
 
       {

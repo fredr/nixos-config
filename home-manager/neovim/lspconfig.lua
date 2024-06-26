@@ -48,18 +48,38 @@ require('lspconfig').gopls.setup {
   on_attach = on_attach,
 }
 
-require('lspconfig').rust_analyzer.setup {
-  on_attach = on_attach,
-  settings = {
-    cargo = {
-      allFeatures = true,
-      autoreload = true,
-      runBuildScripts = true,
-    },
-    checkOnSave = {
-      command = "clippy",
-      enable = true,
-      extraArgs = { "--target-dir", "/home/fredr/rust-analyzer/rust-analyzer-check" },
+vim.g.rustaceanvim = {
+  -- LSP configuration
+  server = {
+    on_attach = function(client, bufnr)
+      local nmap = function(keys, func, desc)
+        if desc then
+          desc = '(rs)LSP: ' .. desc
+        end
+
+        vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
+      end
+
+      on_attach(client, bufnr)
+
+
+      nmap('<leader>ca', '<Cmd>RustLsp codeAction<CR>', '[C]ode [A]ction')
+      nmap('K', '<Cmd>RustLsp hover actions<CR>', 'Hover Documentation')
+    end,
+    default_settings = {
+      -- rust-analyzer language server configuration
+      ['rust-analyzer'] = {
+        cargo = {
+          allFeatures = true,
+          autoreload = true,
+          runBuildScripts = true,
+        },
+        checkOnSave = {
+          command = "clippy",
+          enable = true,
+          extraArgs = { "--target-dir", "/home/fredr/rust-analyzer/rust-analyzer-check" },
+        },
+      },
     },
   },
 }
