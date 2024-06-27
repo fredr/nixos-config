@@ -3,6 +3,7 @@
     wl-clipboard
     nwg-displays
     sway-contrib.grimshot
+    chayang
   ];
 
   imports = [
@@ -28,13 +29,13 @@
     enable = true;
 
     timeouts = [
-      { timeout = 30; command = "${pkgs.swaylock}/bin/swaylock -f -c 00000 --grace 10"; }
-      { timeout = 60; command = "swaymsg \"output * dpms off\""; }
+      { timeout = 30; command = "${pkgs.chayang}/bin/chayang && ${pkgs.swaylock}/bin/swaylock -f -c 000000"; }
+      { timeout = 60; command = "${pkgs.sway}/bin/swaymsg \"output * dpms off\""; }
       { timeout = 90; command = "${pkgs.systemd}/bin/systemctl suspend"; }
     ];
     events = [
-      { event = "after-resume"; command = "swaymsg \"output * dpms on\""; }
-      { event = "before-sleep"; command = "${pkgs.swaylock}/bin/swaylock -f -c 00000"; }
+      { event = "after-resume"; command = "${pkgs.sway}/bin/swaymsg \"output * dpms on\""; }
+      { event = "before-sleep"; command = "${pkgs.swaylock}/bin/swaylock -f -c 000000"; }
     ];
 
   };
