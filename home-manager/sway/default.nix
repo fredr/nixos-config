@@ -24,7 +24,20 @@
 
   programs.swaylock.enable = true;
 
-  services.swayidle.enable = true;
+  services.swayidle = {
+    enable = true;
+
+    timeouts = [
+      { timeout = 30; command = "${pkgs.swaylock}/bin/swaylock -f -c 00000 --grace 10"; }
+      { timeout = 60; command = "swaymsg \"output * dpms off\""; }
+      { timeout = 90; command = "${pkgs.systemd}/bin/systemctl suspend"; }
+    ];
+    events = [
+      { event = "after-resume"; command = "swaymsg \"output * dpms on\""; }
+      { event = "before-sleep"; command = "${pkgs.swaylock}/bin/swaylock -f -c 00000"; }
+    ];
+
+  };
 
   wayland.windowManager.sway =
     let
