@@ -2,6 +2,7 @@
   home.packages = with pkgs; [
     wl-clipboard
     nwg-displays
+    sway-contrib.grimshot
   ];
 
   imports = [
@@ -28,6 +29,7 @@
   wayland.windowManager.sway =
     let
       mod = "Mod4";
+      grimshot = "${pkgs.sway-contrib.grimshot}/bin/grimshot";
     in
     {
       enable = true;
@@ -54,6 +56,15 @@
         keybindings = lib.mkOptionDefault {
           "${mod}+Tab" = "exec rofi -show window";
           "${mod}+Shift+Escape" = "exec swaynag -t warning -m 'Lock system?' -B 'Yes' 'swaylock -f -c 000000; pkill swaynag'";
+
+          # Print selection to clipboard
+          "Print" = "exec slurp | grim -g - - | wl-copy -t image/png";
+          # Print selection to file
+          "Ctrl+Print" = "exec slurp | grim -g -";
+          # Print focused window to clipboard
+          "Shift+Print" = "exec ${grimshot} copy active";
+          # Print focused window to file
+          "Ctrl+Shift+Print" = "exec ${grimshot} save active";
         };
 
         menu = "'${pkgs.rofi}/bin/rofi -modi drun,window,run -show drun'";
