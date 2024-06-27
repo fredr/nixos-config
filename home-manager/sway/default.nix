@@ -30,6 +30,9 @@
     let
       mod = "Mod4";
       grimshot = "${pkgs.sway-contrib.grimshot}/bin/grimshot";
+      rofi = "${pkgs.rofi}/bin/rofi";
+      slurp = "${pkgs.slurp}/bin/slurp";
+      grim = "${pkgs.slurp}/bin/grim";
     in
     {
       enable = true;
@@ -54,20 +57,20 @@
         right = "l";
 
         keybindings = lib.mkOptionDefault {
-          "${mod}+Tab" = "exec rofi -show window";
+          "${mod}+Tab" = "exec ${rofi} -show window";
           "${mod}+Shift+Escape" = "exec swaynag -t warning -m 'Lock system?' -B 'Yes' 'swaylock -f -c 000000; pkill swaynag'";
 
           # Print selection to clipboard
-          "Print" = "exec slurp | grim -g - - | wl-copy -t image/png";
+          "Print" = "exec ${slurp} | ${grim} -g - - | wl-copy -t image/png";
           # Print selection to file
-          "Ctrl+Print" = "exec slurp | grim -g -";
+          "Ctrl+Print" = "exec ${slurp} | ${grim} -g -";
           # Print focused window to clipboard
           "Shift+Print" = "exec ${grimshot} copy active";
           # Print focused window to file
           "Ctrl+Shift+Print" = "exec ${grimshot} save active";
         };
 
-        menu = "'${pkgs.rofi}/bin/rofi -modi drun,window,run -show drun'";
+        menu = "'${rofi} -modi drun,window,run -show drun'";
 
         bars = [{ command = "${pkgs.waybar}/bin/waybar"; }];
 
