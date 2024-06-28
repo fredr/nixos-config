@@ -46,7 +46,7 @@
       grimshot = "${pkgs.sway-contrib.grimshot}/bin/grimshot";
       rofi = "${pkgs.rofi}/bin/rofi";
       slurp = "${pkgs.slurp}/bin/slurp";
-      grim = "${pkgs.slurp}/bin/grim";
+      grim = "${pkgs.grim}/bin/grim";
     in
     {
       enable = true;
