@@ -6,6 +6,7 @@
     lua-language-server
     # pick neovim from unstable to get 0.10
     unstable.neovim-unwrapped
+    prettierd
   ];
 
   programs.neovim = {
@@ -23,6 +24,22 @@
         type = "lua";
         config = ''
           require("fidget").setup {}
+        '';
+      }
+      {
+        plugin = conform-nvim;
+        type = "lua";
+        config = ''
+          require("conform").setup({
+            formatters_by_ft = {
+              javascript = { "prettierd" },
+              typescript = { "prettierd" },
+            },
+            format_on_save = {
+              timeout_ms = 500,
+              lsp_fallback = true,
+            },
+          })
         '';
       }
 
