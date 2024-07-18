@@ -68,11 +68,32 @@ in
     gimp
     obsidian
     pavucontrol
+    zed-editor
   ];
 
   home.file.".config/dive/config.yaml".text = ''
     container-engine: podman
     source: podman
+  '';
+
+  home.file.".config/zed/settings.json".text = ''
+    {
+      "ui_font_size": 16,
+      "buffer_font_size": 16,
+      "vim_mode": true,
+      "lsp": {
+        "rust-analyzer": {
+          "initialization_options": {
+            "check": {
+              "command": "clippy"
+            }
+          },
+          "binary": {
+            "path": "${pkgs.rust-analyzer}/bin/rust-analyzer"
+          }
+        }
+      }
+    }
   '';
 
   programs.atuin.enable = true;
