@@ -84,6 +84,11 @@ in
       "auto_update": false,
       "relative_line_numbers": true,
       "lsp": {
+        "gopls": {
+          "binary": {
+            "path": "${pkgs.gopls}/bin/gopls"
+          },
+        },
         "rust-analyzer": {
           "initialization_options": {
             "completion": {
