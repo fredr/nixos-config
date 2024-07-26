@@ -5,6 +5,9 @@ vim.g.maplocalleader = ' '
 
 vim.cmd.colorscheme 'nordic'
 
+vim.opt.list = false
+vim.opt.listchars = { tab = "→ ", space = "·", trail = "·", nbsp = "␣", eol = "↴" }
+
 -- disable netrw at the very start of your init.lua
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
@@ -51,6 +54,10 @@ vim.o.termguicolors = true
 vim.o.scrolloff = 10
 
 -- [[ Basic Keymaps ]]
+-- toggle whitespace
+vim.keymap.set('n', '<leader>tw', function()
+  vim.o.list = not vim.o.list
+end, { desc = "[T]oggle [W]hitespace" })
 
 -- turn off highlight from search
 vim.keymap.set('n', '<esc><esc>', ':nohlsearch<cr>', { silent = true })
