@@ -13,15 +13,10 @@
     nur.url = "github:nix-community/NUR";
 
     nix-colors.url = "github:misterio77/nix-colors";
-
-    fenix = {
-      url = "github:nix-community/fenix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
 
-  outputs = { nixpkgs, nur, fenix, home-manager, ... }@inputs:
+  outputs = { nixpkgs, nur, home-manager, ... }@inputs:
     let
       system = "x86_64-linux";
       home-manager-conf = { host, ... }: {
@@ -39,7 +34,6 @@
       overlays = {
         nixpkgs.overlays = [
           nur.overlay
-          fenix.overlays.default
           unstable-packages
         ];
       };

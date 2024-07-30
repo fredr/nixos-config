@@ -1,4 +1,4 @@
-{ config, ... }: {
+{ config, pkgs, ... }: {
   programs.zsh = {
     enable = true;
     enableCompletion = true;
@@ -28,6 +28,9 @@
 
       export ENCORE_RUNTIMES_PATH=/home/fredr/projects/encoredev/encore/runtimes
       export ENCORE_GOROOT=/home/fredr/projects/encoredev/go/dist/linux_amd64/encore-go
+
+      # for cross compilation to windows
+      export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_RUSTFLAGS="-L native=${pkgs.pkgsCross.mingwW64.windows.pthreads}/lib";
 
       # disable right prompt (clock in dst)
       unset RPROMPT

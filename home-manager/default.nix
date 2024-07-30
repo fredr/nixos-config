@@ -12,7 +12,6 @@ in
     ./neovim
     ./zsh.nix
     ./gcloud.nix
-    ./rust.nix
   ];
 
   home.username = "fredr";
@@ -59,7 +58,13 @@ in
     gnumake
     protobuf
     cmake
-
+    rustup
+    pkgsCross.mingwW64.windows.pthreads
+    pkgsCross.mingwW64.windows.mcfgthreads
+    (pkgsCross.mingwW64.stdenv.cc.override
+      {
+        extraBuildCommands = ''printf '%s ' '-L${pkgsCross.mingwW64.windows.mcfgthreads}/lib' >> $out/nix-support/cc-ldflags'';
+      })
     go
     nodejs_22
 
