@@ -32,6 +32,9 @@
       # for cross compilation to windows
       export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_RUSTFLAGS="-L native=${pkgs.pkgsCross.mingwW64.windows.pthreads}/lib";
 
+      # for building boring-sys etc
+      export LIBCLANG_PATH="${pkgs.llvmPackages.libclang.lib}/lib";
+
       # disable right prompt (clock in dst)
       unset RPROMPT
     '';

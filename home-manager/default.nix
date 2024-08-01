@@ -53,12 +53,14 @@ in
     websocat
     dig
 
-    gcc
+    (hiPrio gcc)
     openssl
     gnumake
     protobuf
     cmake
     rustup
+    llvm
+    clang
     pkgsCross.mingwW64.windows.pthreads
     pkgsCross.mingwW64.windows.mcfgthreads
     (pkgsCross.mingwW64.stdenv.cc.override
