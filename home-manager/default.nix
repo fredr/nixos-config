@@ -36,6 +36,7 @@ in
 
     slack
     discord
+    zulip
 
     dconf
     grim
@@ -53,14 +54,14 @@ in
     websocat
     dig
 
-    (hiPrio gcc)
     openssl
     gnumake
+    pkg-config
     protobuf
     cmake
-    rustup
+    gcc
     llvm
-    clang
+    rustup
     pkgsCross.mingwW64.windows.pthreads
     pkgsCross.mingwW64.windows.mcfgthreads
     (pkgsCross.mingwW64.stdenv.cc.override
@@ -69,6 +70,7 @@ in
       })
     go
     nodejs_22
+    python3
 
     drm_info
 
