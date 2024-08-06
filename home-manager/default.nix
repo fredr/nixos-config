@@ -78,6 +78,7 @@ in
     obsidian
     pavucontrol
     zed-editor
+    obs-studio
   ];
 
   home.file.".config/dive/config.yaml".text = ''
