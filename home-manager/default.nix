@@ -42,6 +42,7 @@ in
     grim
     slurp
     dmenu
+    kalker
 
     font-awesome
     powerline-fonts
