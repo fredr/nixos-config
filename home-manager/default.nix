@@ -71,6 +71,8 @@ in
       })
     go
     nodejs_22
+    nodePackages.pnpm
+    nodePackages.yarn
     python3
 
     drm_info
