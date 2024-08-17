@@ -4,6 +4,7 @@
     nwg-displays
     sway-contrib.grimshot
     chayang
+    swayimg
   ];
 
   imports = [
