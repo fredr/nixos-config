@@ -82,6 +82,7 @@ in
     pavucontrol
     zed-editor
     obs-studio
+    mplayer
   ];
 
   home.file.".config/dive/config.yaml".text = ''
