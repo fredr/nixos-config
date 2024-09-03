@@ -73,6 +73,7 @@ in
     nodejs_22
     nodePackages.pnpm
     nodePackages.yarn
+    nodePackages.vercel
     python3
 
     drm_info
