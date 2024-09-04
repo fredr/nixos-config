@@ -75,6 +75,7 @@ in
     nodePackages.yarn
     nodePackages.vercel
     python3
+    typescript
 
     drm_info
 
