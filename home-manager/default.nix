@@ -142,6 +142,12 @@ in
     }
   '';
 
+  programs.direnv = {
+    enable = true;
+    enableZshIntegration = true;
+    nix-direnv.enable = true;
+  };
+
   programs.atuin.enable = true;
   programs.atuin.settings = {
     filter_mode = "session";
