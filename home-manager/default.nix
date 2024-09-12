@@ -82,7 +82,7 @@ in
     gimp
     obsidian
     pavucontrol
-    zed-editor
+    unstable.zed-editor
     obs-studio
     mplayer
   ];
