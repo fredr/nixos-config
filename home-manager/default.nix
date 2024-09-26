@@ -33,6 +33,7 @@ in
     tree
     btop
     lsof
+    file
 
     slack
     discord
@@ -78,6 +79,7 @@ in
     typescript
     zig
     musl
+    musl.dev
 
     drm_info
 
@@ -87,6 +89,7 @@ in
     unstable.zed-editor
     obs-studio
     mplayer
+    spotify
   ];
 
   home.file.".config/dive/config.yaml".text = ''
