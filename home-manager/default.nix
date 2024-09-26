@@ -76,6 +76,7 @@ in
     nodePackages.vercel
     python3
     typescript
+    zig
 
     drm_info
 
