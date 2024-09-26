@@ -77,6 +77,7 @@ in
     python3
     typescript
     zig
+    musl
 
     drm_info
 
