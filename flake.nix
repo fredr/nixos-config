@@ -31,10 +31,18 @@
           config.allowUnfree = true;
         };
       };
+
+      mypkgs = final: _prev: {
+        mypkgs = import ./pkgs {
+          pkgs = final.pkgs;
+        };
+      };
+
       overlays = {
         nixpkgs.overlays = [
           nur.overlay
           unstable-packages
+          mypkgs
         ];
       };
     in
