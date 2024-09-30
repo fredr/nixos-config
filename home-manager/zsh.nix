@@ -18,13 +18,15 @@
     shellAliases =
       let
         encoreDev = "/home/fredr/projects/encoredev";
+        gobin = "/home/fredr/go/bin";
+        cargobin = "/home/fredr/.cargo/bin";
       in
       {
         ll = "ls -l";
         nixrebuild = "sudo nixos-rebuild switch";
         gst = "git status";
         gg = "git grep -n --untracked -I";
-        encore-dev = "ENCORE_RUNTIMES_PATH=${encoreDev}/encore/runtimes ENCORE_GOROOT=${encoreDev}/go/dist/linux_amd64/encore-go /home/fredr/go/bin/encore";
+        encore-dev = "ENCORE_RUNTIMES_PATH=${encoreDev}/encore/runtimes ENCORE_GOROOT=${encoreDev}/go/dist/linux_amd64/encore-go ENCORE_TSPARSER_PATH=${cargobin}/tsparser-encore ENCORE_TSBUNDLER_PATH=${gobin}/tsbundler-encore ${gobin}/encore";
       };
 
     initExtra = ''
