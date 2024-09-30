@@ -1,18 +1,18 @@
 { stdenv, lib, fetchurl, autoPatchelfHook }:
 
-stdenv.mkDerivation rec 
+stdenv.mkDerivation rec
 {
   pname = "encore";
   version = "1.41.7";
-  tarFile = {
-    "x86_64-linux" = "linux_amd64.tar.gz";
-    "x86_64-darwin" = "darwin_amd64.tar.gz"; 
-    "aarch64-linux" = "linux_arm64.tar.gz"; 
-    "aarch64-darwin" = "darwin_arm64.tar.gz"; 
+  system = {
+    "x86_64-linux" = "linux_amd64";
+    "x86_64-darwin" = "darwin_amd64";
+    "aarch64-linux" = "linux_arm64";
+    "aarch64-darwin" = "darwin_arm64";
   }.${stdenv.targetPlatform.system};
 
   src = fetchurl {
-    url = "https://d2f391esomvqpi.cloudfront.net/${pname}-${version}-${tarFile}";
+    url = "https://d2f391esomvqpi.cloudfront.net/${pname}-${version}-${system}.tar.gz";
     sha256 = "sha256-KdYvPllr+VGrIaWHaK2+BTqUNoRjvaxxBv2IB0m5rc4=";
   };
 
@@ -22,7 +22,7 @@ stdenv.mkDerivation rec
     autoPatchelfHook
   ];
 
-  buildInputs = [];
+  buildInputs = [ ];
 
   unpackPhase = ''
     tar -C ./ -xzf ${src}

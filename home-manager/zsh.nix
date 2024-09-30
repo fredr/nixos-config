@@ -15,19 +15,21 @@
       theme = "dst";
     };
 
-    shellAliases = {
-      ll = "ls -l";
-      nixrebuild = "sudo nixos-rebuild switch";
-      gst = "git status";
-      gg = "git grep -n --untracked -I";
-    };
+    shellAliases =
+      let
+        encoreDev = "/home/fredr/projects/encoredev";
+      in
+      {
+        ll = "ls -l";
+        nixrebuild = "sudo nixos-rebuild switch";
+        gst = "git status";
+        gg = "git grep -n --untracked -I";
+        encore-dev = "ENCORE_RUNTIMES_PATH=${encoreDev}/runtimes ENCORE_GOROOT=${encoreDev}/go/dist/linux_amd64/encore-go /home/fredr/go/bin/encore";
+      };
 
     initExtra = ''
       export PATH=$PATH:/home/fredr/go/bin
       export PATH=$PATH:/home/fredr/.cargo/bin
-
-      export ENCORE_RUNTIMES_PATH=/home/fredr/projects/encoredev/encore/runtimes
-      export ENCORE_GOROOT=/home/fredr/projects/encoredev/go/dist/linux_amd64/encore-go
 
       # for cross compilation to windows
       export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_RUSTFLAGS="-L native=${pkgs.pkgsCross.mingwW64.windows.pthreads}/lib";
