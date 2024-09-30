@@ -24,7 +24,7 @@
         nixrebuild = "sudo nixos-rebuild switch";
         gst = "git status";
         gg = "git grep -n --untracked -I";
-        encore-dev = "ENCORE_RUNTIMES_PATH=${encoreDev}/runtimes ENCORE_GOROOT=${encoreDev}/go/dist/linux_amd64/encore-go /home/fredr/go/bin/encore";
+        encore-dev = "ENCORE_RUNTIMES_PATH=${encoreDev}/encore/runtimes ENCORE_GOROOT=${encoreDev}/go/dist/linux_amd64/encore-go /home/fredr/go/bin/encore";
       };
 
     initExtra = ''
