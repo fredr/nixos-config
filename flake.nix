@@ -99,6 +99,10 @@
           in
           pkgs.mkShell {
             packages = [ pkgs.mypkgs.encore ];
+
+            shellHook = ''
+              export SHELL_NAME=''${SHELL_NAME}''${SHELL_NAME:+>}encore-rel
+            '';
           };
 
         encore-dev =
@@ -113,6 +117,8 @@
           in
           pkgs.mkShell {
             shellHook = ''
+              export SHELL_NAME=''${SHELL_NAME}''${SHELL_NAME:+>}encore-dev
+
               export ENCORE_RUNTIMES_PATH=${encoreDev}/encore/runtimes
               export ENCORE_GOROOT=${encoreDev}/go/dist/linux_amd64/encore-go
               export ENCORE_TSPARSER_PATH=${cargobin}/tsparser-encore
