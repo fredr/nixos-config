@@ -88,5 +88,38 @@
             overlays
           ];
         };
+
+      devShells."${system}" = {
+        encore-rel =
+          let
+            pkgs = import nixpkgs {
+              inherit system;
+              overlays = [ mypkgs ];
+            };
+          in
+          pkgs.mkShell {
+            packages = [ pkgs.mypkgs.encore ];
+          };
+
+        encore-dev =
+          let
+            pkgs = import nixpkgs {
+              inherit system;
+            };
+
+            encoreDev = "/home/fredr/projects/encoredev";
+            gobin = "/home/fredr/go/bin";
+            cargobin = "/home/fredr/.cargo/bin";
+          in
+          pkgs.mkShell {
+            shellHook = ''
+              export ENCORE_RUNTIMES_PATH=${encoreDev}/encore/runtimes
+              export ENCORE_GOROOT=${encoreDev}/go/dist/linux_amd64/encore-go
+              export ENCORE_TSPARSER_PATH=${cargobin}/tsparser-encore
+              export ENCORE_TSBUNDLER_PATH=${gobin}/tsbundler-encore
+            '';
+          };
+      };
     };
 }
+

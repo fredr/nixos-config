@@ -90,8 +90,6 @@ in
     obs-studio
     mplayer
     spotify
-
-    mypkgs.encore
   ];
 
   home.file.".config/dive/config.yaml".text = ''
