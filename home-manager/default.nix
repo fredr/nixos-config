@@ -90,6 +90,8 @@ in
     obs-studio
     mplayer
     spotify
+
+    mypkgs.mirror
   ];
 
   home.file.".config/dive/config.yaml".text = ''
