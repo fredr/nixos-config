@@ -97,7 +97,7 @@
               overlays = [ mypkgs ];
             };
           in
-          pkgs.mkShell {
+          pkgs.mkShellNoCC {
             packages = [ pkgs.mypkgs.encore ];
 
             shellHook = ''
@@ -115,7 +115,7 @@
             gobin = "/home/fredr/go/bin";
             cargobin = "/home/fredr/.cargo/bin";
           in
-          pkgs.mkShell {
+          pkgs.mkShellNoCC {
             shellHook = ''
               export SHELL_NAME=''${SHELL_NAME}''${SHELL_NAME:+>}encore-dev
 
