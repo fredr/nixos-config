@@ -109,6 +109,7 @@
           let
             pkgs = import nixpkgs {
               inherit system;
+              overlays = [ mypkgs ];
             };
 
             encoreDev = "/home/fredr/projects/encoredev";
@@ -116,6 +117,8 @@
             cargobin = "/home/fredr/.cargo/bin";
           in
           pkgs.mkShellNoCC {
+            packages = [ pkgs.mypkgs.stringer ];
+
             shellHook = ''
               export SHELL_NAME=''${SHELL_NAME}''${SHELL_NAME:+>}encore-dev
 
