@@ -3,7 +3,7 @@
 stdenv.mkDerivation rec
 {
   pname = "encore";
-  version = "1.41.7";
+  version = "1.41.8";
   system = {
     "x86_64-linux" = "linux_amd64";
     "x86_64-darwin" = "darwin_amd64";
@@ -13,7 +13,7 @@ stdenv.mkDerivation rec
 
   src = fetchurl {
     url = "https://d2f391esomvqpi.cloudfront.net/${pname}-${version}-${system}.tar.gz";
-    sha256 = "sha256-KdYvPllr+VGrIaWHaK2+BTqUNoRjvaxxBv2IB0m5rc4=";
+    sha256 = "sha256-U5x9LPZxTEAUiRVbSIwWqdeMv/RbxTvpgJhtvXAmAeg=";
   };
 
   dontBuild = true;
