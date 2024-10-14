@@ -13,10 +13,12 @@
     nur.url = "github:nix-community/NUR";
 
     nix-colors.url = "github:misterio77/nix-colors";
+
+    encore.url = "github:encoredev/encore-flake";
   };
 
 
-  outputs = { nixpkgs, nur, home-manager, ... }@inputs:
+  outputs = { nixpkgs, nur, home-manager, encore, ... }@inputs:
     let
       system = "x86_64-linux";
       home-manager-conf = { host, ... }: {
@@ -30,6 +32,10 @@
           system = final.system;
           config.allowUnfree = true;
         };
+      };
+
+      encore-overlay = final: _prev: {
+        encore = encore.packages.${final.system}.encore;
       };
 
       mypkgs = final: _prev: {
@@ -68,6 +74,7 @@
           ];
         };
 
+
       nixosConfigurations.slimnix =
         let
           host = {
@@ -94,11 +101,11 @@
           let
             pkgs = import nixpkgs {
               inherit system;
-              overlays = [ mypkgs ];
+              overlays = [ encore-overlay ];
             };
           in
           pkgs.mkShellNoCC {
-            packages = [ pkgs.mypkgs.encore ];
+            packages = [ pkgs.encore ];
 
             shellHook = ''
               export SHELL_NAME=''${SHELL_NAME}''${SHELL_NAME:+>}encore-rel
