@@ -28,6 +28,7 @@ in
     yq-go
     eza
     fzf
+    bat
 
     which
     tree
