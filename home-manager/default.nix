@@ -170,6 +170,8 @@ in
     settings.editor = "nvim";
   };
 
+  programs.zathura.enable = true;
+
   fonts.fontconfig.enable = true;
 
   gtk = {
