@@ -12,6 +12,7 @@ in
     ./neovim
     ./zsh.nix
     ./gcloud.nix
+    ./kanshi.nix
   ];
 
   home.username = "fredr";
@@ -93,6 +94,8 @@ in
     spotify
 
     mypkgs.mirror
+
+    wlr-randr
   ];
 
   home.file.".config/dive/config.yaml".text = ''
