@@ -5,6 +5,19 @@
     settings = [
       {
         profile = {
+          name = "none";
+
+          outputs = [
+            {
+              criteria = "eDP-1";
+              position = "0,0";
+              mode = "1920x1200@60.001Hz";
+            }
+          ];
+        };
+      }
+      {
+        profile = {
           name = "home";
 
           outputs = [
