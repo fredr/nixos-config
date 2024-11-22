@@ -31,7 +31,7 @@
 
     timeouts = [
       { timeout = 300; command = "${pkgs.chayang}/bin/chayang && ${pkgs.swaylock}/bin/swaylock -f -c 000000"; }
-      { timeout = 600; command = "${pkgs.sway}/bin/swaymsg \"output * dpms off\""; resumeCommand = "${pkgs.sway}/bin/swaymsg \"output * dpms on\""; }
+      { timeout = 600; command = "${pkgs.sway}/bin/swaymsg \"output * dpms off\""; resumeCommand = "${pkgs.sway}/bin/swaymsg \"output * dpms on, output * enable\""; }
       { timeout = 900; command = "${pkgs.systemd}/bin/systemctl suspend"; }
     ];
     events = [
