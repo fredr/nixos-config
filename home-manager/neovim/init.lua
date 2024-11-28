@@ -1,5 +1,7 @@
 -- lua vim config
 
+vim.opt.swapfile = false
+
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
