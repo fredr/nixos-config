@@ -130,6 +130,6 @@
   virtualisation.virtualbox.host.enable = true;
   users.extraGroups.vboxusers.members = [ "fredr" ];
 
-  environment.systemPackages = [ pkgs.cifs-utils pkgs.ntfs3g ];
+  environment.systemPackages = [ pkgs.cifs-utils pkgs.ntfs3g pkgs.ms-sys ];
 }
 
