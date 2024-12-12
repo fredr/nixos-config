@@ -83,6 +83,8 @@ in
     musl
     musl.dev
 
+    unstable.code-cursor
+
     drm_info
 
     gimp
