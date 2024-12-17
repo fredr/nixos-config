@@ -66,6 +66,7 @@ in
     overmind
     tailscale
     firecracker
+    pgcli
 
     openssl
     gnumake
