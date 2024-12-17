@@ -25,6 +25,7 @@
     initExtra = ''
       export PATH=$PATH:/home/fredr/go/bin
       export PATH=$PATH:/home/fredr/.cargo/bin
+      export PATH=$PATH:/home/fredr/bin
 
       # for cross compilation to windows
       export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_RUSTFLAGS="-L native=${pkgs.pkgsCross.mingwW64.windows.pthreads}/lib";

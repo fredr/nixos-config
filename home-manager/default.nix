@@ -30,6 +30,7 @@ in
     eza
     fzf
     bat
+    cue
 
     which
     tree
@@ -57,6 +58,14 @@ in
     dive
     websocat
     dig
+    pulumi
+    pulumiPackages.pulumi-language-go
+    cloudflared
+    docker-compose
+    cbtemulator
+    overmind
+    tailscale
+    firecracker
 
     openssl
     gnumake
