@@ -80,6 +80,11 @@
   };
 
   programs.thunar.enable = true;
+  programs.thunar.plugins = with pkgs.xfce; [
+    thunar-archive-plugin
+    thunar-volman
+  ];
+  programs.file-roller.enable = true;
   programs.zsh.enable = true;
   programs.zsh.loginShellInit = ''
     [ "$(tty)" = "/dev/tty1" ] && exec sway
