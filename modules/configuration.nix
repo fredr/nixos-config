@@ -18,6 +18,10 @@
   # Enable networking
   networking.networkmanager.enable = true;
 
+  # Firewall
+  networking.firewall.enable = true;
+  # networking.firewall.allowedTCPPorts = [ 1111 ];
+
   # Set your time zone.
   time.timeZone = "Europe/Stockholm";
 
