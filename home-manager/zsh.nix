@@ -18,6 +18,9 @@
       nixrebuild = "sudo nixos-rebuild switch";
       gst = "git status";
       gg = "git grep -n --untracked -I";
+
+      git-untracked-branches = "git fetch -p ; git branch -r | awk '{print $1}' | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk '{print $1}'";
+
       encore-dev = "nix develop ~/nixos-config#encore-dev -c $SHELL";
       encore-rel = "nix develop ~/nixos-config#encore-rel -c $SHELL";
     };
