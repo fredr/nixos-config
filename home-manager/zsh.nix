@@ -23,6 +23,8 @@
 
       encore-dev = "nix develop ~/nixos-config#encore-dev -c $SHELL";
       encore-rel = "nix develop ~/nixos-config#encore-rel -c $SHELL";
+
+      encore-new = "encore app create --example=ts/hello-world";
     };
 
     initExtra = ''
