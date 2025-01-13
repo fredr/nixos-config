@@ -124,6 +124,7 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
+  boot.kernelParams = [ "kvm.enable_virt_at_load=0" ];
   virtualisation.containers.enable = true;
   virtualisation = {
     podman = {
