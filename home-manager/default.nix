@@ -31,6 +31,7 @@ in
     fzf
     bat
     cue
+    llm
 
     which
     tree
