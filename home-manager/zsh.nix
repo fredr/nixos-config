@@ -32,6 +32,11 @@
       export PATH=$PATH:/home/fredr/.cargo/bin
       export PATH=$PATH:/home/fredr/bin
 
+      # helper for converting encore protos to json, proto type is the argument
+      function encore-buf() {
+        (cd ~/projects/encoredev/encore/proto ; buf convert --type $1)
+      }
+
       # for cross compilation to windows
       export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_RUSTFLAGS="-L native=${pkgs.pkgsCross.mingwW64.windows.pthreads}/lib";
 

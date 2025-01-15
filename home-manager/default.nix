@@ -67,6 +67,7 @@ in
     tailscale
     firecracker
     pgcli
+    buf
 
     openssl
     gnumake
