@@ -95,6 +95,8 @@
   '';
   users.defaultUserShell = pkgs.zsh;
 
+  programs.steam.enable = true;
+
   services.tailscale.enable = true;
 
   xdg.portal = {
