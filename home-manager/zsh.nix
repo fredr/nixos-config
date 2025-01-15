@@ -34,7 +34,7 @@
 
       # helper for converting encore protos to json, proto type is the argument
       function encore-buf() {
-        (cd ~/projects/encoredev/encore/proto ; buf convert --type $1)
+        (cd ~/projects/encoredev/encore/proto ; buf convert --type $1 | jq)
       }
 
       # for cross compilation to windows
