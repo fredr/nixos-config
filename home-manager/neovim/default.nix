@@ -124,8 +124,12 @@
         plugin = render-markdown-nvim;
         type = "lua";
         config = ''
+          vim.filetype.add({
+            extension = { mdx = 'markdown' }
+          })
+
           require('render-markdown').setup({
-            file_types = { 'markdown', 'copilot-chat' },
+            file_types = { 'markdown', 'copilot-chat' }
           })
         '';
       }
