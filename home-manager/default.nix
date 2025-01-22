@@ -59,8 +59,9 @@ in
     dive
     websocat
     dig
-    pulumi
-    pulumiPackages.pulumi-language-go
+    # use unstable until: https://github.com/NixOS/nixpkgs/pull/352221
+    unstable.pulumi
+    unstable.pulumiPackages.pulumi-language-go
     cloudflared
     docker-compose
     cbtemulator

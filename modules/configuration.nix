@@ -73,7 +73,6 @@
   services.blueman.enable = true;
 
   # Enable sound with pipewire.
-  sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -126,9 +125,8 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  boot.kernelParams = [ "kvm.enable_virt_at_load=0" ];
-  virtualisation.containers.enable = true;
   virtualisation = {
+    containers.enable = true;
     podman = {
       enable = true;
 
@@ -139,9 +137,14 @@
       # Required for containers under podman-compose to be able to talk to each other.
       defaultNetwork.settings.dns_enabled = true;
     };
+
+    virtualbox.host.enable = true;
   };
 
-  virtualisation.virtualbox.host.enable = true;
+  # nested virtualization
+  boot.extraModprobeConfig = "options kvm_intel nested=1";
+  #boot.kernelParams = [ "kvm.enable_virt_at_load=0" ];
+
   users.extraGroups.vboxusers.members = [ "fredr" ];
 
   environment.systemPackages = [ pkgs.cifs-utils pkgs.ntfs3g pkgs.ms-sys ];
