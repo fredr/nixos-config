@@ -118,7 +118,7 @@
   users.users.fredr = {
     isNormalUser = true;
     description = "fredr";
-    extraGroups = [ "networkmanager" "wheel" "podman" ];
+    extraGroups = [ "networkmanager" "wheel" "podman" "libvirtd" ];
     packages = [ ];
   };
 
@@ -138,15 +138,43 @@
       defaultNetwork.settings.dns_enabled = true;
     };
 
-    virtualbox.host.enable = true;
+    libvirtd = {
+      enable = true;
+      qemu = {
+        package = pkgs.qemu_kvm;
+        runAsRoot = true;
+        swtpm.enable = true;
+        ovmf = {
+          enable = true;
+          packages = [ pkgs.OVMFFull.fd ];
+        };
+      };
+    };
+
+    spiceUSBRedirection.enable = true;
   };
+
+  services.spice-vdagentd.enable = true;
+
+  programs.dconf.enable = true;
 
   # nested virtualization
   boot.extraModprobeConfig = "options kvm_intel nested=1";
-  boot.kernelParams = [ "kvm.enable_virt_at_load=0" ];
 
   users.extraGroups.vboxusers.members = [ "fredr" ];
 
-  environment.systemPackages = [ pkgs.cifs-utils pkgs.ntfs3g pkgs.ms-sys ];
+  environment.systemPackages = [
+    pkgs.cifs-utils
+    pkgs.ntfs3g
+    pkgs.ms-sys
+    pkgs.virt-manager
+    pkgs.virt-viewer
+    pkgs.spice
+    pkgs.spice-gtk
+    pkgs.spice-protocol
+    pkgs.win-virtio
+    pkgs.win-spice
+    pkgs.swtpm
+  ];
 }
 
