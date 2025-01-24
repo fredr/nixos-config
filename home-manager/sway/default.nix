@@ -112,7 +112,7 @@
 
         output = {
           "*" = {
-            bg = "${config.xdg.configHome}/sway/background.png fill";
+            bg = "${config.xdg.configHome}/sway/background.png center #282828";
           };
           eDP-1 = {
             scale = "1";
