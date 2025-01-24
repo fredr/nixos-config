@@ -1,4 +1,4 @@
-{ ... }: {
+{ pkgs, ... }: {
   services.kanshi = {
     enable = true;
 
@@ -20,6 +20,11 @@
       {
         profile = {
           name = "home";
+
+          exec = [
+            "${pkgs.sway}/bin/swaymsg workspace 1, move workspace to eDP-1"
+            "${pkgs.sway}/bin/swaymsg workspace 10, move workspace to HDMI-A-1"
+          ];
 
           outputs = [
             {
