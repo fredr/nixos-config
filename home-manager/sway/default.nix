@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }: {
+{ pkgs, lib, config, ... }: {
   home.packages = with pkgs; [
     wl-clipboard
     nwg-displays
@@ -40,6 +40,10 @@
 
   };
 
+  home.file.".config/sway/background.png" = {
+    source = ./background.png;
+  };
+
   wayland.windowManager.sway =
     let
       mod = "Mod4";
@@ -51,6 +55,7 @@
     {
       enable = true;
       systemd.enable = true;
+      checkConfig = false;
 
       extraSessionCommands = ''
         eval $(gnome-keyring-daemon --daemonize)
@@ -106,6 +111,9 @@
         };
 
         output = {
+          "*" = {
+            bg = "${config.xdg.configHome}/sway/background.png fill";
+          };
           eDP-1 = {
             scale = "1";
           };
