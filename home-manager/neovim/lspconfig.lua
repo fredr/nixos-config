@@ -100,6 +100,13 @@ require('lspconfig').lua_ls.setup {
 
 require('lspconfig').nixd.setup {
   on_attach = on_attach,
+  settings = {
+    nixd = {
+      formatting = {
+        command = { "nixpkgs-fmt" }
+      }
+    }
+  }
 }
 
 require("typescript-tools").setup {
