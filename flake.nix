@@ -119,12 +119,23 @@
               overlays = [ mypkgs ];
             };
 
+            buildCommand = pkgs.writeShellScriptBin "encore-build-all" ''
+              #!${pkgs.bash}/bin/bash
+              (
+                cd /home/fredr/projects/encoredev/encore/ &&
+                cargo install --path tsparser --debug &&
+                go run ./pkg/encorebuild/cmd/build-local-binary all --builder cargo &&
+                go install ./cli/cmd/encore &&
+                encore daemon
+              )
+            '';
+
             encoreDev = "/home/fredr/projects/encoredev";
             gobin = "/home/fredr/go/bin";
             cargobin = "/home/fredr/.cargo/bin";
           in
           pkgs.mkShellNoCC {
-            packages = [ pkgs.mypkgs.stringer ];
+            packages = [ pkgs.mypkgs.stringer buildCommand ];
 
             shellHook = ''
               export SHELL_NAME=''${SHELL_NAME}''${SHELL_NAME:+>}encore-dev
