@@ -38,6 +38,7 @@ in
     btop
     lsof
     file
+    linuxPackages.perf
 
     slack
     discord
