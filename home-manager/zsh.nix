@@ -28,6 +28,8 @@
     };
 
     initExtra = ''
+      export DOCKER_HOST=unix:///run/user/1000/podman/podman.sock
+
       export PATH=$PATH:/home/fredr/go/bin
       export PATH=$PATH:/home/fredr/.cargo/bin
       export PATH=$PATH:/home/fredr/bin
