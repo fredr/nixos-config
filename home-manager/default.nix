@@ -64,7 +64,13 @@ in
     unstable.pulumi
     unstable.pulumiPackages.pulumi-language-go
     cloudflared
-    docker-compose
+    podman-compose
+    (runCommand "podman-docker-compose-compat" { } ''
+      mkdir -p $out/bin
+      ln -s ${pkgs.podman-compose}/bin/podman-compose $out/bin/docker-compose
+    '')
+    podman-desktop
+    podman-tui
     cbtemulator
     overmind
     tailscale
