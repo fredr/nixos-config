@@ -119,6 +119,34 @@
               overlays = [ mypkgs ];
             };
 
+            # protoc 4.23.4
+            protobuf-pkgs = import
+              (pkgs.fetchFromGitHub {
+                owner = "NixOS";
+                repo = "nixpkgs";
+                rev = "05bbf675397d5366259409139039af8077d695ce";
+                sha256 = "IE7PZn9bSjxI4/MugjAEx49oPoxu0uKXdfC+X7HcRuQ=";
+              })
+              {
+                inherit system;
+              };
+
+            # protoc-gen-go 1.31.0 & protoc-gen-go-grpc 1.3.0
+            proto-gen-pkgs = import
+              (pkgs.fetchFromGitHub {
+                owner = "NixOS";
+                repo = "nixpkgs";
+                rev = "f194412e36bff594767b95c4bd023c653a4cae41";
+                sha256 = "L/xaRcjRTxte5cZw6ofJxfN8yBZakk1rijqp58plK1w=";
+              })
+              {
+                inherit system;
+              };
+
+            protobuf = protobuf-pkgs.protobuf_23;
+            protoc-gen-go = proto-gen-pkgs.protoc-gen-go;
+            protoc-gen-go-grpc = proto-gen-pkgs.protoc-gen-go-grpc;
+
             encoreDev = "/home/fredr/projects/encoredev";
             gobin = "/home/fredr/go/bin";
             cargobin = "/home/fredr/.cargo/bin";
@@ -135,7 +163,13 @@
             '';
           in
           pkgs.mkShellNoCC {
-            packages = [ pkgs.mypkgs.stringer buildCommand ];
+            packages = [
+              pkgs.mypkgs.stringer
+              buildCommand
+              protobuf
+              protoc-gen-go
+              protoc-gen-go-grpc
+            ];
 
             shellHook = ''
               export SHELL_NAME=''${SHELL_NAME}''${SHELL_NAME:+>}encore-dev
