@@ -88,6 +88,8 @@
     thunar-volman
   ];
   programs.file-roller.enable = true;
+  services.gvfs.enable = true;
+
   programs.zsh.enable = true;
   programs.zsh.loginShellInit = ''
     [ "$(tty)" = "/dev/tty1" ] && exec sway
