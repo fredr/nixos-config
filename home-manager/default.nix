@@ -32,6 +32,7 @@ in
     bat
     cue
     llm
+    killall
 
     which
     tree
