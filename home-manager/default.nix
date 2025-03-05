@@ -94,6 +94,7 @@ in
         extraBuildCommands = ''printf '%s ' '-L${pkgsCross.mingwW64.windows.mcfgthreads}/lib' >> $out/nix-support/cc-ldflags'';
       })
     go
+    bun
     nodejs_22
     nodePackages.pnpm
     nodePackages.yarn
