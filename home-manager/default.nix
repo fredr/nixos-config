@@ -122,6 +122,10 @@ in
     wlr-randr
   ];
 
+  home.file.".config/containers/registries.conf".text = ''
+    unqualified-search-registries = ["docker.io"]
+  '';
+
   home.file.".config/dive/config.yaml".text = ''
     container-engine: podman
     source: podman
