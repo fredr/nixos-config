@@ -61,6 +61,7 @@ in
     dive
     websocat
     dig
+    whois
     # use unstable until: https://github.com/NixOS/nixpkgs/pull/352221
     unstable.pulumi
     unstable.pulumiPackages.pulumi-language-go
