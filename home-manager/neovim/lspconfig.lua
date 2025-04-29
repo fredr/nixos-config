@@ -69,6 +69,13 @@ vim.g.rustaceanvim = {
     default_settings = {
       -- rust-analyzer language server configuration
       ['rust-analyzer'] = {
+        procMacro = {
+          enable = true,
+        },
+        diagnostics = {
+          enable = true,
+          enableExperimental = true,
+        },
         cargo = {
           allFeatures = true,
           autoreload = true,

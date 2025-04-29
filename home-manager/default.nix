@@ -64,7 +64,7 @@ in
     whois
     # use unstable until: https://github.com/NixOS/nixpkgs/pull/352221
     unstable.pulumi
-    unstable.pulumiPackages.pulumi-language-go
+    unstable.pulumiPackages.pulumi-go
     cloudflared
     podman-compose
     (runCommand "podman-docker-compose-compat" { } ''
@@ -175,7 +175,7 @@ in
             }
           },
           "binary": {
-            "path": "${pkgs.rust-analyzer}/bin/rust-analyzer"
+            "path": "${pkgs.rustup}/bin/rust-analyzer"
           }
         }
       }
