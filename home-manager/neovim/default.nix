@@ -9,11 +9,18 @@
     prettierd
   ];
 
-  programs.neovim = {
+  programs.neovim = let
+    # see https://github.com/NixOS/nixpkgs/issues/402998
+    neovim-unwrapped = pkgs.unstable.neovim-unwrapped.overrideAttrs(old: {
+        meta = old.meta // {
+            maintainers = old.meta.teams;
+        };
+    });
+  in {
     enable = true;
     defaultEditor = true;
 
-    package = pkgs.unstable.neovim-unwrapped;
+    package = neovim-unwrapped;
 
     plugins = with pkgs.unstable.vimPlugins; [
       vim-fugitive
