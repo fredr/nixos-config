@@ -2,7 +2,7 @@
 {
   programs.zed-editor = {
     enable = true;
-    extensions = [ "nix" "toml" "lua" ];
+    extensions = [ "nix" "toml" "lua" "catppuccin" "catppuccin-icons" ];
 
     package = pkgs.unstable.zed-editor;
 
@@ -25,6 +25,12 @@
         inline = {
           enabled = true;
         };
+      };
+
+      preview_tabs = {
+        enabled = true;
+        enable_preview_from_file_finder = true;
+        enable_preview_from_code_navigation = true;
       };
 
       lsp = {
@@ -88,6 +94,17 @@
           provider = "zed.dev";
           model = "claude-3-7-sonnet-latest";
         };
+      };
+
+      theme = {
+        mode = "system";
+        dark = "Catppuccin Macchiato";
+        light = "Catppuccin Latte";
+      };
+      icon_theme = {
+        mode = "system";
+        dark = "Catppuccin Macchiato";
+        light = "Catppuccin Latte";
       };
     };
   };
