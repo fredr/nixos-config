@@ -13,6 +13,7 @@ in
     ./zsh.nix
     ./gcloud.nix
     ./kanshi.nix
+    ./zed.nix
   ];
 
   home.username = "fredr";
@@ -113,7 +114,6 @@ in
     gimp
     obsidian
     pavucontrol
-    unstable.zed-editor
     obs-studio
     mplayer
     spotify
@@ -130,56 +130,6 @@ in
   home.file.".config/dive/config.yaml".text = ''
     container-engine: podman
     source: podman
-  '';
-
-  home.file.".config/zed/settings.json".text = ''
-    {
-      "ui_font_size": 16,
-      "buffer_font_size": 16,
-      "vim_mode": true,
-      "auto_update": false,
-      "relative_line_numbers": true,
-      "lsp": {
-        "gopls": {
-          "binary": {
-            "path": "${pkgs.gopls}/bin/gopls"
-          },
-        },
-        "rust-analyzer": {
-          "initialization_options": {
-            "completion": {
-              "snippets": {
-                "Arc::new": {
-                    "postfix": "arc",
-                    "body": ["Arc::new(''${receiver})"],
-                    "requires": "std::sync::Arc",
-                    "scope": "expr"
-                },
-                "Some": {
-                    "postfix": "some",
-                    "body": ["Some(''${receiver})"],
-                    "scope": "expr"
-                },
-                "Ok": {
-                    "postfix": "ok",
-                    "body": ["Ok(''${receiver})"],
-                    "scope": "expr"
-                },
-              },
-            },
-            "rust": {
-              "analyzerTargetDir": true,
-            },
-            "check": {
-              "command": "clippy"
-            }
-          },
-          "binary": {
-            "path": "${pkgs.rustup}/bin/rust-analyzer"
-          }
-        }
-      }
-    }
   '';
 
   programs.direnv = {
