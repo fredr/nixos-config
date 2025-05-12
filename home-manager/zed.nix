@@ -1,8 +1,20 @@
 { pkgs, ... }:
 {
+  home.packages = with pkgs; [
+    unstable.package-version-server
+    mypkgs.cargotom
+  ];
+
   programs.zed-editor = {
     enable = true;
-    extensions = [ "nix" "toml" "lua" "catppuccin" "catppuccin-icons" ];
+    extensions = [
+      "nix"
+      "toml"
+      "lua"
+      "cargo-tom"
+      "catppuccin"
+      "catppuccin-icons"
+    ];
 
     package = pkgs.unstable.zed-editor;
 
@@ -71,6 +83,17 @@
         gopls = {
           binary = {
             path = "${pkgs.gopls}/bin/gopls";
+          };
+        };
+        package-version-server = {
+          binary = {
+            path = "${pkgs.unstable.package-version-server}/bin/package-version-server";
+          };
+        };
+        cargo-tom = {
+          binary = {
+            path = "${pkgs.mypkgs.cargotom}/bin/cargotom";
+            arguments = [ "--storage" "/home/fredr/.cargo-tom" ];
           };
         };
       };
