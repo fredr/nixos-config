@@ -3,6 +3,7 @@
   home.packages = with pkgs; [
     unstable.package-version-server
     mypkgs.cargotom
+    mypkgs.protobuf-language-server
   ];
 
   programs.zed-editor = {
@@ -14,6 +15,7 @@
       "cargo-tom"
       "catppuccin"
       "catppuccin-icons"
+      "proto"
     ];
 
     package = pkgs.unstable.zed-editor;
@@ -94,6 +96,11 @@
           binary = {
             path = "${pkgs.mypkgs.cargotom}/bin/cargotom";
             arguments = [ "--storage" "/home/fredr/.cargo-tom" ];
+          };
+        };
+        protobuf-language-server = {
+          binary = {
+            path = "${pkgs.mypkgs.protobuf-language-server}/bin/protobuf-language-server";
           };
         };
       };
