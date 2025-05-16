@@ -45,6 +45,8 @@
       # for building boring-sys etc
       export LIBCLANG_PATH="${pkgs.llvmPackages.libclang.lib}/lib";
 
+      export ANTHROPIC_API_KEY="`cat ~/.anthropic-api-key`"
+
       # "theme" based on dst
       function nix_shell() {
         shell_name=''${SHELL_NAME:-shell}
@@ -74,4 +76,3 @@
     history.path = "${config.xdg.dataHome}/zsh/history";
   };
 }
-
