@@ -74,7 +74,7 @@
             };
             diagnostics = {
               experimental = {
-                enable = true;
+                enable = false;
               };
             };
             check = {
