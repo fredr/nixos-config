@@ -126,6 +126,10 @@
         };
       };
 
+      edit_predictions = {
+        mode = "subtle";
+      };
+
       theme = {
         mode = "system";
         dark = "Catppuccin Macchiato";
