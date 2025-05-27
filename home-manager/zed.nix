@@ -16,6 +16,7 @@
       "catppuccin"
       "catppuccin-icons"
       "proto"
+      "dockerfile"
     ];
 
     package = pkgs.unstable.zed-editor;
