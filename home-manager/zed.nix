@@ -81,6 +81,11 @@
             check = {
               command = "clippy";
             };
+            cargo = {
+              allFeatures = true;
+              autoreload = true;
+              runBuildScripts = true;
+            };
           };
         };
         gopls = {
