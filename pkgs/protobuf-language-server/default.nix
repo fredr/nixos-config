@@ -8,10 +8,10 @@ buildGoModule {
     owner = "lasorda";
     repo = "protobuf-language-server";
     rev = "6e366e0b805480cf319c6e6ee12d0d1292369556";
-    hash = "sha256-95CR1m3Ydul8WF4N12JFFqmva2vltGb6vtrUu7uck4E=";
+    hash = "sha256-bDsvByXa2kH3DnvQpAq79XvwFg4gfhtOP2BpqA1LCI0=";
   };
 
-  vendorHash = "sha256-4nTpKBe7ekJsfQf+P6edT/9Vp2SBYbKz1ITawD3bhkI=";
+  vendorHash = "sha256-dRria1zm5Jk7ScXh0HXeU686EmZcRrz5ZgnF0ca9aUQ=";
 
   subPackages = [ "." ];
 }
