@@ -128,7 +128,7 @@
         default_open_ai_model = null;
         default_model = {
           provider = "anthropic";
-          model = "claude-3-7-sonnet-latest";
+          model = "claude-opus-4-latest";
         };
       };
 
