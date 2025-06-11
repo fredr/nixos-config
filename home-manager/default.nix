@@ -34,6 +34,7 @@ in
     cue
     llm
     killall
+    claude-code
 
     which
     tree
