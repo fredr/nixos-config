@@ -27,7 +27,7 @@
       encore-new = "encore app create --example=ts/hello-world";
     };
 
-    initExtra = ''
+    initContent = ''
       export DOCKER_HOST=unix:///run/user/1000/podman/podman.sock
 
       export PATH=$PATH:/home/fredr/go/bin

@@ -55,7 +55,6 @@ in
     font-awesome
     powerline-fonts
     powerline-symbols
-    nerdfonts
 
     kubectl
     kubectx
