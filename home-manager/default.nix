@@ -34,7 +34,7 @@ in
     cue
     llm
     killall
-    claude-code
+    unstable.claude-code
 
     which
     tree
@@ -42,6 +42,8 @@ in
     lsof
     file
     linuxPackages.perf
+    usbutils
+    whois
 
     slack
     discord
