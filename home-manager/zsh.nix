@@ -25,6 +25,7 @@
       encore-rel = "nix develop ~/nixos-config#encore-rel -c $SHELL";
 
       encore-new = "encore app create --example=ts/hello-world";
+      encore-zed-rules = "curl https://raw.githubusercontent.com/encoredev/encore/refs/heads/main/ts_llm_instructions.txt -o .rules";
     };
 
     initContent = ''
