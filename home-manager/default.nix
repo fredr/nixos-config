@@ -54,6 +54,7 @@ in
     slurp
     dmenu
     kalker
+    graphviz
 
     font-awesome
     powerline-fonts
@@ -75,7 +76,7 @@ in
       mkdir -p $out/bin
       ln -s ${pkgs.podman-compose}/bin/podman-compose $out/bin/docker-compose
     '')
-    podman-desktop
+    # podman-desktop
     podman-tui
     cbtemulator
     overmind
