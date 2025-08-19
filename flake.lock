@@ -21,11 +21,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1753186935,
-        "narHash": "sha256-aPNJY2w5Ety0CQMcrKRYtbsrouKMGvLpXEfaaylZC/c=",
+        "lastModified": 1755510644,
+        "narHash": "sha256-ghXrZa3DYGHoSdEP0JY5fDGLgYpp+xPVSvd/JLfwXIw=",
         "owner": "encoredev",
         "repo": "encore-flake",
-        "rev": "686c570cb6bc61b39ea04b60e6973e4843ad9560",
+        "rev": "9fc03a721af1c0431abdd7cbab98fbf26e00c668",
         "type": "github"
       },
       "original": {
