@@ -143,6 +143,20 @@
                 inherit system;
               };
 
+            # sqlc 1.25.0
+            sqlc-pkgs = import
+              (pkgs.fetchFromGitHub {
+                owner = "NixOS";
+                repo = "nixpkgs";
+                rev = "b0dc996a606919d2762e427296c902ca476b6470";
+                sha256 = "sha256-T6Y4/Bp1HN84uCXZ56dQ0Wwr8rWjgIvjdENRMcmRk1I=";
+              })
+              {
+                inherit system;
+              };
+
+            sqlc = sqlc-pkgs.sqlc;
+
             protobuf = protobuf-pkgs.protobuf_23;
             protoc-gen-go = proto-gen-pkgs.protoc-gen-go;
             protoc-gen-go-grpc = proto-gen-pkgs.protoc-gen-go-grpc;
@@ -170,6 +184,8 @@
               protoc-gen-go
               protoc-gen-go-grpc
               pkgs.semgrep
+              sqlc
+              pkgs.mypkgs.goimports
             ];
 
             shellHook = ''
