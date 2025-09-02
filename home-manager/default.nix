@@ -80,7 +80,8 @@ in
     podman-tui
     cbtemulator
     overmind
-    tailscale
+    # use unstable until: https://github.com/NixOS/nixpkgs/issues/438765
+    unstable.tailscale
     firecracker
     pgcli
     buf

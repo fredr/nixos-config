@@ -98,7 +98,10 @@
 
   programs.steam.enable = true;
 
-  services.tailscale.enable = true;
+  services.tailscale = {
+    enable = true;
+    package = pkgs.unstable.tailscale;
+  };
 
   xdg.portal = {
     enable = true;
