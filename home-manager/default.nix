@@ -67,21 +67,18 @@ in
     websocat
     dig
     whois
-    # use unstable until: https://github.com/NixOS/nixpkgs/pull/352221
-    unstable.pulumi
-    unstable.pulumiPackages.pulumi-go
+    pulumi
+    pulumiPackages.pulumi-go
     cloudflared
     podman-compose
     (runCommand "podman-docker-compose-compat" { } ''
       mkdir -p $out/bin
       ln -s ${pkgs.podman-compose}/bin/podman-compose $out/bin/docker-compose
     '')
-    # podman-desktop
+    podman-desktop
     podman-tui
     cbtemulator
     overmind
-    # use unstable until: https://github.com/NixOS/nixpkgs/issues/438765
-    unstable.tailscale
     firecracker
     pgcli
     buf

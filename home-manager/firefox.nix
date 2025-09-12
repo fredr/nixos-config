@@ -18,6 +18,9 @@
   };
   xdg.mimeApps = {
     enable = true;
+    associations.added = {
+      "image/png" = [ "gimp.desktop" ];
+    };
     defaultApplications = {
       "default-web-browser" = [ "firefox.desktop" ];
       "text/html" = [ "firefox.desktop" ];
