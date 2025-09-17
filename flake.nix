@@ -192,6 +192,7 @@
               pkgs.semgrep
               sqlc
               pkgs.mypkgs.goimports
+              pkgs.llvmPackages.clang
             ];
 
             shellHook = ''
