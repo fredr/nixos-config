@@ -183,6 +183,9 @@
             '';
           in
           pkgs.mkShellNoCC {
+            buildInputs = with pkgs; [
+              llvmPackages.clang
+            ];
             packages = [
               pkgs.mypkgs.stringer
               buildCommand
@@ -192,7 +195,6 @@
               pkgs.semgrep
               sqlc
               pkgs.mypkgs.goimports
-              pkgs.llvmPackages.clang
             ];
 
             shellHook = ''
