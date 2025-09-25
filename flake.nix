@@ -176,6 +176,7 @@
               (
                 cd ${encoreDev}/encore/ &&
                 cargo install --path tsparser --debug &&
+                go install ./cli/cmd/tsbundler-encore &&
                 go run ./pkg/encorebuild/cmd/build-local-binary all --builder cargo &&
                 go install ./cli/cmd/encore &&
                 encore daemon
