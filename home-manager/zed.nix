@@ -32,7 +32,9 @@
       show_whitespaces = "all";
       ui_font_size = 16;
       buffer_font_size = 16;
-      hour_format = "hour24";
+      journal = {
+        hour_format = "hour24";
+      };
 
       telemetry = {
         metrics = false;
@@ -124,13 +126,11 @@
         };
       };
 
-      assistant = {
+      agent = {
         enabled = true;
-        version = "2";
-        default_open_ai_model = null;
         default_model = {
           provider = "anthropic";
-          model = "claude-opus-4-latest";
+          model = "claude-sonnet-4-5-latest";
         };
       };
 
