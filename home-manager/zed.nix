@@ -124,6 +124,9 @@
             };
           };
         };
+        Rust = {
+          debuggers = [ "GDB" ];
+        };
       };
 
       agent = {

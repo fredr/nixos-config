@@ -108,6 +108,8 @@ in
     zig
     musl
     musl.dev
+    gdb
+    lldb
 
     unstable.code-cursor
 
