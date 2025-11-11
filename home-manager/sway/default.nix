@@ -60,6 +60,10 @@
       extraSessionCommands = ''
         eval $(gnome-keyring-daemon --daemonize)
         export SSH_AUTH_SOCK
+
+        # Import environment into systemd to ensure portals get correct variables
+        systemctl --user import-environment PATH XDG_DATA_DIRS XDG_CONFIG_DIRS GIO_EXTRA_MODULES
+        dbus-update-activation-environment --systemd PATH XDG_DATA_DIRS XDG_CONFIG_DIRS GIO_EXTRA_MODULES
       '';
 
       wrapperFeatures.gtk = true;
@@ -121,5 +125,3 @@
       };
     };
 }
-
-
