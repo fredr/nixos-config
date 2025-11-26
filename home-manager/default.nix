@@ -110,6 +110,7 @@ in
     musl.dev
     gdb
     lldb
+    delve
 
     unstable.code-cursor
 

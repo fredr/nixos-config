@@ -4,7 +4,11 @@
     unstable.package-version-server
     mypkgs.cargotom
     mypkgs.protobuf-language-server
+    mypkgs.delve-shim-dap
   ];
+
+  home.file.".local/share/zed/debug_adapters/delve-shim-dap/delve-shim-dap_${pkgs.mypkgs.delve-shim-dap.version}/delve-shim-dap".source = "${pkgs.mypkgs.delve-shim-dap}/bin/delve-shim-dap";
+  home.file.".local/share/zed/debug_adapters/delve-shim-dap/dlv".source = "${pkgs.delve}/bin/dlv";
 
   programs.zed-editor = {
     enable = true;
