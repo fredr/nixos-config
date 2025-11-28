@@ -128,8 +128,15 @@
             };
           };
         };
-        Rust = {
-          debuggers = [ "GDB" ];
+      };
+
+      dap = {
+        CodeLLDB = {
+          binary = "${pkgs.mypkgs.codelldb}/extension/adapter/codelldb";
+          args = [
+            "--settings"
+            "{\"sourceLanguages\":[\"rust\"]}"
+          ];
         };
       };
 

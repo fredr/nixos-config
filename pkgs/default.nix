@@ -6,4 +6,5 @@
   cargotom = pkgs.callPackage ./cargotom { };
   protobuf-language-server = pkgs.callPackage ./protobuf-language-server { };
   delve-shim-dap = pkgs.callPackage ./delve-shim-dap { };
+  codelldb = pkgs.callPackage ./codelldb { };
 }
