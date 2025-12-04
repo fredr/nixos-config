@@ -125,25 +125,25 @@
               overlays = [ mypkgs ];
             };
 
-            # protoc 4.23.4
+            # protoc 6.32.1
             protobuf-pkgs = import
               (pkgs.fetchFromGitHub {
                 owner = "NixOS";
                 repo = "nixpkgs";
-                rev = "05bbf675397d5366259409139039af8077d695ce";
-                sha256 = "IE7PZn9bSjxI4/MugjAEx49oPoxu0uKXdfC+X7HcRuQ=";
+                rev = "e2daad4d9da87f6a838e76ce65040b1ffabb1993";
+                sha256 = "m/HfkGTAj+jzX+WJZfnXl4JcHoSNclv6cctjFcVPrsI=";
               })
               {
                 inherit system;
               };
 
-            # protoc-gen-go 1.31.0 & protoc-gen-go-grpc 1.3.0
+            # protoc-gen-go 1.36.10 & protoc-gen-go-grpc 1.5.1
             proto-gen-pkgs = import
               (pkgs.fetchFromGitHub {
                 owner = "NixOS";
                 repo = "nixpkgs";
-                rev = "f194412e36bff594767b95c4bd023c653a4cae41";
-                sha256 = "L/xaRcjRTxte5cZw6ofJxfN8yBZakk1rijqp58plK1w=";
+                rev = "0c84e29495353f736f4715ee13f0f25e5ba602e6";
+                sha256 = "ZUnxws3ZbKZVyZdl8hlVfkJ0DpzyxQwA3SpUSCoga7Y=";
               })
               {
                 inherit system;
@@ -163,7 +163,7 @@
 
             sqlc = sqlc-pkgs.sqlc;
 
-            protobuf = protobuf-pkgs.protobuf_23;
+            protobuf = protobuf-pkgs.protobuf_32;
             protoc-gen-go = proto-gen-pkgs.protoc-gen-go;
             protoc-gen-go-grpc = proto-gen-pkgs.protoc-gen-go-grpc;
 
