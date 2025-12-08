@@ -46,7 +46,11 @@
   services.xserver.enable = true;
   services.xserver.displayManager.startx.enable = true;
 
+  # Enable gnome-keyring for system-wide secret management
   services.gnome.gnome-keyring.enable = true;
+
+  # Enable PAM integration for automatic keyring unlock on login
+  security.pam.services.login.enableGnomeKeyring = true;
 
   # Polkit needed for sway
   # see https://nixos.wiki/wiki/Sway
@@ -87,7 +91,6 @@
     thunar-archive-plugin
     thunar-volman
   ];
-  programs.file-roller.enable = true;
   services.gvfs.enable = true;
 
   programs.zsh.enable = true;
@@ -158,10 +161,6 @@
         package = pkgs.qemu_kvm;
         runAsRoot = true;
         swtpm.enable = true;
-        ovmf = {
-          enable = true;
-          packages = [ pkgs.OVMFFull.fd ];
-        };
         vhostUserPackages = [ pkgs.virtiofsd ];
       };
     };
@@ -187,7 +186,7 @@
     pkgs.spice
     pkgs.spice-gtk
     pkgs.spice-protocol
-    pkgs.win-virtio
+    pkgs.virtio-win
     pkgs.win-spice
     pkgs.swtpm
   ];

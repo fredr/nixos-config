@@ -41,7 +41,7 @@ in
     btop
     lsof
     file
-    linuxPackages.perf
+    perf
     usbutils
     whois
 
@@ -91,12 +91,12 @@ in
     gcc
     llvm
     rustup
-    pkgsCross.mingwW64.windows.pthreads
-    pkgsCross.mingwW64.windows.mcfgthreads
-    (pkgsCross.mingwW64.stdenv.cc.override
-      {
-        extraBuildCommands = ''printf '%s ' '-L${pkgsCross.mingwW64.windows.mcfgthreads}/lib' >> $out/nix-support/cc-ldflags'';
-      })
+    # pkgsCross.mingwW64.windows.pthreads
+    # pkgsCross.mingwW64.windows.mcfgthreads
+    # (pkgsCross.mingwW64.stdenv.cc.override
+    #   {
+    #     extraBuildCommands = ''printf '%s ' '-L${pkgsCross.mingwW64.windows.mcfgthreads}/lib' >> $out/nix-support/cc-ldflags'';
+    #   })
     go
     bun
     nodejs_22
@@ -127,6 +127,7 @@ in
     mypkgs.mirror
 
     wlr-randr
+    file-roller
   ];
 
   home.file.".config/containers/registries.conf".text = ''
@@ -186,7 +187,7 @@ in
 
   dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
 
-  home.stateVersion = "24.05";
+  home.stateVersion = "25.11";
 
   # Home manager manages home manager
   programs.home-manager.enable = true;

@@ -5,6 +5,7 @@
     sway-contrib.grimshot
     chayang
     swayimg
+    gcr # Provides org.gnome.keyring.SystemPrompter
   ];
 
   imports = [
@@ -58,12 +59,12 @@
       checkConfig = false;
 
       extraSessionCommands = ''
-        eval $(gnome-keyring-daemon --daemonize)
-        export SSH_AUTH_SOCK
+        # Set SSH_AUTH_SOCK to gnome-keyring's SSH agent socket
+        export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/gcr/ssh"
 
-        # Import environment into systemd to ensure portals get correct variables
-        systemctl --user import-environment PATH XDG_DATA_DIRS XDG_CONFIG_DIRS GIO_EXTRA_MODULES
-        dbus-update-activation-environment --systemd PATH XDG_DATA_DIRS XDG_CONFIG_DIRS GIO_EXTRA_MODULES
+        # Import environment into systemd to ensure portals and other services get correct variables
+        systemctl --user import-environment SSH_AUTH_SOCK PATH XDG_DATA_DIRS XDG_CONFIG_DIRS GIO_EXTRA_MODULES
+        dbus-update-activation-environment --systemd SSH_AUTH_SOCK PATH XDG_DATA_DIRS XDG_CONFIG_DIRS GIO_EXTRA_MODULES
       '';
 
       wrapperFeatures.gtk = true;

@@ -4,17 +4,20 @@
 
   programs.git = {
     enable = true;
-    userName = "Fredrik Enestad";
-    userEmail = "fredrik@enestad.com";
 
-    aliases = {
-      co = "checkout";
-    };
 
-    extraConfig = {
+    settings = {
       init.defaultBranch = "main";
       core.editor = "nvim";
-      user.signingKey = host.pubKey;
+      user = {
+        name = "Fredrik Enestad";
+        email = "fredrik@enestad.com";
+
+        signingKey = host.pubKey;
+      };
+      alias = {
+        co = "checkout";
+      };
       push = {
         default = "simple";
         autoSetupRemote = true;
