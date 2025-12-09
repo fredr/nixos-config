@@ -35,6 +35,8 @@ in
     llm
     killall
     unstable.claude-code
+    nitch
+    dysk
 
     which
     tree
