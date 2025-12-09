@@ -16,6 +16,8 @@
     shellAliases = {
       ll = "ls -l";
       nixrebuild = "sudo nixos-rebuild switch";
+      nixrebuild-diff = "tmp=$(mktemp -d); (cd $tmp; nixos-rebuild build && ${pkgs.nvd}/bin/nvd diff /run/current-system result); rm -r $tmp";
+      nix-diff-latest = "${pkgs.nvd}/bin/nvd diff $(ls -d /nix/var/nix/profiles/system-*-link | tail -n 2)";
       gst = "git status";
       gg = "git grep -n --untracked -I";
 

@@ -1,4 +1,4 @@
-{ pkgs, host, ... }:
+{ pkgs, host, lib, ... }:
 {
   imports = [
     ./gc.nix
@@ -176,6 +176,14 @@
   boot.extraModprobeConfig = "options kvm_intel nested=1";
 
   users.extraGroups.vboxusers.members = [ "fredr" ];
+
+  system.activationScripts.report-changes = {
+    text = ''
+      PATH=$PATH:${lib.makeBinPath [pkgs.nix pkgs.nvd]}
+      ${lib.getExe pkgs.nvd} diff $(ls -d /nix/var/nix/profiles/system-*-link | tail -n 2) || true
+    '';
+    supportsDryActivation = true;
+  };
 
   environment.systemPackages = [
     pkgs.cifs-utils
