@@ -127,7 +127,7 @@
       settings = {
         screencast = {
           chooser_type = "simple";
-          chooser_cmd = "${pkgs.slurp}/bin/slurp -f %o -ro";
+          chooser_cmd = "${pkgs.slurp}/bin/slurp -f 'Monitor: %o' -or";
         };
       };
     };
