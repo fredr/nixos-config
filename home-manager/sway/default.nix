@@ -62,6 +62,9 @@
         # Set SSH_AUTH_SOCK to gnome-keyring's SSH agent socket
         export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/gcr/ssh"
 
+        # flickering in zed, see https://github.com/swaywm/sway/issues/8755
+        export WLR_RENDER_NO_EXPLICIT_SYNC=1
+
         # Import environment into systemd to ensure portals and other services get correct variables
         systemctl --user import-environment SSH_AUTH_SOCK PATH XDG_DATA_DIRS XDG_CONFIG_DIRS GIO_EXTRA_MODULES
         dbus-update-activation-environment --systemd SSH_AUTH_SOCK PATH XDG_DATA_DIRS XDG_CONFIG_DIRS GIO_EXTRA_MODULES
