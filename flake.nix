@@ -21,6 +21,11 @@
       url = "github:encoredev/encore-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Pinned nixpkgs for specific tool versions
+    nixpkgs-protobuf.url = "github:NixOS/nixpkgs/e2daad4d9da87f6a838e76ce65040b1ffabb1993"; # protoc 6.32.1
+    nixpkgs-protoc-gen.url = "github:NixOS/nixpkgs/0c84e29495353f736f4715ee13f0f25e5ba602e6"; # protoc-gen-go 1.36.10 & protoc-gen-go-grpc 1.5.1
+    nixpkgs-sqlc.url = "github:NixOS/nixpkgs/b0dc996a606919d2762e427296c902ca476b6470"; # sqlc 1.25.0
   };
 
 
@@ -57,6 +62,17 @@
           mypkgs
         ];
       };
+
+      # Pre-import pinned nixpkgs versions to reuse across shells
+      pkgs = import nixpkgs {
+        inherit system;
+        overlays = [ mypkgs ];
+      };
+
+      # Import pinned nixpkgs from inputs for specific tool versions
+      protobuf-pkgs = import inputs.nixpkgs-protobuf { inherit system; };
+      proto-gen-pkgs = import inputs.nixpkgs-protoc-gen { inherit system; };
+      sqlc-pkgs = import inputs.nixpkgs-sqlc { inherit system; };
     in
     {
       nixosConfigurations.flatnix =
@@ -106,13 +122,13 @@
       devShells."${system}" = {
         encore-rel =
           let
-            pkgs = import nixpkgs {
+            encore-pkgs = import nixpkgs {
               inherit system;
               overlays = [ encore-overlay ];
             };
           in
-          pkgs.mkShellNoCC {
-            packages = [ pkgs.encore ];
+          encore-pkgs.mkShellNoCC {
+            packages = [ encore-pkgs.encore ];
 
             shellHook = ''
               export SHELL_NAME=''${SHELL_NAME}''${SHELL_NAME:+>}encore-rel
@@ -121,49 +137,7 @@
 
         encore-dev =
           let
-            pkgs = import nixpkgs {
-              inherit system;
-              overlays = [ mypkgs ];
-            };
-
-            # protoc 6.32.1
-            protobuf-pkgs = import
-              (pkgs.fetchFromGitHub {
-                owner = "NixOS";
-                repo = "nixpkgs";
-                rev = "e2daad4d9da87f6a838e76ce65040b1ffabb1993";
-                sha256 = "m/HfkGTAj+jzX+WJZfnXl4JcHoSNclv6cctjFcVPrsI=";
-              })
-              {
-                inherit system;
-              };
-
-            # protoc-gen-go 1.36.10 & protoc-gen-go-grpc 1.5.1
-            proto-gen-pkgs = import
-              (pkgs.fetchFromGitHub {
-                owner = "NixOS";
-                repo = "nixpkgs";
-                rev = "0c84e29495353f736f4715ee13f0f25e5ba602e6";
-                sha256 = "ZUnxws3ZbKZVyZdl8hlVfkJ0DpzyxQwA3SpUSCoga7Y=";
-              })
-              {
-                inherit system;
-              };
-
-            # sqlc 1.25.0
-            sqlc-pkgs = import
-              (pkgs.fetchFromGitHub {
-                owner = "NixOS";
-                repo = "nixpkgs";
-                rev = "b0dc996a606919d2762e427296c902ca476b6470";
-                sha256 = "sha256-T6Y4/Bp1HN84uCXZ56dQ0Wwr8rWjgIvjdENRMcmRk1I=";
-              })
-              {
-                inherit system;
-              };
-
             sqlc = sqlc-pkgs.sqlc;
-
             protobuf = protobuf-pkgs.protobuf_32;
             protoc-gen-go = proto-gen-pkgs.protoc-gen-go;
             protoc-gen-go-grpc = proto-gen-pkgs.protoc-gen-go-grpc;
