@@ -6,6 +6,7 @@
     chayang
     swayimg
     gcr # Provides org.gnome.keyring.SystemPrompter
+    jq
   ];
 
   imports = [
@@ -52,6 +53,31 @@
       rofi = "${pkgs.rofi}/bin/rofi";
       slurp = "${pkgs.slurp}/bin/slurp";
       grim = "${pkgs.grim}/bin/grim";
+
+      # scratchpad toggle scripts
+      toggle_terminal = pkgs.writeShellScript "toggle-terminal-scratchpad" ''
+        if ${pkgs.sway}/bin/swaymsg -t get_tree | ${pkgs.jq}/bin/jq -e '.. | select(.app_id? == "scratchpad_terminal")' > /dev/null; then
+          ${pkgs.sway}/bin/swaymsg '[app_id="scratchpad_terminal"]' scratchpad show
+        else
+          ${pkgs.alacritty}/bin/alacritty --class scratchpad_terminal
+        fi
+      '';
+
+      toggle_obsidian = pkgs.writeShellScript "toggle-obsidian-scratchpad" ''
+        if ${pkgs.sway}/bin/swaymsg -t get_tree | ${pkgs.jq}/bin/jq -e '.. | select(.app_id? == "obsidian")' > /dev/null; then
+          ${pkgs.sway}/bin/swaymsg '[app_id="obsidian"]' scratchpad show
+        else
+          ${pkgs.obsidian}/bin/obsidian
+        fi
+      '';
+
+      toggle_firefox = pkgs.writeShellScript "toggle-firefox-scratchpad" ''
+        if ${pkgs.sway}/bin/swaymsg -t get_tree | ${pkgs.jq}/bin/jq -e '.. | select(.app_id? == "scratchpad_firefox")' > /dev/null; then
+          ${pkgs.sway}/bin/swaymsg '[app_id="scratchpad_firefox"]' scratchpad show
+        else
+          ${pkgs.firefox}/bin/firefox --name scratchpad_firefox --no-remote -P scratchpad
+        fi
+      '';
     in
     {
       enable = true;
@@ -95,7 +121,28 @@
           "Shift+Print" = "exec ${grimshot} copy active";
           # Print focused window to file
           "Ctrl+Shift+Print" = "exec ${grimshot} save active";
+
+          # Scratchpad toggles
+          "${mod}+t" = "exec ${toggle_terminal}";
+          "${mod}+o" = "exec ${toggle_obsidian}";
+          "${mod}+i" = "exec ${toggle_firefox}";
         };
+
+        # Window commands (for_window rules)
+        window.commands = [
+          {
+            criteria = { app_id = "scratchpad_terminal"; };
+            command = "move scratchpad, scratchpad show";
+          }
+          {
+            criteria = { app_id = "obsidian"; };
+            command = "move scratchpad, scratchpad show";
+          }
+          {
+            criteria = { app_id = "scratchpad_firefox"; };
+            command = "move scratchpad, scratchpad show";
+          }
+        ];
 
         menu = "'${rofi} -modi drun,window,run -show drun'";
 

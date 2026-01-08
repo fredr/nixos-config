@@ -14,6 +14,17 @@
           onepassword-password-manager
         ];
       };
+
+      scratchpad = {
+        id = 1;
+        name = "scratchpad";
+        isDefault = false;
+
+        extensions.packages = with pkgs.nur.repos.rycee.firefox-addons; [
+          ublock-origin
+          onepassword-password-manager
+        ];
+      };
     };
   };
   xdg.mimeApps = {
