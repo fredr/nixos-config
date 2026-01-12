@@ -21,11 +21,6 @@
       url = "github:encoredev/encore-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    # Pinned nixpkgs for specific tool versions
-    nixpkgs-protobuf.url = "github:NixOS/nixpkgs/e2daad4d9da87f6a838e76ce65040b1ffabb1993"; # protoc 6.32.1
-    nixpkgs-protoc-gen.url = "github:NixOS/nixpkgs/0c84e29495353f736f4715ee13f0f25e5ba602e6"; # protoc-gen-go 1.36.10 & protoc-gen-go-grpc 1.5.1
-    nixpkgs-sqlc.url = "github:NixOS/nixpkgs/b0dc996a606919d2762e427296c902ca476b6470"; # sqlc 1.25.0
   };
 
 
@@ -63,16 +58,10 @@
         ];
       };
 
-      # Pre-import pinned nixpkgs versions to reuse across shells
       pkgs = import nixpkgs {
         inherit system;
         overlays = [ mypkgs ];
       };
-
-      # Import pinned nixpkgs from inputs for specific tool versions
-      protobuf-pkgs = import inputs.nixpkgs-protobuf { inherit system; };
-      proto-gen-pkgs = import inputs.nixpkgs-protoc-gen { inherit system; };
-      sqlc-pkgs = import inputs.nixpkgs-sqlc { inherit system; };
     in
     {
       nixosConfigurations.flatnix =
@@ -137,10 +126,11 @@
 
         encore-dev =
           let
-            sqlc = sqlc-pkgs.sqlc;
-            protobuf = protobuf-pkgs.protobuf_32;
-            protoc-gen-go = proto-gen-pkgs.protoc-gen-go;
-            protoc-gen-go-grpc = proto-gen-pkgs.protoc-gen-go-grpc;
+            # Use encore-specific versions downloaded as pre-built binaries
+            sqlc = pkgs.mypkgs.sqlc-encore;
+            protobuf = pkgs.mypkgs.protoc-encore;
+            protoc-gen-go = pkgs.mypkgs.protoc-gen-go-encore;
+            protoc-gen-go-grpc = pkgs.mypkgs.protoc-gen-go-grpc-encore;
 
             encoreDev = "/home/fredr/projects/encoredev";
             gobin = "/home/fredr/go/bin";
