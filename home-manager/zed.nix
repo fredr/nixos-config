@@ -23,6 +23,7 @@
       "dockerfile"
       "sql"
       "makefile"
+      "ember" # handlebars
     ];
 
     package = pkgs.unstable.zed-editor;
