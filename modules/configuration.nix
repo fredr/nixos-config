@@ -6,6 +6,10 @@
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
+  boot.kernel.sysctl = {
+    "kernel.yama.ptrace_scope" = 0;
+  };
+
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
