@@ -84,6 +84,7 @@ in
     firecracker
     pgcli
     buf
+    clickhouse
 
     openssl
     gnumake
@@ -113,8 +114,6 @@ in
     gdb
     lldb
     delve
-
-    unstable.code-cursor
 
     drm_info
 
