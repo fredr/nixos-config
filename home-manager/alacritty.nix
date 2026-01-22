@@ -11,6 +11,7 @@
       scrolling.multiplier = 5;
       keyboard.bindings = [
         { key = "N"; mods = "Control|Shift"; action = "SpawnNewInstance"; }
+        { key = "Return"; mods = "Shift"; chars = "\\u000a"; }
       ];
     };
   };
