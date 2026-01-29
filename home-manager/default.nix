@@ -114,6 +114,7 @@ in
     gdb
     lldb
     delve
+    uv
 
     drm_info
 
