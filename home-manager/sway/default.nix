@@ -1,4 +1,9 @@
 { pkgs, lib, config, ... }: {
+  # Protect sway-related services from systemd-oomd
+  systemd.user.services.sway-session.Service.ManagedOOMPreference = "avoid";
+  systemd.user.services.waybar.Service.ManagedOOMPreference = "avoid";
+  systemd.user.services.swayidle.Service.ManagedOOMPreference = "avoid";
+
   home.packages = with pkgs; [
     wl-clipboard
     nwg-displays

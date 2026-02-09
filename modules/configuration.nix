@@ -8,11 +8,30 @@
 
   boot.kernel.sysctl = {
     "kernel.yama.ptrace_scope" = 0;
+    # Memory management tuning for zram
+    "vm.swappiness" = 180;
+    "vm.watermark_boost_factor" = 0;
+    "vm.watermark_scale_factor" = 125;
+    "vm.page-cluster" = 0;
   };
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+
+  # Compressed swap in RAM
+  zramSwap = {
+    enable = true;
+    memoryPercent = 50;
+  };
+
+  # Userspace OOM killer - acts before system becomes unresponsive
+  systemd.oomd = {
+    enable = true;
+    enableRootSlice = true;
+    enableSystemSlice = true;
+    enableUserSlices = true;
+  };
 
   # Enable flakes
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
