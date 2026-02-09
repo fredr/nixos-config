@@ -65,6 +65,12 @@
 
   services.fwupd.enable = true;
 
+  # SSD TRIM - runs weekly for SSD health/performance
+  services.fstrim.enable = true;
+
+  # Intel thermal management - prevents throttling
+  services.thermald.enable = true;
+
   # Enable the X11 windowing system.
   services.xserver.enable = true;
   services.xserver.displayManager.startx.enable = true;
