@@ -199,6 +199,12 @@ in
 
   dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
 
+  nix.gc = {
+    automatic = true;
+    frequency = "weekly";
+    options = "--delete-older-than 14d";
+  };
+
   home.stateVersion = "25.11";
 
   # Home manager manages home manager
