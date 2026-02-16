@@ -85,6 +85,7 @@ in
     pgcli
     buf
     clickhouse
+    dust
 
     openssl
     gnumake
