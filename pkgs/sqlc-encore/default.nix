@@ -2,11 +2,11 @@
 
 stdenv.mkDerivation rec {
   pname = "sqlc-encore";
-  version = "1.25.0";
+  version = "1.30.0";
 
   src = fetchzip {
     url = "https://github.com/sqlc-dev/sqlc/releases/download/v${version}/sqlc_${version}_linux_amd64.tar.gz";
-    hash = "sha256-DXhJOfubYzDystCU1KgnHNX0CZAphg0Zd31t6ooU4uU=";
+    hash = "sha256-iXTjHAx+W0Afw6xjz8CgGaE269ZpW6PBgrDkOe/3lb4=";
     stripRoot = false;
   };
 
