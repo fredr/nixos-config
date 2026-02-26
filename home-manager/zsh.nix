@@ -49,6 +49,9 @@
       # for building boring-sys etc
       export LIBCLANG_PATH="${pkgs.llvmPackages.libclang.lib}/lib";
 
+      # bindgen needs mingw headers when cross-compiling to windows
+      export BINDGEN_EXTRA_CLANG_ARGS_x86_64_pc_windows_gnu="-isystem ${pkgs.pkgsCross.mingwW64.stdenv.cc.libc.dev}/include";
+
       # "theme" based on dst
       function nix_shell() {
         shell_name=''${SHELL_NAME:-shell}
