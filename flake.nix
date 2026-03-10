@@ -35,13 +35,13 @@
       };
       unstable-packages = final: _prev: {
         unstable = import inputs.nixpkgs-unstable {
-          system = final.system;
+          system = final.stdenv.hostPlatform.system;
           config.allowUnfree = true;
         };
       };
 
       encore-overlay = final: _prev: {
-        encore = encore.packages.${final.system}.encore;
+        encore = encore.packages.${final.stdenv.hostPlatform.system}.encore;
       };
 
       mypkgs = final: _prev: {
@@ -72,11 +72,10 @@
           };
         in
         nixpkgs.lib.nixosSystem {
-          system = system;
-
           specialArgs = { inherit inputs host; };
 
           modules = [
+            { nixpkgs.hostPlatform = system; }
             ./modules/configuration.nix
             ./hosts/flatnix
             home-manager.nixosModules.home-manager
@@ -94,11 +93,10 @@
           };
         in
         nixpkgs.lib.nixosSystem {
-          system = system;
-
           specialArgs = { inherit inputs host; };
 
           modules = [
+            { nixpkgs.hostPlatform = system; }
             ./modules/configuration.nix
             ./hosts/slimnix
             home-manager.nixosModules.home-manager
