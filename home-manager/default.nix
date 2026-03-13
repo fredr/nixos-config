@@ -1,8 +1,4 @@
-{ pkgs, inputs, ... }:
-let
-  inherit (inputs.nix-colors.lib-contrib { inherit pkgs; }) gtkThemeFromScheme;
-  colorscheme = inputs.nix-colors.colorSchemes.ayu-dark;
-in
+{ pkgs, ... }:
 {
   imports = [
     ./firefox.nix
@@ -62,6 +58,7 @@ in
     powerline-fonts
     powerline-symbols
     nerd-fonts.symbols-only
+    nerd-fonts.jetbrains-mono
 
     kubectl
     kubectx
@@ -182,13 +179,19 @@ in
     enable = true;
 
     theme = {
-      name = colorscheme.slug;
-      package = gtkThemeFromScheme { scheme = colorscheme; };
+      name = "catppuccin-mocha-blue-standard";
+      package = pkgs.catppuccin-gtk.override {
+        accents = [ "blue" ];
+        variant = "mocha";
+      };
     };
 
     iconTheme = {
-      name = "Papirus";
-      package = pkgs.papirus-icon-theme;
+      name = "Papirus-Dark";
+      package = pkgs.catppuccin-papirus-folders.override {
+        flavor = "mocha";
+        accent = "blue";
+      };
     };
 
     gtk3.extraConfig = {

@@ -23,6 +23,8 @@
     enable = true;
     package = pkgs.rofi;
 
+    theme = "catppuccin-mocha";
+
     extraConfig = {
       display-drun = "Application";
       display-window = "Windows";
@@ -32,18 +34,118 @@
     };
   };
 
-  programs.swaylock.enable = true;
+  xdg.dataFile."rofi/themes/catppuccin-mocha.rasi".text = ''
+    * {
+      bg: #1e1e2e;
+      bg-alt: #313244;
+      fg: #cdd6f4;
+      fg-alt: #a6adc8;
+      blue: #89b4fa;
+
+      background-color: @bg;
+      border: 0;
+      margin: 0;
+      padding: 0;
+      spacing: 0;
+    }
+
+    window {
+      width: 500px;
+      border: 2px;
+      border-color: @bg-alt;
+      border-radius: 12px;
+    }
+
+    inputbar {
+      children: [prompt, entry];
+      background-color: @bg-alt;
+      border-radius: 12px 12px 0 0;
+      padding: 12px;
+    }
+
+    prompt {
+      background-color: transparent;
+      text-color: @blue;
+      padding: 0 8px 0 0;
+    }
+
+    entry {
+      background-color: transparent;
+      text-color: @fg;
+      placeholder: "Search...";
+      placeholder-color: @fg-alt;
+    }
+
+    listview {
+      lines: 8;
+      columns: 1;
+      fixed-height: false;
+      background-color: @bg;
+      padding: 4px 0;
+    }
+
+    element {
+      padding: 8px 12px;
+      background-color: transparent;
+      text-color: @fg-alt;
+    }
+
+    element selected {
+      background-color: @bg-alt;
+      text-color: @fg;
+    }
+
+    element-icon {
+      size: 24px;
+      padding: 0 8px 0 0;
+      background-color: transparent;
+    }
+
+    element-text {
+      background-color: transparent;
+      text-color: inherit;
+      vertical-align: 0.5;
+    }
+  '';
+
+  programs.swaylock = {
+    enable = true;
+    settings = {
+      color = "1e1e2e";
+      inside-color = "1e1e2e";
+      inside-clear-color = "1e1e2e";
+      inside-ver-color = "1e1e2e";
+      inside-wrong-color = "1e1e2e";
+      ring-color = "585b70";
+      ring-clear-color = "f9e2af";
+      ring-ver-color = "89b4fa";
+      ring-wrong-color = "f38ba8";
+      key-hl-color = "a6e3a1";
+      bs-hl-color = "f38ba8";
+      text-color = "cdd6f4";
+      text-clear-color = "cdd6f4";
+      text-ver-color = "cdd6f4";
+      text-wrong-color = "cdd6f4";
+      line-color = "00000000";
+      line-clear-color = "00000000";
+      line-ver-color = "00000000";
+      line-wrong-color = "00000000";
+      separator-color = "00000000";
+      indicator-radius = 100;
+      indicator-thickness = 7;
+    };
+  };
 
   services.swayidle = {
     enable = true;
 
     timeouts = [
-      { timeout = 300; command = "${pkgs.chayang}/bin/chayang && ${pkgs.swaylock}/bin/swaylock -f -c 000000"; }
+      { timeout = 300; command = "${pkgs.chayang}/bin/chayang && ${pkgs.swaylock}/bin/swaylock -f"; }
       { timeout = 600; command = "${pkgs.sway}/bin/swaymsg \"output * dpms off\""; resumeCommand = "${pkgs.sway}/bin/swaymsg \"output * dpms on, output * enable\""; }
       { timeout = 900; command = "${pkgs.systemd}/bin/systemctl suspend"; }
     ];
     events = [
-      { event = "before-sleep"; command = "${pkgs.swaylock}/bin/swaylock -f -c 000000"; }
+      { event = "before-sleep"; command = "${pkgs.swaylock}/bin/swaylock -f"; }
     ];
 
   };
@@ -158,7 +260,7 @@
 
         keybindings = lib.mkOptionDefault {
           "${mod}+Tab" = "exec ${rofi} -show window";
-          "${mod}+Shift+Escape" = "exec swaynag -t warning -m 'Lock system?' -B 'Yes' 'swaylock -f -c 000000; pkill swaynag'";
+          "${mod}+Shift+Escape" = "exec swaynag -t warning -m 'Lock system?' -B 'Yes' 'swaylock -f; pkill swaynag'";
 
           # Print selection to clipboard
           "Print" = "exec ${slurp} | ${grim} -g - - | wl-copy -t image/png";

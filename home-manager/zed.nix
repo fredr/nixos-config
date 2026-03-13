@@ -155,12 +155,12 @@
 
       theme = {
         mode = "system";
-        dark = "Catppuccin Macchiato";
+        dark = "Catppuccin Mocha";
         light = "Catppuccin Latte";
       };
       icon_theme = {
         mode = "system";
-        dark = "Catppuccin Macchiato";
+        dark = "Catppuccin Mocha";
         light = "Catppuccin Latte";
       };
     };

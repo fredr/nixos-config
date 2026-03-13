@@ -15,8 +15,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nix-colors.url = "github:misterio77/nix-colors";
-
     encore = {
       url = "github:encoredev/encore-flake";
       inputs.nixpkgs.follows = "nixpkgs";
