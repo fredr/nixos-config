@@ -115,6 +115,47 @@
         up = "k";
         right = "l";
 
+        window = {
+          border = 2;
+          titlebar = false;
+        };
+        floating = {
+          border = 2;
+          titlebar = false;
+        };
+
+        colors = {
+          focused = {
+            border = "#585b70";
+            background = "#1e1e2e";
+            text = "#cdd6f4";
+            indicator = "#585b70";
+            childBorder = "#585b70";
+          };
+          focusedInactive = {
+            border = "#313244";
+            background = "#1e1e2e";
+            text = "#cdd6f4";
+            indicator = "#313244";
+            childBorder = "#313244";
+          };
+          unfocused = {
+            border = "#313244";
+            background = "#1e1e2e";
+            text = "#a6adc8";
+            indicator = "#313244";
+            childBorder = "#313244";
+          };
+          urgent = {
+            border = "#f38ba8";
+            background = "#1e1e2e";
+            text = "#cdd6f4";
+            indicator = "#f38ba8";
+            childBorder = "#f38ba8";
+          };
+          background = "#1e1e2e";
+        };
+
         keybindings = lib.mkOptionDefault {
           "${mod}+Tab" = "exec ${rofi} -show window";
           "${mod}+Shift+Escape" = "exec swaynag -t warning -m 'Lock system?' -B 'Yes' 'swaylock -f -c 000000; pkill swaynag'";
@@ -156,8 +197,8 @@
 
         gaps = {
           smartGaps = true;
-          inner = 2;
-          outer = 4;
+          inner = 5;
+          outer = 10;
         };
 
         input = {
@@ -180,5 +221,10 @@
           };
         };
       };
+
+      extraConfig = ''
+        titlebar_border_thickness 0
+        titlebar_padding 0
+      '';
     };
 }

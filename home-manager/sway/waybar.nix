@@ -12,7 +12,7 @@
         margin-left = 10;
         margin-right = 10;
         spacing = 0;
-        modules-left = [ "sway/workspaces" "sway/mode" "sway/scratchpad" "mpris" ];
+        modules-left = [ "sway/workspaces" "sway/mode" "sway/scratchpad" "sway/window" "mpris" ];
         modules-center = [ ];
         modules-right = [ "privacy" "idle_inhibitor" "pulseaudio" "bluetooth" "network" "cpu" "memory" "backlight" "sway/language" "battery" "battery#bat2" "clock" "tray" ];
 
