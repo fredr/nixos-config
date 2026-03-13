@@ -12,6 +12,7 @@
     swayimg
     gcr # Provides org.gnome.keyring.SystemPrompter
     jq
+    playerctl
   ];
 
   imports = [

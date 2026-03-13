@@ -7,59 +7,110 @@
       mainBar = {
         layer = "top";
         position = "top";
-        height = 30;
-        spacing = 4;
-        modules-left = [ "sway/workspaces" "sway/mode" "sway/scratchpad" ];
-        modules-center = [ "sway/window" ];
-        modules-right = [ "idle_inhibitor" "custom/k8s" "bluetooth" "network" "cpu" "memory" "backlight" "sway/language" "battery" "battery#bat2" "clock" "tray" ];
+        height = 28;
+        margin-top = 6;
+        margin-left = 10;
+        margin-right = 10;
+        spacing = 0;
+        modules-left = [ "sway/workspaces" "sway/mode" "sway/scratchpad" "mpris" ];
+        modules-center = [ ];
+        modules-right = [ "privacy" "idle_inhibitor" "pulseaudio" "bluetooth" "network" "cpu" "memory" "backlight" "sway/language" "battery" "battery#bat2" "clock" "tray" ];
 
+        "sway/workspaces" = {
+          disable-scroll = true;
+          all-outputs = false;
+        };
         "sway/mode" = {
-          format = "<span style=\"italic\">{}</span>";
+          format = "{}";
         };
         "sway/scratchpad" = {
           format = "{icon} {count}";
           show-empty = false;
-          format-icons = [ "" "" ];
+          format-icons = [ "󰖲" "󰖲" ];
           tooltip = true;
           tooltip-format = "{app}: {title}";
+        };
+        "mpris" = {
+          format = "{player_icon} {title} - {artist}";
+          format-paused = "{player_icon} {status_icon} {title} - {artist}";
+          player-icons = {
+            default = "▶";
+            spotify = "";
+            firefox = "";
+          };
+          status-icons = {
+            paused = "⏸";
+          };
+          max-length = 40;
+          on-click = "${pkgs.playerctl}/bin/playerctl play-pause";
+          on-click-right = "${pkgs.playerctl}/bin/playerctl next";
+          on-scroll-up = "${pkgs.playerctl}/bin/playerctl volume 0.05+";
+          on-scroll-down = "${pkgs.playerctl}/bin/playerctl volume 0.05-";
+        };
+        "privacy" = {
+          icon-spacing = 4;
+          icon-size = 14;
+          transition-duration = 250;
+          modules = [
+            { type = "screenshare"; tooltip = true; tooltip-icon-size = 20; }
+            { type = "audio-in"; tooltip = true; tooltip-icon-size = 20; }
+            { type = "audio-out"; tooltip = true; tooltip-icon-size = 20; }
+          ];
         };
         idle_inhibitor = {
           format = "{icon}";
           format-icons = {
-            activated = "";
-            deactivated = "";
+            activated = "󰅶";
+            deactivated = "󰾪";
           };
         };
+        "pulseaudio" = {
+          format = "{icon} {volume}%";
+          format-bluetooth = "󰂱 {volume}%";
+          format-muted = "󰝟";
+          format-icons = {
+            headphone = "󰋋";
+            default = [ "󰕿" "󰖀" "󰕾" ];
+          };
+          scroll-step = 5;
+          on-click = "${pkgs.pavucontrol}/bin/pavucontrol";
+          on-click-right = "${pkgs.pulseaudio}/bin/pactl set-sink-mute @DEFAULT_SINK@ toggle";
+        };
         "tray" = {
-          icon-size = 21;
-          spacing = 10;
+          icon-size = 18;
+          spacing = 8;
         };
         "clock" = {
+          format = "{:%H:%M}";
+          format-alt = "{:%a %b %d}";
           tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
-          format-alt = "{:%Y-%m-%d}";
         };
         "cpu" = {
-          format = "{usage}% ";
+          format = " {usage}%";
           tooltip = false;
+          on-click = "${pkgs.btop}/bin/btop";
         };
         "memory" = {
-          format = "{}% ";
+          format = " {}%";
+          on-click = "${pkgs.btop}/bin/btop";
         };
         "backlight" = {
           format = "{icon}";
-          format-icons = [ "" "" "" "" "" "" "" "" "" ];
+          format-icons = [ "󰃞" "󰃟" "󰃠" ];
+          scroll-step = 5;
         };
         "battery" = {
           states = {
-            good = 95;
             warning = 30;
             critical = 15;
           };
-          format = "{capacity}% {icon}";
-          format-charging = "{capacity}% ";
-          format-plugged = "{capacity}% ";
-          format-alt = "{time} {icon}";
-          format-icons = [ "" "" "" "" "" ];
+          format = "{icon}";
+          format-charging = "{icon}";
+          format-plugged = "󰂄";
+          format-alt = "{icon} {capacity}% {time}";
+          format-icons = [ "󰁺" "󰁻" "󰁼" "󰁽" "󰁾" "󰁿" "󰂀" "󰂁" "󰂂" "󰁹" ];
+          format-charging-icons = [ "󰢜" "󰂆" "󰂇" "󰂈" "󰢝" "󰂉" "󰢞" "󰂊" "󰂋" "󰂅" ];
+          tooltip-format = "{capacity}% - {timeTo}";
         };
         "battery#bat2" = {
           bat = "BAT2";
@@ -77,23 +128,15 @@
           on-click = "blueman-manager";
         };
         "network" = {
-          format-wifi = "";
-          tooltip-format-wifi = "{essid} ({signalStrength}%) ";
-          format-ethernet = "{ipaddr}/{cidr} ";
-          tooltip-format = "{ifname} via {gwaddr} ";
-          format-linked = "{ifname} (No IP) ";
-          format-disconnected = "Disconnected ⚠";
+          format-wifi = "{icon}";
+          format-icons = [ "󰤟" "󰤢" "󰤥" "󰤨" ];
+          format-ethernet = "󰈀";
+          tooltip-format-wifi = "{essid} ({signalStrength}%)";
+          tooltip-format = "{ifname} via {gwaddr}";
+          format-linked = "󰈀 No IP";
+          format-disconnected = "󰤭";
           format-alt = "{ifname}: {ipaddr}/{cidr}";
-        };
-        "custom/k8s" = {
-          format = "☁️ {}";
-          exec = pkgs.writeShellScript "current context" ''
-            	     ${pkgs.kubectl}/bin/kubectl config current-context
-            	   '';
-          interval = 5;
-          on-click = pkgs.writeShellScript "choose context" ''
-            	     ${pkgs.kubectx}/bin/kubectx $(${pkgs.kubectx}/bin/kubectx | ${pkgs.rofi}/bin/rofi -dmenu -p 'Context')
-            	   '';
+          on-click-right = "${pkgs.alacritty}/bin/alacritty -e nmtui";
         };
       };
     };
