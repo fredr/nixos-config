@@ -116,11 +116,11 @@
         right = "l";
 
         window = {
-          border = 2;
+          border = 1;
           titlebar = false;
         };
         floating = {
-          border = 2;
+          border = 1;
           titlebar = false;
         };
 
@@ -196,9 +196,8 @@
         bars = [{ command = "${pkgs.waybar}/bin/waybar"; }];
 
         gaps = {
-          smartGaps = true;
           inner = 5;
-          outer = 10;
+          outer = 0;
         };
 
         input = {
@@ -225,6 +224,10 @@
       extraConfig = ''
         titlebar_border_thickness 0
         titlebar_padding 0
+        gaps left 6
+        gaps right 6
+        gaps bottom 6
+        gaps top 1
       '';
     };
 }

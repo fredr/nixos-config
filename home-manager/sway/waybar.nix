@@ -14,7 +14,7 @@
         spacing = 0;
         modules-left = [ "sway/workspaces" "sway/mode" "sway/scratchpad" "sway/window" "mpris" ];
         modules-center = [ ];
-        modules-right = [ "privacy" "idle_inhibitor" "pulseaudio" "bluetooth" "network" "cpu" "memory" "backlight" "sway/language" "battery" "battery#bat2" "clock" "tray" ];
+        modules-right = [ "privacy" "custom/updates" "idle_inhibitor" "pulseaudio" "bluetooth" "network" "cpu" "memory" "backlight" "sway/language" "battery" "battery#bat2" "clock" "tray" ];
 
         "sway/workspaces" = {
           disable-scroll = true;
@@ -46,6 +46,20 @@
           on-click-right = "${pkgs.playerctl}/bin/playerctl next";
           on-scroll-up = "${pkgs.playerctl}/bin/playerctl volume 0.05+";
           on-scroll-down = "${pkgs.playerctl}/bin/playerctl volume 0.05-";
+        };
+        "custom/updates" = {
+          format = "󰏔 {}";
+          exec = pkgs.writeShellScript "check-updates" ''
+            count=$(${pkgs.nix}/bin/nix store diff-closures /run/current-system /nix/var/nix/profiles/system 2>/dev/null | grep -c '→' || true)
+            if [ "$count" -gt 0 ]; then
+              echo "$count"
+            else
+              echo ""
+            fi
+          '';
+          interval = 3600;
+          tooltip-format = "pending system updates";
+          on-click = "${pkgs.alacritty}/bin/alacritty -e bash -c 'sudo nixos-rebuild switch --flake /home/fredr/nixos-config; read -p \"Press enter to close\"'";
         };
         "privacy" = {
           icon-spacing = 4;
@@ -88,11 +102,11 @@
         "cpu" = {
           format = " {usage}%";
           tooltip = false;
-          on-click = "${pkgs.btop}/bin/btop";
+          on-click = "${pkgs.alacritty}/bin/alacritty -e ${pkgs.btop}/bin/btop";
         };
         "memory" = {
           format = " {}%";
-          on-click = "${pkgs.btop}/bin/btop";
+          on-click = "${pkgs.alacritty}/bin/alacritty -e ${pkgs.btop}/bin/btop";
         };
         "backlight" = {
           format = "{icon}";
