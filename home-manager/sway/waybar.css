@@ -1,6 +1,6 @@
 * {
     /* `otf-font-awesome` is required to be installed for icons */
-    font-family: FontAwesome, Roboto, Helvetica, Arial, sans-serif;
+    font-family: FontAwesome, "Symbols Nerd Font", Roboto, Helvetica, Arial, sans-serif;
     font-size: 13px;
 }
 window#waybar {
@@ -58,6 +58,7 @@ button:hover {
 #temperature,
 #backlight,
 #network,
+#bluetooth,
 #custom-k8s,
 #tray,
 #mode,
@@ -123,6 +124,16 @@ label:focus {
 }
 #backlight {
     background-color: #90b1b1;
+}
+#bluetooth {
+    background-color: #4a6fa5;
+}
+#bluetooth.connected {
+    background-color: #2980b9;
+}
+#bluetooth.disabled,
+#bluetooth.off {
+    background-color: #636e72;
 }
 #network {
     background-color: #2980b9;

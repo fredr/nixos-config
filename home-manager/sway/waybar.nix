@@ -11,7 +11,7 @@
         spacing = 4;
         modules-left = [ "sway/workspaces" "sway/mode" "sway/scratchpad" ];
         modules-center = [ "sway/window" ];
-        modules-right = [ "idle_inhibitor" "custom/k8s" "network" "cpu" "memory" "backlight" "sway/language" "battery" "battery#bat2" "clock" "tray" ];
+        modules-right = [ "idle_inhibitor" "custom/k8s" "bluetooth" "network" "cpu" "memory" "backlight" "sway/language" "battery" "battery#bat2" "clock" "tray" ];
 
         "sway/mode" = {
           format = "<span style=\"italic\">{}</span>";
@@ -63,6 +63,18 @@
         };
         "battery#bat2" = {
           bat = "BAT2";
+        };
+        "bluetooth" = {
+          format = "󰂯";
+          format-connected = "󰂱 {device_alias}";
+          format-connected-battery = "󰂱 {device_alias} {device_battery_percentage}%";
+          format-disabled = "󰂲";
+          format-off = "󰂲";
+          tooltip-format = "{controller_alias}\t{controller_address}\n\n{num_connections} connected";
+          tooltip-format-connected = "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}";
+          tooltip-format-enumerate-connected = "{device_alias}\t{device_address}";
+          tooltip-format-enumerate-connected-battery = "{device_alias}\t{device_address}\t{device_battery_percentage}%";
+          on-click = "blueman-manager";
         };
         "network" = {
           format-wifi = "";
