@@ -87,11 +87,14 @@
         };
         "cpu" = {
           format = " {usage}%";
-          tooltip = false;
+          tooltip = true;
+          tooltip-format = "CPU: {usage}%";
           on-click = "${pkgs.alacritty}/bin/alacritty -e ${pkgs.btop}/bin/btop";
         };
         "memory" = {
           format = " {}%";
+          tooltip = true;
+          tooltip-format = "Memory: {used:0.1f}GiB / {total:0.1f}GiB ({percentage}%)";
           on-click = "${pkgs.alacritty}/bin/alacritty -e ${pkgs.btop}/bin/btop";
         };
         "backlight" = {
