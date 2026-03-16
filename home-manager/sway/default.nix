@@ -229,7 +229,7 @@
         colors = {
           focused = {
             border = "#585b70";
-            background = "#1e1e2e";
+            background = "#313244";
             text = "#cdd6f4";
             indicator = "#585b70";
             childBorder = "#585b70";
@@ -324,8 +324,8 @@
       };
 
       extraConfig = ''
-        titlebar_border_thickness 0
-        titlebar_padding 0
+        titlebar_border_thickness 1
+        titlebar_padding 5 3
         gaps left 6
         gaps right 6
         gaps bottom 6
