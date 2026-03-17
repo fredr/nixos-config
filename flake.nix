@@ -116,7 +116,7 @@
             packages = [ encore-pkgs.encore ];
 
             shellHook = ''
-              export SHELL_NAME=''${SHELL_NAME}''${SHELL_NAME:+>}encore-rel
+              export SHELL_NAME="''${SHELL_NAME}''${SHELL_NAME:+>}encore-rel"
             '';
           };
 
@@ -161,7 +161,7 @@
             ];
 
             shellHook = ''
-              export SHELL_NAME=''${SHELL_NAME}''${SHELL_NAME:+>}encore-dev
+              export SHELL_NAME="''${SHELL_NAME}''${SHELL_NAME:+>}encore-dev"
 
               export ENCORE_RUNTIMES_PATH=${encoreDev}/encore/runtimes
               export ENCORE_GOROOT=${encoreDev}/go/dist/linux_amd64/encore-go

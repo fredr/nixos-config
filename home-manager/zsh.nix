@@ -23,8 +23,8 @@
 
       git-untracked-branches = "git fetch -p ; git branch -r | awk '{print $1}' | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk '{print $1}'";
 
-      encore-dev = "nix develop ~/nixos-config#encore-dev -c $SHELL";
-      encore-rel = "nix develop ~/nixos-config#encore-rel -c $SHELL";
+      encore-dev = "nix develop ~/nixos-config#encore-dev -c zsh";
+      encore-rel = "nix develop ~/nixos-config#encore-rel -c zsh";
 
       encore-new = "encore app create --example=ts/hello-world";
       encore-zed-rules-ts = "curl https://raw.githubusercontent.com/encoredev/encore/refs/heads/main/ts_llm_instructions.txt -o .rules";
@@ -52,10 +52,33 @@
       # bindgen needs mingw headers when cross-compiling to windows
       export BINDGEN_EXTRA_CLANG_ARGS_x86_64_pc_windows_gnu="-isystem ${pkgs.pkgsCross.mingwW64.stdenv.cc.libc.dev}/include";
 
+      # Restore SHELL to zsh — nix develop overrides it to bash via stdenv
+      export _ORIG_SHELL="''${_ORIG_SHELL:-$SHELL}"
+      export SHELL="$_ORIG_SHELL"
+
+      export BASE_SHLVL=''${BASE_SHLVL:-$SHLVL}
+
+      # Detect new subshells (nix develop, nix shell, etc.)
+      if [ "$SHLVL" -gt "$BASE_SHLVL" ] && [ "$SHLVL" != "''${_HANDLED_SHLVL:-0}" ]; then
+        if [ "''${SHELL_NAME:-}" = "''${_PARENT_SHELL_NAME:-}" ]; then
+          _nix_pkg=""
+          if [ -n "''${_PARENT_PATH:-}" ]; then
+            _nix_pkg=$(comm -23 \
+              <(echo "$PATH" | tr ':' '\n' | grep '/nix/store/' | sort) \
+              <(echo "''${_PARENT_PATH}" | tr ':' '\n' | grep '/nix/store/' | sort) \
+              | head -1 | sed -E 's|/nix/store/[a-z0-9]{32}-||;s|/bin$||;s|-[0-9].*||')
+          fi
+          export SHELL_NAME="''${SHELL_NAME:+''${SHELL_NAME}>}''${_nix_pkg:-shell}"
+          unset _nix_pkg
+        fi
+        export _HANDLED_SHLVL=$SHLVL
+      fi
+      export _PARENT_SHELL_NAME="''${SHELL_NAME:-}"
+      export _PARENT_PATH="$PATH"
+
       function nix_shell() {
-        shell_name=''${SHELL_NAME:-shell}
-        if [ ! -z ''${IN_NIX_SHELL+x} ];
-          then echo " %{$fg[cyan]%}''${shell_name}%{$reset_color%}";
+        if [ -n "''${SHELL_NAME:-}" ]; then
+          echo " %{$fg[cyan]%}''${SHELL_NAME}%{$reset_color%}"
         fi
       }
 
