@@ -134,8 +134,9 @@
 
             buildCommand = pkgs.writeShellScriptBin "encore-build-all" ''
               #!${pkgs.bash}/bin/bash
+              src_dir="''${ENCORE_WORKTREE_DIR:-${encoreDev}/encore}"
               (
-                cd ${encoreDev}/encore/ &&
+                cd "$src_dir" &&
                 cargo install --path tsparser --debug &&
                 go install ./cli/cmd/tsbundler-encore &&
                 go install ./cli/cmd/git-remote-encore &&
@@ -161,12 +162,29 @@
             ];
 
             shellHook = ''
-              export SHELL_NAME="''${SHELL_NAME}''${SHELL_NAME:+>}encore-dev"
+              if [ -n "''${ENCORE_WORKTREE_DIR:-}" ]; then
+                _wt_bin="$ENCORE_WORKTREE_DIR/.encore/bin"
+                mkdir -p "$_wt_bin"
 
-              export ENCORE_RUNTIMES_PATH=${encoreDev}/encore/runtimes
-              export ENCORE_GOROOT=${encoreDev}/go/dist/linux_amd64/encore-go
-              export ENCORE_TSPARSER_PATH=${cargobin}/tsparser-encore
-              export ENCORE_TSBUNDLER_PATH=${gobin}/tsbundler-encore
+                export GOBIN="$_wt_bin"
+                export CARGO_INSTALL_ROOT="$ENCORE_WORKTREE_DIR/.encore"
+                export ENCORE_RUNTIMES_PATH="$ENCORE_WORKTREE_DIR/runtimes"
+                export ENCORE_GOROOT=${encoreDev}/go/dist/linux_amd64/encore-go
+                export ENCORE_TSPARSER_PATH="$_wt_bin/tsparser-encore"
+                export ENCORE_TSBUNDLER_PATH="$_wt_bin/tsbundler-encore"
+                export PATH="$_wt_bin:$PATH"
+                export SHELL_NAME="encore-dev($ENCORE_WORKTREE_NAME)"
+
+                cd "$ENCORE_WORKTREE_DIR"
+                unset _wt_bin
+              else
+                export SHELL_NAME="''${SHELL_NAME}''${SHELL_NAME:+>}encore-dev"
+
+                export ENCORE_RUNTIMES_PATH=${encoreDev}/encore/runtimes
+                export ENCORE_GOROOT=${encoreDev}/go/dist/linux_amd64/encore-go
+                export ENCORE_TSPARSER_PATH=${cargobin}/tsparser-encore
+                export ENCORE_TSBUNDLER_PATH=${gobin}/tsbundler-encore
+              fi
             '';
           };
       };

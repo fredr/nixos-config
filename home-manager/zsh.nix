@@ -23,7 +23,7 @@
 
       git-untracked-branches = "git fetch -p ; git branch -r | awk '{print $1}' | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk '{print $1}'";
 
-      encore-dev = "nix develop ~/nixos-config#encore-dev -c zsh";
+      encore-dev-ls = "git -C ~/projects/encoredev/encore worktree list";
       encore-rel = "nix develop ~/nixos-config#encore-rel -c zsh";
 
       encore-new = "encore app create --example=ts/hello-world";
@@ -37,6 +37,47 @@
       export PATH=$PATH:/home/fredr/go/bin
       export PATH=$PATH:/home/fredr/.cargo/bin
       export PATH=$PATH:/home/fredr/bin
+
+      function encore-dev() {
+        if [ -z "$1" ]; then
+          nix develop ~/nixos-config#encore-dev -c zsh
+          return
+        fi
+
+        local name="$1"
+        local encore_main=~/projects/encoredev/encore
+        local worktree_base=~/projects/encoredev/encore.worktrees
+        local worktree_dir="$worktree_base/$name"
+
+        if [ ! -d "$worktree_dir" ]; then
+          echo "Creating worktree '$name' from main..."
+          mkdir -p "$worktree_base"
+          git -C "$encore_main" worktree add "$worktree_dir"
+        fi
+
+        ENCORE_WORKTREE_NAME="$name" \
+        ENCORE_WORKTREE_DIR="$worktree_dir" \
+          nix develop ~/nixos-config#encore-dev -c zsh
+      }
+
+      function encore-dev-rm() {
+        if [ -z "$1" ]; then
+          echo "Usage: encore-dev-rm <name>"
+          return 1
+        fi
+
+        local name="$1"
+        local encore_main=~/projects/encoredev/encore
+        local worktree_dir=~/projects/encoredev/encore.worktrees/$name
+
+        if [ ! -d "$worktree_dir" ]; then
+          echo "Worktree '$name' does not exist"
+          return 1
+        fi
+
+        git -C "$encore_main" worktree remove --force "$worktree_dir"
+        echo "Removed worktree '$name'"
+      }
 
       # helper for converting encore protos to json, proto type is the argument
       function encore-buf() {
