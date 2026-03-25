@@ -142,6 +142,18 @@
     })
   ];
 
+  home.file.".claude/settings.json".text = builtins.toJSON {
+    permissions = {
+      defaultMode = "default";
+      allow = [ "Read" ];
+    };
+    enabledPlugins = {
+      "gopls-lsp@claude-plugins-official" = true;
+      "rust-analyzer-lsp@claude-plugins-official" = true;
+    };
+    effortLevel = "high";
+  };
+
   home.file.".config/containers/registries.conf".text = ''
     unqualified-search-registries = ["docker.io"]
   '';
