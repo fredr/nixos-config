@@ -45,18 +45,27 @@
         fi
 
         local name="$1"
+        if [[ "$name" == */* ]]; then
+          echo "Error: worktree name must not contain '/'"
+          return 1
+        fi
+
+        local branch="fredr/$name"
         local encore_main=~/projects/encoredev/encore
         local worktree_base=~/projects/encoredev/encore.worktrees
         local worktree_dir="$worktree_base/$name"
 
+        local new_worktree=0
         if [ ! -d "$worktree_dir" ]; then
-          echo "Creating worktree '$name' from main..."
+          echo "Creating worktree '$name' (branch '$branch') from main..."
           mkdir -p "$worktree_base"
-          git -C "$encore_main" worktree add "$worktree_dir"
+          git -C "$encore_main" worktree add -b "$branch" "$worktree_dir"
+          new_worktree=1
         fi
 
         ENCORE_WORKTREE_NAME="$name" \
         ENCORE_WORKTREE_DIR="$worktree_dir" \
+        ENCORE_WORKTREE_NEW="$new_worktree" \
           nix develop ~/nixos-config#encore-dev -c zsh
       }
 

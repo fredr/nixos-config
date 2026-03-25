@@ -175,7 +175,9 @@
                 export PATH="$_wt_bin:$PATH"
                 export SHELL_NAME="encore-dev($ENCORE_WORKTREE_NAME)"
 
-                cd "$ENCORE_WORKTREE_DIR"
+                if [ "''${ENCORE_WORKTREE_NEW:-0}" = "1" ]; then
+                  cd "$ENCORE_WORKTREE_DIR"
+                fi
                 unset _wt_bin
               else
                 export SHELL_NAME="''${SHELL_NAME}''${SHELL_NAME:+>}encore-dev"
