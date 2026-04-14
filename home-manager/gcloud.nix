@@ -4,10 +4,12 @@ let
     gke-gcloud-auth-plugin
     bigtable
     cbt
+    pubsub-emulator
   ]);
 in
 {
   home.packages = [
     gcloud
+    pkgs.jre
   ];
 }
