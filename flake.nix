@@ -42,6 +42,21 @@
         encore = encore.packages.${final.stdenv.hostPlatform.system}.encore;
       };
 
+      # https://github.com/NixOS/nixpkgs/issues/505078
+      obsidian-fix = final: prev: {
+        obsidian = prev.obsidian.overrideAttrs (old: {
+          nativeBuildInputs = old.nativeBuildInputs ++ [ final.asar final.jq ];
+          postPatch = (old.postPatch or "") + ''
+            mkdir _app
+            asar extract ./resources/app.asar ./_app
+            jq '.desktopName = "obsidian"' ./_app/package.json > ./_app/package.json.tmp
+            mv ./_app/package.json.tmp ./_app/package.json
+            asar pack ./_app ./resources/app.asar
+            rm -r _app
+          '';
+        });
+      };
+
       mypkgs = final: _prev: {
         mypkgs = import ./pkgs {
           pkgs = final.pkgs;
@@ -52,6 +67,7 @@
         nixpkgs.overlays = [
           nur.overlays.default
           unstable-packages
+          obsidian-fix
           mypkgs
         ];
       };
