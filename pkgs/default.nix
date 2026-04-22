@@ -7,6 +7,7 @@
   protobuf-language-server = pkgs.callPackage ./protobuf-language-server { };
   delve-shim-dap = pkgs.callPackage ./delve-shim-dap { };
   codelldb = pkgs.callPackage ./codelldb { };
+  claude-code = pkgs.callPackage ./claude-code { };
 
   # Encore-specific tool versions
   protoc-encore = pkgs.callPackage ./protoc-encore { };

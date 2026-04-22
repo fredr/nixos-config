@@ -30,7 +30,7 @@
     cue
     llm
     killall
-    unstable.claude-code
+    mypkgs.claude-code
     nitch
     dysk
 
