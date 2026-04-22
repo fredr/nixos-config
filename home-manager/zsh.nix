@@ -45,18 +45,38 @@
         fi
 
         local name="$1"
+        local custom_path="$2"
+
         if [[ "$name" == */* ]]; then
-          echo "Error: worktree name must not contain '/'"
+          echo "Error: name must not contain '/'"
           return 1
         fi
 
-        local branch="fredr/$name"
         local encore_main=~/projects/encoredev/encore
         local worktree_base=~/projects/encoredev/encore.worktrees
         local worktree_dir="$worktree_base/$name"
 
         local new_worktree=0
-        if [ ! -d "$worktree_dir" ]; then
+
+        if [ -n "$custom_path" ]; then
+          local resolved_path="$(realpath "$custom_path" 2>/dev/null)"
+          if [ ! -d "$resolved_path" ]; then
+            echo "Error: path '$custom_path' does not exist or is not a directory"
+            return 1
+          fi
+
+          if [ -d "$worktree_dir" ] && [ ! -L "$worktree_dir" ]; then
+            echo "Error: '$name' already exists as a worktree, not an external path"
+            return 1
+          fi
+
+          mkdir -p "$worktree_base"
+          ln -sfn "$resolved_path" "$worktree_dir"
+        elif [ -L "$worktree_dir" ] && [ ! -d "$worktree_dir" ]; then
+          echo "Error: '$name' links to a path that no longer exists: $(readlink "$worktree_dir")"
+          return 1
+        elif [ ! -d "$worktree_dir" ]; then
+          local branch="fredr/$name"
           echo "Creating worktree '$name' (branch '$branch') from main..."
           mkdir -p "$worktree_base"
           git -C "$encore_main" worktree add -b "$branch" "$worktree_dir"
@@ -64,7 +84,7 @@
         fi
 
         ENCORE_WORKTREE_NAME="$name" \
-        ENCORE_WORKTREE_DIR="$worktree_dir" \
+        ENCORE_WORKTREE_DIR="$(realpath "$worktree_dir")" \
         ENCORE_WORKTREE_NEW="$new_worktree" \
           nix develop ~/nixos-config#encore-dev -c zsh
       }
@@ -79,13 +99,18 @@
         local encore_main=~/projects/encoredev/encore
         local worktree_dir=~/projects/encoredev/encore.worktrees/$name
 
-        if [ ! -d "$worktree_dir" ]; then
-          echo "Worktree '$name' does not exist"
+        if [ ! -e "$worktree_dir" ] && [ ! -L "$worktree_dir" ]; then
+          echo "Entry '$name' does not exist"
           return 1
         fi
 
-        git -C "$encore_main" worktree remove --force "$worktree_dir"
-        echo "Removed worktree '$name'"
+        if [ -L "$worktree_dir" ]; then
+          rm "$worktree_dir"
+          echo "Removed path link '$name'"
+        else
+          git -C "$encore_main" worktree remove --force "$worktree_dir"
+          echo "Removed worktree '$name'"
+        fi
       }
 
       # helper for converting encore protos to json, proto type is the argument

@@ -145,8 +145,6 @@
             protoc-gen-go-grpc = pkgs.mypkgs.protoc-gen-go-grpc-encore;
 
             encoreDev = "/home/fredr/projects/encoredev";
-            gobin = "/home/fredr/go/bin";
-            cargobin = "/home/fredr/.cargo/bin";
 
             buildCommand = pkgs.writeShellScriptBin "encore-build-all" ''
               #!${pkgs.bash}/bin/bash
@@ -178,31 +176,28 @@
             ];
 
             shellHook = ''
-              if [ -n "''${ENCORE_WORKTREE_DIR:-}" ]; then
-                _wt_bin="$ENCORE_WORKTREE_DIR/.encore/bin"
-                mkdir -p "$_wt_bin"
+              _encore_base="''${ENCORE_WORKTREE_DIR:-${encoreDev}/encore}"
+              _encore_bin="$_encore_base/.encore/bin"
+              mkdir -p "$_encore_bin"
 
-                export GOBIN="$_wt_bin"
-                export CARGO_INSTALL_ROOT="$ENCORE_WORKTREE_DIR/.encore"
-                export ENCORE_RUNTIMES_PATH="$ENCORE_WORKTREE_DIR/runtimes"
-                export ENCORE_GOROOT=${encoreDev}/go/dist/linux_amd64/encore-go
-                export ENCORE_TSPARSER_PATH="$_wt_bin/tsparser-encore"
-                export ENCORE_TSBUNDLER_PATH="$_wt_bin/tsbundler-encore"
-                export PATH="$_wt_bin:$PATH"
+              export GOBIN="$_encore_bin"
+              export CARGO_INSTALL_ROOT="$_encore_base/.encore"
+              export ENCORE_RUNTIMES_PATH="$_encore_base/runtimes"
+              export ENCORE_GOROOT=${encoreDev}/go/dist/linux_amd64/encore-go
+              export ENCORE_TSPARSER_PATH="$_encore_bin/tsparser-encore"
+              export ENCORE_TSBUNDLER_PATH="$_encore_bin/tsbundler-encore"
+              export PATH="$_encore_bin:$PATH"
+
+              if [ -n "''${ENCORE_WORKTREE_NAME:-}" ]; then
                 export SHELL_NAME="encore-dev($ENCORE_WORKTREE_NAME)"
-
                 if [ "''${ENCORE_WORKTREE_NEW:-0}" = "1" ]; then
                   cd "$ENCORE_WORKTREE_DIR"
                 fi
-                unset _wt_bin
               else
                 export SHELL_NAME="''${SHELL_NAME}''${SHELL_NAME:+>}encore-dev"
-
-                export ENCORE_RUNTIMES_PATH=${encoreDev}/encore/runtimes
-                export ENCORE_GOROOT=${encoreDev}/go/dist/linux_amd64/encore-go
-                export ENCORE_TSPARSER_PATH=${cargobin}/tsparser-encore
-                export ENCORE_TSBUNDLER_PATH=${gobin}/tsbundler-encore
               fi
+
+              unset _encore_base _encore_bin
             '';
           };
       };
