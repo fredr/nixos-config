@@ -146,11 +146,6 @@
 
             encoreDev = "/home/fredr/projects/encoredev";
 
-            gotoCommand = pkgs.writeShellScriptBin "encore-dir" ''
-              #!${pkgs.bash}/bin/bash
-              src_dir="''${ENCORE_WORKTREE_DIR:-${encoreDev}/encore}"
-              cd "$src_dir"
-            '';
             buildCommand = pkgs.writeShellScriptBin "encore-build-all" ''
               #!${pkgs.bash}/bin/bash
               src_dir="''${ENCORE_WORKTREE_DIR:-${encoreDev}/encore}"
@@ -172,7 +167,6 @@
             packages = [
               pkgs.mypkgs.stringer
               buildCommand
-              gotoCommand
               protobuf
               protoc-gen-go
               protoc-gen-go-grpc
@@ -193,6 +187,7 @@
               export ENCORE_TSPARSER_PATH="$_encore_bin/tsparser-encore"
               export ENCORE_TSBUNDLER_PATH="$_encore_bin/tsbundler-encore"
               export PATH="$_encore_bin:$PATH"
+              export ENCORE_DEV_DIR="$_encore_base"
 
               if [ -n "''${ENCORE_WORKTREE_NAME:-}" ]; then
                 export SHELL_NAME="encore-dev($ENCORE_WORKTREE_NAME)"

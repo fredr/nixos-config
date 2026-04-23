@@ -113,6 +113,14 @@
         fi
       }
 
+      function encore-dir() {
+        if [ -z "''${ENCORE_DEV_DIR:-}" ]; then
+          echo "encore-dir: not inside an encore-dev shell" >&2
+          return 1
+        fi
+        cd "$ENCORE_DEV_DIR"
+      }
+
       # helper for converting encore protos to json, proto type is the argument
       function encore-buf() {
         (cd ~/projects/encoredev/encore/proto ; buf convert --type $1 | jq)
