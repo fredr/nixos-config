@@ -127,7 +127,7 @@
       }
 
       # for cross compilation to windows
-      export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_RUSTFLAGS="-L native=${pkgs.pkgsCross.mingwW64.windows.pthreads}/lib";
+      export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_RUSTFLAGS="-L native=${pkgs.pkgsCross.mingwW64.windows.pthreads}/lib -L native=${pkgs.pkgsCross.mingwW64.windows.mcfgthreads}/lib -C link-arg=-lmcfgthread";
 
       # for building boring-sys etc
       export LIBCLANG_PATH="${pkgs.llvmPackages.libclang.lib}/lib";
