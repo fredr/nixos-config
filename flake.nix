@@ -146,6 +146,11 @@
 
             encoreDev = "/home/fredr/projects/encoredev";
 
+            gotoCommand = pkgs.writeShellScriptBin "encore-dir" ''
+              #!${pkgs.bash}/bin/bash
+              src_dir="''${ENCORE_WORKTREE_DIR:-${encoreDev}/encore}"
+              cd "$src_dir"
+            '';
             buildCommand = pkgs.writeShellScriptBin "encore-build-all" ''
               #!${pkgs.bash}/bin/bash
               src_dir="''${ENCORE_WORKTREE_DIR:-${encoreDev}/encore}"
@@ -167,6 +172,7 @@
             packages = [
               pkgs.mypkgs.stringer
               buildCommand
+              gotoCommand
               protobuf
               protoc-gen-go
               protoc-gen-go-grpc
