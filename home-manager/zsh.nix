@@ -126,6 +126,16 @@
         (cd ~/projects/encoredev/encore/proto ; buf convert --type $1 | jq)
       }
 
+      # cross-compile a go package to windows/amd64 with cgo via the mingw-w64 toolchain
+      function gowinbuild() {
+        CC=x86_64-w64-mingw32-gcc \
+        CXX=x86_64-w64-mingw32-g++ \
+        CGO_ENABLED=1 \
+        GOOS=windows \
+        GOARCH=amd64 \
+          go build "$@"
+      }
+
       # for cross compilation to windows
       export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_RUSTFLAGS="-L native=${pkgs.pkgsCross.mingwW64.windows.pthreads}/lib -L native=${pkgs.pkgsCross.mingwW64.windows.mcfgthreads}/lib -C link-arg=-lmcfgthread";
 
