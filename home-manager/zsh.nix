@@ -129,6 +129,16 @@
       # for cross compilation to windows
       export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_RUSTFLAGS="-L native=${pkgs.pkgsCross.mingwW64.windows.pthreads}/lib -L native=${pkgs.pkgsCross.mingwW64.windows.mcfgthreads}/lib -C link-arg=-lmcfgthread";
 
+      # napi-build requires a real Windows libnode.dll when cross-compiling
+      # napi addons to x86_64-pc-windows-gnu. Official Node.js Windows builds
+      # don't ship one, so use a prebuilt shared-library Node from
+      # github.com/alshdavid/libnode-prebuilt.
+      export LIBNODE_PATH="${pkgs.fetchzip {
+        url = "https://github.com/alshdavid/libnode-prebuilt/releases/download/v22.18.0/libnode-windows-amd64.tar.gz";
+        hash = "sha256-ED8F0HIdLAc2fd9l77Ox9D247bRusvs6+XAfXdglWQU=";
+        stripRoot = false;
+      }}";
+
       # for building boring-sys etc
       export LIBCLANG_PATH="${pkgs.llvmPackages.libclang.lib}/lib";
 
