@@ -83,6 +83,7 @@
     buf
     clickhouse
     dust
+    grpcurl
 
     openssl
     gnumake

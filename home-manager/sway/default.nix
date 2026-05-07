@@ -6,6 +6,7 @@
 
   home.packages = with pkgs; [
     wl-clipboard
+    xclip
     nwg-displays
     sway-contrib.grimshot
     chayang
