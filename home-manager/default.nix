@@ -84,6 +84,7 @@
     clickhouse
     dust
     grpcurl
+    bubblewrap
 
     openssl
     gnumake
