@@ -45,6 +45,9 @@
   networking.firewall.enable = true;
   # networking.firewall.allowedTCPPorts = [ 1111 ];
 
+  # nftables
+  networking.nftables.enable = true;
+
   # Set your time zone.
   time.timeZone = "Europe/Stockholm";
 

@@ -85,6 +85,7 @@
     dust
     grpcurl
     bubblewrap
+    libsecret
 
     openssl
     gnumake
