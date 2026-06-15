@@ -45,7 +45,6 @@
 
     slack
     discord
-    zulip
 
     dconf
     grim
