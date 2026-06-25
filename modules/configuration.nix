@@ -43,7 +43,7 @@
 
   # Firewall
   networking.firewall.enable = true;
-  # networking.firewall.allowedTCPPorts = [ 1111 ];
+  networking.firewall.allowedTCPPorts = [ 1420 1421 ];
 
   # nftables
   networking.nftables.enable = true;
