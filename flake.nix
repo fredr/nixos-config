@@ -63,11 +63,20 @@
         };
       };
 
+      # On Linux, nixpkgs builds electron_40/41/42 from source (Chromium), which
+      # Hydra often hasn't cached yet, forcing slow local compiles. Use the
+      # cached upstream prebuilt binaries instead.
+      electron-bin-fix = final: prev: {
+        electron_40 = prev.electron_40-bin;
+        electron_41 = prev.electron_41-bin;
+      };
+
       overlays = {
         nixpkgs.overlays = [
           nur.overlays.default
           unstable-packages
           obsidian-fix
+          electron-bin-fix
           mypkgs
         ];
       };
