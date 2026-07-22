@@ -153,6 +153,16 @@
 
   programs.steam.enable = true;
 
+  # Enforce Chromium's Local Network Access checks so public sites that reach
+  # loopback/LAN addresses (e.g. fetch('http://127.0.0.1:9800/')) trigger the
+  # permission prompt instead of silently connecting.
+  programs.chromium = {
+    enable = true;
+    extraOpts = {
+      "LocalNetworkAccessRestrictionsEnabled" = true;
+    };
+  };
+
   services.tailscale = {
     enable = true;
     package = pkgs.tailscale;

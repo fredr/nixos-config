@@ -13,6 +13,16 @@ in
   programs.firefox = {
     enable = true;
 
+    # Gate local network / loopback access (e.g. a public site doing
+    # fetch('http://127.0.0.1:9800/')) behind a user permission prompt.
+    policies = {
+      LocalNetworkAccess = {
+        Enabled = true;
+        EnablePrompting = true;
+        BlockTrackers = true;
+      };
+    };
+
     profiles = {
       default = {
         id = 0;
