@@ -13,14 +13,50 @@ in
   programs.firefox = {
     enable = true;
 
-    # Gate local network / loopback access (e.g. a public site doing
-    # fetch('http://127.0.0.1:9800/')) behind a user permission prompt.
     policies = {
+      # Gate local network / loopback access (e.g. a public site doing
+      # fetch('http://127.0.0.1:8080/')) behind a user permission prompt.
       LocalNetworkAccess = {
         Enabled = true;
         EnablePrompting = true;
         BlockTrackers = true;
       };
+
+      # Force HTTPS everywhere.
+      HttpsOnlyMode = "force_enabled";
+
+      # Encrypted DNS via Cloudflare. Mode is DoH-with-fallback, and ts.net is
+      # excluded so Tailscale MagicDNS names keep resolving via the system.
+      DNSOverHTTPS = {
+        Enabled = true;
+        ProviderURL = "https://mozilla.cloudflare-dns.com/dns-query";
+        Locked = false;
+        ExcludedDomains = [ "ts.net" ];
+      };
+
+      # Reject tracker + third-party cookies (partition the rest).
+      Cookies = {
+        Behavior = "reject-tracker-and-partition-foreign";
+      };
+
+      # Strict tracking protection incl. crypto-mining and fingerprinting.
+      EnableTrackingProtection = {
+        Value = true;
+        Cryptomining = true;
+        Fingerprinting = true;
+      };
+
+      # Post-quantum key agreement for TLS.
+      PostQuantumKeyAgreementEnabled = true;
+
+      # Kill telemetry / studies.
+      DisableTelemetry = true;
+      DisableFirefoxStudies = true;
+
+      # Reduce background chatter / stored history.
+      NetworkPrediction = false;
+      DisableFormHistory = true;
+      SearchSuggestEnabled = false;
     };
 
     profiles = {

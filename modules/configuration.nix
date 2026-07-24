@@ -153,13 +153,43 @@
 
   programs.steam.enable = true;
 
-  # Enforce Chromium's Local Network Access checks so public sites that reach
-  # loopback/LAN addresses (e.g. fetch('http://127.0.0.1:9800/')) trigger the
-  # permission prompt instead of silently connecting.
+  # Managed browser policies. The programs.chromium module writes the policy
+  # file to Chromium's, Google Chrome's, and Brave's managed-policy paths, so
+  # these apply to google-chrome (installed via home-manager) as well.
   programs.chromium = {
     enable = true;
     extraOpts = {
+      # Enforce Local Network Access checks so public sites that reach
+      # loopback/LAN addresses (e.g. fetch('http://127.0.0.1:8080/')) trigger
+      # the permission prompt instead of silently connecting.
       "LocalNetworkAccessRestrictionsEnabled" = true;
+
+      # Force HTTPS everywhere.
+      "HttpsOnlyMode" = "force_enabled";
+
+      # Encrypted DNS via Cloudflare, with insecure fallback (keeps Tailscale
+      # MagicDNS working: on DoH failure it falls back to the system resolver).
+      "DnsOverHttpsMode" = "automatic";
+      "DnsOverHttpsTemplates" = "https://cloudflare-dns.com/dns-query";
+
+      # Block third-party cookies.
+      "BlockThirdPartyCookies" = true;
+
+      # Post-quantum key agreement for TLS.
+      "PostQuantumKeyAgreementEnabled" = true;
+
+      # Kill usage/metrics reporting.
+      "MetricsReportingEnabled" = false;
+
+      # Block dangerous/malicious downloads.
+      "DownloadRestrictions" = 1;
+
+      # Disable Chrome Remote Desktop firewall traversal.
+      "RemoteAccessHostFirewallTraversal" = false;
+
+      # Block geolocation and notifications by default (no prompt spam).
+      "DefaultGeolocationSetting" = 2;
+      "DefaultNotificationsSetting" = 2;
     };
   };
 

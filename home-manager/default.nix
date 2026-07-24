@@ -127,7 +127,7 @@
     obs-studio
     mplayer
     spotify
-    chromium
+    google-chrome
 
     mypkgs.mirror
 
