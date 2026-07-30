@@ -19,10 +19,17 @@
   # No services.xserver here: this is a Wayland-only session. XWayland comes
   # from sway's own wrapper, so X11 clients (steam, xclip) still work.
   #
-  # services.xserver used to pull in services.graphical-desktop, which is what
-  # set this; without it fonts.packages is empty and you lose DejaVu, Liberation
-  # and the Noto colour emoji font. hardware.graphics and the xdg.* bits are
-  # still enabled by other modules, so this is the only piece worth restoring.
+  # But services.xserver used to pull in services.graphical-desktop, and nothing
+  # else in this config sets what that turned on, so both of these have to be
+  # declared explicitly:
+  #
+  # - hardware.graphics is what creates the /run/opengl-driver symlink. Without
+  #   it there is no Mesa EGL/GBM for wlroots to find, so `exec sway` on tty1
+  #   dies with a renderer error and drops you straight back to the login
+  #   prompt. Not optional.
+  # - fonts.enableDefaultPackages, or fonts.packages is empty and you lose
+  #   DejaVu, Liberation and the Noto colour emoji font.
+  hardware.graphics.enable = true;
   fonts.enableDefaultPackages = true;
 
   # Start sway on login at the first tty; sway itself is configured in
