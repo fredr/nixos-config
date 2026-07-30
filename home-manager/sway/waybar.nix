@@ -52,7 +52,7 @@
           on-scroll-up = "${pkgs.playerctl}/bin/playerctl volume 0.05+";
           on-scroll-down = "${pkgs.playerctl}/bin/playerctl volume 0.05-";
         };
-"privacy" = {
+        "privacy" = {
           icon-spacing = 4;
           icon-size = 14;
           transition-duration = 250;

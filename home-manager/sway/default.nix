@@ -1,4 +1,4 @@
-{ pkgs, lib, config, ... }: {
+{ pkgs, lib, ... }: {
   # Protect sway-related services from systemd-oomd
   systemd.user.services.waybar.Service.ManagedOOMPreference = "avoid";
   systemd.user.services.swayidle.Service.ManagedOOMPreference = "avoid";
@@ -11,7 +11,6 @@
     chayang
     swayimg
     gcr # Provides org.gnome.keyring.SystemPrompter
-    jq
     playerctl
   ];
 
@@ -150,10 +149,6 @@
 
   };
 
-  home.file.".config/sway/background.png" = {
-    source = ./background.png;
-  };
-
   wayland.windowManager.sway =
     let
       mod = "Mod4";
@@ -197,8 +192,30 @@
     in
     {
       enable = true;
-      systemd.enable = true;
-      checkConfig = false;
+
+      systemd = {
+        enable = true;
+
+        # Environment imported into the systemd/D-Bus user environment before
+        # sway-session.target starts, so portals and user services see it. The
+        # first eight are the module defaults.
+        variables = [
+          "DISPLAY"
+          "WAYLAND_DISPLAY"
+          "SWAYSOCK"
+          "XDG_CURRENT_DESKTOP"
+          "XDG_SESSION_TYPE"
+          "NIXOS_OZONE_WL"
+          "XCURSOR_THEME"
+          "XCURSOR_SIZE"
+
+          "SSH_AUTH_SOCK"
+          "PATH"
+          "XDG_DATA_DIRS"
+          "XDG_CONFIG_DIRS"
+          "GIO_EXTRA_MODULES"
+        ];
+      };
 
       extraSessionCommands = ''
         # Set SSH_AUTH_SOCK to gnome-keyring's SSH agent socket
@@ -206,10 +223,6 @@
 
         # flickering in zed, see https://github.com/swaywm/sway/issues/8755
         export WLR_RENDER_NO_EXPLICIT_SYNC=1
-
-        # Import environment into systemd to ensure portals and other services get correct variables
-        systemctl --user import-environment SSH_AUTH_SOCK PATH XDG_DATA_DIRS XDG_CONFIG_DIRS GIO_EXTRA_MODULES
-        dbus-update-activation-environment --systemd SSH_AUTH_SOCK PATH XDG_DATA_DIRS XDG_CONFIG_DIRS GIO_EXTRA_MODULES
       '';
 
       wrapperFeatures.gtk = true;
@@ -330,7 +343,8 @@
 
         output = {
           "*" = {
-            bg = "${config.xdg.configHome}/sway/background.png center #282828";
+            # Store path, so the wallpaper needs no copy in ~/.config
+            bg = "${./background.png} center #282828";
           };
           eDP-1 = {
             scale = "1";

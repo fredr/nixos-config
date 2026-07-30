@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 {
   home.packages = with pkgs; [
     unstable.package-version-server
@@ -80,7 +80,7 @@
               };
             };
             rust = {
-              analyzerTargetDir = "/home/fredr/rust-analyzer/rust-analyzer-check";
+              analyzerTargetDir = "${config.home.homeDirectory}/rust-analyzer/rust-analyzer-check";
             };
             diagnostics = {
               experimental = {
@@ -110,7 +110,7 @@
         cargo-tom = {
           binary = {
             path = "${pkgs.mypkgs.cargotom}/bin/cargotom";
-            arguments = [ "--storage" "/home/fredr/.cargo-tom" ];
+            arguments = [ "--storage" "${config.home.homeDirectory}/.cargo-tom" ];
           };
         };
         protobuf-language-server = {
@@ -125,7 +125,9 @@
           language_servers = [ "nixd" "!nil" ];
           formatter = {
             external = {
-              command = "nixpkgs-fmt";
+              # nixpkgs-fmt is deprecated upstream; nixfmt is the RFC 166
+              # official formatter and matches `nix fmt` (see flake.nix).
+              command = "nixfmt";
             };
           };
         };

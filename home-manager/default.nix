@@ -16,8 +16,8 @@
   home.homeDirectory = "/home/fredr";
 
   home.sessionVariables = {
+    # Read by Electron/Chromium apps (zed, obsidian, slack, discord, chrome).
     NIXOS_OZONE_WL = "1";
-    MOZ_ENABLE_WAYLAND = "1";
   };
 
   home.packages = with pkgs; [
@@ -46,10 +46,8 @@
     slack
     discord
 
-    dconf
     grim
     slurp
-    dmenu
     kalker
     graphviz
 
@@ -64,7 +62,6 @@
     dive
     websocat
     dig
-    whois
     pulumi
     pulumiPackages.pulumi-go
     cloudflared
@@ -156,11 +153,11 @@
     effortLevel = "high";
   };
 
-  home.file.".config/containers/registries.conf".text = ''
+  xdg.configFile."containers/registries.conf".text = ''
     unqualified-search-registries = ["docker.io"]
   '';
 
-  home.file.".config/dive/config.yaml".text = ''
+  xdg.configFile."dive/config.yaml".text = ''
     container-engine: podman
     source: podman
   '';
@@ -218,12 +215,6 @@
   };
 
   dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
-
-  nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 14d";
-  };
 
   home.stateVersion = "25.11";
 

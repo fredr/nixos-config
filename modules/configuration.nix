@@ -1,4 +1,4 @@
-{ pkgs, host, lib, ... }:
+{ pkgs, host, lib, inputs, ... }:
 {
   imports = [
     ./gc.nix
@@ -25,16 +25,40 @@
     memoryPercent = 50;
   };
 
-  # Userspace OOM killer - acts before system becomes unresponsive
+  # Userspace OOM killer - acts before system becomes unresponsive.
+  # Root + user slices only, matching Fedora: monitoring system.slice
+  # lets oomd kill NetworkManager/dbus/podman, which is worse than the
+  # pressure it relieves.
   systemd.oomd = {
     enable = true;
     enableRootSlice = true;
-    enableSystemSlice = true;
     enableUserSlices = true;
+  };
+
+  # sway is launched from the tty login shell, so it lives in a logind session
+  # scope (/user.slice/user-1000.slice/session-N.scope) along with every GUI app
+  # started from it. That makes the scope by far the largest reclaim candidate
+  # under user.slice, i.e. oomd's first pick would be the entire desktop.
+  # Drop-ins on the "session-" prefix apply to every session-N.scope logind
+  # creates. These scopes are root-owned and so are the monitored ancestors
+  # (-.slice, user.slice), so the xattr is honoured - see the ownership rules in
+  # systemd.resource-control(5). Takes effect on next login.
+  systemd.units."session-.scope" = {
+    overrideStrategy = "asDropin";
+    text = ''
+      [Scope]
+      ManagedOOMPreference=avoid
+    '';
   };
 
   # Enable flakes
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  # Point the CLI at the same nixpkgs the system is built from, so
+  # `nix shell nixpkgs#foo` and `<nixpkgs>` resolve to the locked input
+  # instead of fetching a separate copy.
+  nix.registry.nixpkgs.flake = inputs.nixpkgs;
+  nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
 
   networking.hostName = host.hostname;
 
@@ -43,7 +67,6 @@
 
   # Firewall
   networking.firewall.enable = true;
-  networking.firewall.allowedTCPPorts = [ 1420 1421 ];
 
   # nftables
   networking.nftables.enable = true;
@@ -74,9 +97,7 @@
   # Intel thermal management - prevents throttling
   services.thermald.enable = true;
 
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
-  services.xserver.displayManager.startx.enable = true;
+  fonts.enableDefaultPackages = true;
 
   # Enable gnome-keyring for system-wide secret management
   services.gnome.gnome-keyring.enable = true;
@@ -91,13 +112,8 @@
   # needed for sway installed via home manager to enable swaylock
   security.pam.services.swaylock = { };
 
-  # Configure keymap in X11
-  services.xserver.xkb = {
-    layout = "se";
-    variant = "";
-  };
-
   # Configure console keymap
+  # (the graphical keymap is set per-input in sway, see sway/default.nix)
   console.keyMap = "sv-latin1";
 
   # Enable CUPS to print documents.
@@ -266,8 +282,6 @@
 
   # nested virtualization
   boot.extraModprobeConfig = "options kvm_intel nested=1";
-
-  users.extraGroups.vboxusers.members = [ "fredr" ];
 
   system.activationScripts.report-changes = {
     text = ''

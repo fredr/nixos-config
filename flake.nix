@@ -28,6 +28,8 @@
       home-manager-conf = { host, ... }: {
         home-manager.useGlobalPkgs = true;
         home-manager.useUserPackages = true;
+        # Move a colliding file aside instead of failing activation
+        home-manager.backupFileExtension = "hm-bak";
         home-manager.extraSpecialArgs = { inherit inputs host; };
         home-manager.users.fredr = import ./home-manager;
       };
@@ -128,6 +130,9 @@
           ];
         };
 
+
+      # `nix fmt`
+      formatter."${system}" = pkgs.nixfmt-rfc-style;
 
       devShells."${system}" = {
         encore-rel =

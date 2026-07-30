@@ -2,7 +2,7 @@
   home.packages = with pkgs; [
     gopls
     nixd
-    nixpkgs-fmt
+    nixfmt-rfc-style
     lua-language-server
     # pick neovim from unstable to get 0.10
     unstable.neovim-unwrapped
