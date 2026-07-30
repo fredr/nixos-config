@@ -1,4 +1,11 @@
-{ stdenv, fetchzip, autoPatchelfHook, libtiff, lib }: stdenv.mkDerivation rec {
+{
+  stdenv,
+  fetchzip,
+  autoPatchelfHook,
+  libtiff,
+  lib,
+}:
+stdenv.mkDerivation rec {
   pname = "codelldb";
   version = "v1.11.8";
   # https://github.com/vadimcn/codelldb

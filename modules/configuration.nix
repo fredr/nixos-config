@@ -1,4 +1,10 @@
-{ pkgs, host, lib, inputs, ... }:
+{
+  pkgs,
+  host,
+  lib,
+  inputs,
+  ...
+}:
 {
   imports = [
     ./gc.nix
@@ -52,7 +58,10 @@
   };
 
   # Enable flakes
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
   # Point the CLI at the same nixpkgs the system is built from, so
   # `nix shell nixpkgs#foo` and `<nixpkgs>` resolve to the locked input
@@ -225,7 +234,10 @@
         default = [ "gtk" ];
       };
       sway = {
-        default = [ "wlr" "gtk" ];
+        default = [
+          "wlr"
+          "gtk"
+        ];
         "org.freedesktop.impl.portal.Screenshot" = [ "wlr" ];
         "org.freedesktop.impl.portal.ScreenCast" = [ "wlr" ];
       };
@@ -244,7 +256,12 @@
   users.users.fredr = {
     isNormalUser = true;
     description = "fredr";
-    extraGroups = [ "networkmanager" "wheel" "podman" "libvirtd" ];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "podman"
+      "libvirtd"
+    ];
     packages = [ ];
   };
 
@@ -285,7 +302,12 @@
 
   system.activationScripts.report-changes = {
     text = ''
-      PATH=$PATH:${lib.makeBinPath [pkgs.nix pkgs.nvd]}
+      PATH=$PATH:${
+        lib.makeBinPath [
+          pkgs.nix
+          pkgs.nvd
+        ]
+      }
       ${lib.getExe pkgs.nvd} diff $(ls -d /nix/var/nix/profiles/system-*-link | tail -n 2) || true
     '';
     supportsDryActivation = true;

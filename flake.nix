@@ -21,8 +21,14 @@
     };
   };
 
-
-  outputs = { nixpkgs, nur, home-manager, encore, ... }@inputs:
+  outputs =
+    {
+      nixpkgs,
+      nur,
+      home-manager,
+      encore,
+      ...
+    }@inputs:
     let
       system = "x86_64-linux";
       home-manager-conf = { host, ... }: {
@@ -47,7 +53,10 @@
       # https://github.com/NixOS/nixpkgs/issues/505078
       obsidian-fix = final: prev: {
         obsidian = prev.obsidian.overrideAttrs (old: {
-          nativeBuildInputs = old.nativeBuildInputs ++ [ final.asar final.jq ];
+          nativeBuildInputs = old.nativeBuildInputs ++ [
+            final.asar
+            final.jq
+          ];
           postPatch = (old.postPatch or "") + ''
             mkdir _app
             asar extract ./resources/app.asar ./_app
@@ -109,7 +118,6 @@
           ];
         };
 
-
       nixosConfigurations.slimnix =
         let
           host = {
@@ -130,9 +138,8 @@
           ];
         };
 
-
       # `nix fmt`
-      formatter."${system}" = pkgs.nixfmt-rfc-style;
+      formatter."${system}" = pkgs.nixfmt-tree;
 
       devShells."${system}" = {
         encore-rel =

@@ -1,4 +1,9 @@
-{ rustPlatform, fetchFromGitHub, pkg-config, openssl }:
+{
+  rustPlatform,
+  fetchFromGitHub,
+  pkg-config,
+  openssl,
+}:
 # https://github.com/frederik-uni/cargotom
 
 rustPlatform.buildRustPackage rec {

@@ -139,12 +139,25 @@
     enable = true;
 
     timeouts = [
-      { timeout = 300; command = "${pkgs.chayang}/bin/chayang && ${pkgs.swaylock}/bin/swaylock -f"; }
-      { timeout = 600; command = "${pkgs.sway}/bin/swaymsg \"output * dpms off\""; resumeCommand = "${pkgs.sway}/bin/swaymsg \"output * dpms on\""; }
-      { timeout = 900; command = "${pkgs.systemd}/bin/systemctl suspend"; }
+      {
+        timeout = 300;
+        command = "${pkgs.chayang}/bin/chayang && ${pkgs.swaylock}/bin/swaylock -f";
+      }
+      {
+        timeout = 600;
+        command = "${pkgs.sway}/bin/swaymsg \"output * dpms off\"";
+        resumeCommand = "${pkgs.sway}/bin/swaymsg \"output * dpms on\"";
+      }
+      {
+        timeout = 900;
+        command = "${pkgs.systemd}/bin/systemctl suspend";
+      }
     ];
     events = [
-      { event = "before-sleep"; command = "${pkgs.swaylock}/bin/swaylock -f"; }
+      {
+        event = "before-sleep";
+        command = "${pkgs.swaylock}/bin/swaylock -f";
+      }
     ];
 
   };
@@ -282,7 +295,8 @@
         keybindings = lib.mkOptionDefault {
           "${mod}+Tab" = "exec ${rofi} -show window";
           "${mod}+Shift+c" = "exec ${reload_sway}";
-          "${mod}+Shift+Escape" = "exec swaynag -t warning -m 'Lock system?' -B 'Yes' 'swaylock -f; pkill swaynag'";
+          "${mod}+Shift+Escape" =
+            "exec swaynag -t warning -m 'Lock system?' -B 'Yes' 'swaylock -f; pkill swaynag'";
 
           # Print selection to clipboard
           "Print" = "exec ${slurp} | ${grim} -g - - | wl-copy -t image/png";
@@ -302,15 +316,21 @@
         # Window commands (for_window rules)
         window.commands = [
           {
-            criteria = { app_id = "scratchpad_terminal"; };
+            criteria = {
+              app_id = "scratchpad_terminal";
+            };
             command = "move scratchpad, scratchpad show";
           }
           {
-            criteria = { app_id = "obsidian"; };
+            criteria = {
+              app_id = "obsidian";
+            };
             command = "move scratchpad, scratchpad show";
           }
           {
-            criteria = { app_id = "scratchpad_firefox"; };
+            criteria = {
+              app_id = "scratchpad_firefox";
+            };
             command = "move scratchpad, scratchpad show";
           }
         ];
@@ -321,8 +341,14 @@
         bars = [ ];
 
         workspaceOutputAssign = [
-          { workspace = "1"; output = "eDP-1"; }
-          { workspace = "10"; output = "HDMI-A-1"; }
+          {
+            workspace = "1";
+            output = "eDP-1";
+          }
+          {
+            workspace = "10";
+            output = "HDMI-A-1";
+          }
         ];
 
         gaps = {

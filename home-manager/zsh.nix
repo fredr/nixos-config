@@ -28,8 +28,7 @@
     LIBCLANG_PATH = "${pkgs.llvmPackages.libclang.lib}/lib";
 
     # bindgen needs mingw headers when cross-compiling to windows
-    BINDGEN_EXTRA_CLANG_ARGS_x86_64_pc_windows_gnu =
-      "-isystem ${pkgs.pkgsCross.mingwW64.stdenv.cc.libc.dev}/include";
+    BINDGEN_EXTRA_CLANG_ARGS_x86_64_pc_windows_gnu = "-isystem ${pkgs.pkgsCross.mingwW64.stdenv.cc.libc.dev}/include";
   };
 
   programs.zsh = {

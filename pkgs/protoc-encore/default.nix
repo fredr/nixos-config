@@ -1,4 +1,8 @@
-{ stdenv, fetchzip, autoPatchelfHook }:
+{
+  stdenv,
+  fetchzip,
+  autoPatchelfHook,
+}:
 
 stdenv.mkDerivation rec {
   pname = "protoc-encore";

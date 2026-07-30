@@ -15,7 +15,10 @@
       };
 
       window = {
-        padding = { x = 10; y = 10; };
+        padding = {
+          x = 10;
+          y = 10;
+        };
         dynamic_padding = true;
         opacity = 0.95;
       };
@@ -36,13 +39,28 @@
           cursor = "#b4befe";
         };
         search = {
-          matches = { foreground = "#1e1e2e"; background = "#a6adc8"; };
-          focused_match = { foreground = "#1e1e2e"; background = "#a6e3a1"; };
+          matches = {
+            foreground = "#1e1e2e";
+            background = "#a6adc8";
+          };
+          focused_match = {
+            foreground = "#1e1e2e";
+            background = "#a6e3a1";
+          };
         };
-        footer_bar = { foreground = "#1e1e2e"; background = "#a6adc8"; };
+        footer_bar = {
+          foreground = "#1e1e2e";
+          background = "#a6adc8";
+        };
         hints = {
-          start = { foreground = "#1e1e2e"; background = "#f9e2af"; };
-          end = { foreground = "#1e1e2e"; background = "#a6adc8"; };
+          start = {
+            foreground = "#1e1e2e";
+            background = "#f9e2af";
+          };
+          end = {
+            foreground = "#1e1e2e";
+            background = "#a6adc8";
+          };
         };
         selection = {
           text = "#1e1e2e";
@@ -82,8 +100,16 @@
 
       scrolling.multiplier = 5;
       keyboard.bindings = [
-        { key = "N"; mods = "Control|Shift"; action = "SpawnNewInstance"; }
-        { key = "Return"; mods = "Shift"; chars = "\\u000a"; }
+        {
+          key = "N";
+          mods = "Control|Shift";
+          action = "SpawnNewInstance";
+        }
+        {
+          key = "Return";
+          mods = "Shift";
+          chars = "\\u000a";
+        }
       ];
     };
   };

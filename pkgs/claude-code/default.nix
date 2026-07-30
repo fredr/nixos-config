@@ -1,4 +1,14 @@
-{ lib, stdenv, fetchurl, makeBinaryWrapper, autoPatchelfHook, procps, ripgrep, bubblewrap, socat }:
+{
+  lib,
+  stdenv,
+  fetchurl,
+  makeBinaryWrapper,
+  autoPatchelfHook,
+  procps,
+  ripgrep,
+  bubblewrap,
+  socat,
+}:
 
 # check https://downloads.claude.ai/claude-code-releases/latest
 # nix-prefetch-url https://downloads.claude.ai/claude-code-releases/<VERSION>/linux-x64/claude
@@ -20,7 +30,10 @@ stdenv.mkDerivation {
   dontUnpack = true;
   dontStrip = true; # stripping corrupts the embedded Bun trailer
 
-  nativeBuildInputs = [ makeBinaryWrapper autoPatchelfHook ];
+  nativeBuildInputs = [
+    makeBinaryWrapper
+    autoPatchelfHook
+  ];
 
   installPhase = ''
     mkdir -p $out/bin
@@ -29,7 +42,14 @@ stdenv.mkDerivation {
       --set DISABLE_AUTOUPDATER 1 \
       --set DISABLE_INSTALLATION_CHECKS 1 \
       --set USE_BUILTIN_RIPGREP 0 \
-      --prefix PATH : ${lib.makeBinPath [ procps ripgrep bubblewrap socat ]}
+      --prefix PATH : ${
+        lib.makeBinPath [
+          procps
+          ripgrep
+          bubblewrap
+          socat
+        ]
+      }
   '';
 
   meta = {

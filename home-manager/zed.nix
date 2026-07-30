@@ -7,7 +7,8 @@
     mypkgs.delve-shim-dap
   ];
 
-  home.file.".local/share/zed/debug_adapters/delve-shim-dap/delve-shim-dap_${pkgs.mypkgs.delve-shim-dap.version}/delve-shim-dap".source = "${pkgs.mypkgs.delve-shim-dap}/bin/delve-shim-dap";
+  home.file.".local/share/zed/debug_adapters/delve-shim-dap/delve-shim-dap_${pkgs.mypkgs.delve-shim-dap.version}/delve-shim-dap".source =
+    "${pkgs.mypkgs.delve-shim-dap}/bin/delve-shim-dap";
   home.file.".local/share/zed/debug_adapters/delve-shim-dap/dlv".source = "${pkgs.delve}/bin/dlv";
 
   programs.zed-editor = {
@@ -110,7 +111,10 @@
         cargo-tom = {
           binary = {
             path = "${pkgs.mypkgs.cargotom}/bin/cargotom";
-            arguments = [ "--storage" "${config.home.homeDirectory}/.cargo-tom" ];
+            arguments = [
+              "--storage"
+              "${config.home.homeDirectory}/.cargo-tom"
+            ];
           };
         };
         protobuf-language-server = {
@@ -122,7 +126,10 @@
 
       languages = {
         Nix = {
-          language_servers = [ "nixd" "!nil" ];
+          language_servers = [
+            "nixd"
+            "!nil"
+          ];
           formatter = {
             external = {
               # nixpkgs-fmt is deprecated upstream; nixfmt is the RFC 166

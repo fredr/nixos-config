@@ -17,9 +17,29 @@
         margin-left = 10;
         margin-right = 10;
         spacing = 0;
-        modules-left = [ "sway/workspaces" "sway/mode" "sway/scratchpad" "sway/window" "mpris" ];
+        modules-left = [
+          "sway/workspaces"
+          "sway/mode"
+          "sway/scratchpad"
+          "sway/window"
+          "mpris"
+        ];
         modules-center = [ ];
-        modules-right = [ "privacy" "idle_inhibitor" "pulseaudio" "bluetooth" "network" "cpu" "memory" "backlight" "sway/language" "battery" "battery#bat2" "clock" "tray" ];
+        modules-right = [
+          "privacy"
+          "idle_inhibitor"
+          "pulseaudio"
+          "bluetooth"
+          "network"
+          "cpu"
+          "memory"
+          "backlight"
+          "sway/language"
+          "battery"
+          "battery#bat2"
+          "clock"
+          "tray"
+        ];
 
         "sway/workspaces" = {
           disable-scroll = true;
@@ -31,7 +51,10 @@
         "sway/scratchpad" = {
           format = "{icon} {count}";
           show-empty = false;
-          format-icons = [ "󰖲" "󰖲" ];
+          format-icons = [
+            "󰖲"
+            "󰖲"
+          ];
           tooltip = true;
           tooltip-format = "{app}: {title}";
         };
@@ -57,9 +80,21 @@
           icon-size = 14;
           transition-duration = 250;
           modules = [
-            { type = "screenshare"; tooltip = true; tooltip-icon-size = 20; }
-            { type = "audio-in"; tooltip = true; tooltip-icon-size = 20; }
-            { type = "audio-out"; tooltip = true; tooltip-icon-size = 20; }
+            {
+              type = "screenshare";
+              tooltip = true;
+              tooltip-icon-size = 20;
+            }
+            {
+              type = "audio-in";
+              tooltip = true;
+              tooltip-icon-size = 20;
+            }
+            {
+              type = "audio-out";
+              tooltip = true;
+              tooltip-icon-size = 20;
+            }
           ];
         };
         idle_inhibitor = {
@@ -75,7 +110,11 @@
           format-muted = "󰝟";
           format-icons = {
             headphone = "󰋋";
-            default = [ "󰕿" "󰖀" "󰕾" ];
+            default = [
+              "󰕿"
+              "󰖀"
+              "󰕾"
+            ];
           };
           scroll-step = 5;
           on-click = "${pkgs.pavucontrol}/bin/pavucontrol";
@@ -104,7 +143,11 @@
         };
         "backlight" = {
           format = "{icon}";
-          format-icons = [ "󰃞" "󰃟" "󰃠" ];
+          format-icons = [
+            "󰃞"
+            "󰃟"
+            "󰃠"
+          ];
           scroll-step = 5;
         };
         "battery" = {
@@ -116,8 +159,30 @@
           format-charging = "{icon}";
           format-plugged = "󰂄";
           format-alt = "{icon} {capacity}% {time}";
-          format-icons = [ "󰁺" "󰁻" "󰁼" "󰁽" "󰁾" "󰁿" "󰂀" "󰂁" "󰂂" "󰁹" ];
-          format-charging-icons = [ "󰢜" "󰂆" "󰂇" "󰂈" "󰢝" "󰂉" "󰢞" "󰂊" "󰂋" "󰂅" ];
+          format-icons = [
+            "󰁺"
+            "󰁻"
+            "󰁼"
+            "󰁽"
+            "󰁾"
+            "󰁿"
+            "󰂀"
+            "󰂁"
+            "󰂂"
+            "󰁹"
+          ];
+          format-charging-icons = [
+            "󰢜"
+            "󰂆"
+            "󰂇"
+            "󰂈"
+            "󰢝"
+            "󰂉"
+            "󰢞"
+            "󰂊"
+            "󰂋"
+            "󰂅"
+          ];
           tooltip-format = "{capacity}% - {timeTo}";
         };
         "battery#bat2" = {
@@ -137,7 +202,12 @@
         };
         "network" = {
           format-wifi = "{icon}";
-          format-icons = [ "󰤟" "󰤢" "󰤥" "󰤨" ];
+          format-icons = [
+            "󰤟"
+            "󰤢"
+            "󰤥"
+            "󰤨"
+          ];
           format-ethernet = "󰈀";
           tooltip-format-wifi = "{essid} ({signalStrength}%)";
           tooltip-format = "{ifname} via {gwaddr}";
