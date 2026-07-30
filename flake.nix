@@ -96,52 +96,122 @@
         inherit system;
         overlays = [ mypkgs ];
       };
+
+      # A host is its hostname plus the ssh key it signs commits with.
+      # ./hosts/<hostname> picks which of the ./modules/* roles it wants.
+      mkHost =
+        { hostname, pubKey }:
+        nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            inherit inputs;
+            host = { inherit hostname pubKey; };
+          };
+
+          modules = [
+            { nixpkgs.hostPlatform = system; }
+            ./hosts/${hostname}
+            home-manager.nixosModules.home-manager
+            home-manager-conf
+            overlays
+          ];
+        };
     in
     {
-      nixosConfigurations.flatnix =
-        let
-          host = {
-            hostname = "flatnix";
-            pubKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOpKQ7mHkk7LXzlV95YahAg76K6llq2QFAKVqiiSMoHm";
-          };
-        in
-        nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs host; };
-
-          modules = [
-            { nixpkgs.hostPlatform = system; }
-            ./modules/configuration.nix
-            ./hosts/flatnix
-            home-manager.nixosModules.home-manager
-            home-manager-conf
-            overlays
-          ];
+      nixosConfigurations = {
+        flatnix = mkHost {
+          hostname = "flatnix";
+          pubKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOpKQ7mHkk7LXzlV95YahAg76K6llq2QFAKVqiiSMoHm";
         };
 
-      nixosConfigurations.slimnix =
-        let
-          host = {
-            hostname = "slimnix";
-            pubKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJypu216HqvuovQMbSesFBOOp+NEA/egmhS32pE7CRjw";
-          };
-        in
-        nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs host; };
-
-          modules = [
-            { nixpkgs.hostPlatform = system; }
-            ./modules/configuration.nix
-            ./hosts/slimnix
-            home-manager.nixosModules.home-manager
-            home-manager-conf
-            overlays
-          ];
+        slimnix = mkHost {
+          hostname = "slimnix";
+          pubKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJypu216HqvuovQMbSesFBOOp+NEA/egmhS32pE7CRjw";
         };
+      };
 
       # `nix fmt`
       formatter."${system}" = pkgs.nixfmt-tree;
 
       devShells."${system}" = {
+        # Cross-compiling to x86_64-pc-windows-gnu. The mingw toolchain and
+        # these three variables used to sit in the global profile and login
+        # environment; they are only ever needed for a Windows target.
+        # LIBCLANG_PATH stays global on purpose - bindgen wants it for any
+        # target, not just this one.
+        windows-cross =
+          let
+            mingwCC = pkgs.pkgsCross.mingwW64.stdenv.cc.override {
+              extraBuildCommands = ''
+                printf '%s ' '-L${pkgs.pkgsCross.mingwW64.windows.mcfgthreads}/lib' >> $out/nix-support/cc-ldflags
+                printf '%s ' '-isystem ${pkgs.pkgsCross.mingwW64.windows.pthreads}/include' >> $out/nix-support/cc-cflags-before
+                printf '%s ' '-isystem ${pkgs.pkgsCross.mingwW64.windows.mcfgthreads.dev}/include' >> $out/nix-support/cc-cflags-before
+              '';
+            };
+
+            # napi-build requires a real Windows libnode.dll when
+            # cross-compiling napi addons. Official Node.js Windows builds don't
+            # ship one, so use a prebuilt shared-library Node from
+            # github.com/alshdavid/libnode-prebuilt.
+            libnode = pkgs.fetchzip {
+              url = "https://github.com/alshdavid/libnode-prebuilt/releases/download/v22.18.0/libnode-windows-amd64.tar.gz";
+              hash = "sha256-ED8F0HIdLAc2fd9l77Ox9D247bRusvs6+XAfXdglWQU=";
+              stripRoot = false;
+            };
+
+            # A script rather than a zsh function, so it survives
+            # `nix develop -c zsh` (shellHook runs in bash).
+            gowinbuild = pkgs.writeShellApplication {
+              name = "gowinbuild";
+              runtimeInputs = [ mingwCC ];
+              text = ''
+                CC=x86_64-w64-mingw32-gcc \
+                CXX=x86_64-w64-mingw32-g++ \
+                CGO_ENABLED=1 \
+                GOOS=windows \
+                GOARCH=amd64 \
+                  go build "$@"
+              '';
+            };
+          in
+          pkgs.mkShellNoCC {
+            packages = [
+              mingwCC
+              gowinbuild
+            ];
+
+            env = {
+              CARGO_TARGET_X86_64_PC_WINDOWS_GNU_RUSTFLAGS =
+                "-L native=${pkgs.pkgsCross.mingwW64.windows.pthreads}/lib "
+                + "-L native=${pkgs.pkgsCross.mingwW64.windows.mcfgthreads}/lib "
+                + "-C link-arg=-lmcfgthread";
+
+              LIBNODE_PATH = "${libnode}";
+
+              # bindgen needs mingw headers when cross-compiling to windows
+              BINDGEN_EXTRA_CLANG_ARGS_x86_64_pc_windows_gnu = "-isystem ${pkgs.pkgsCross.mingwW64.stdenv.cc.libc.dev}/include";
+            };
+
+            shellHook = ''
+              export SHELL_NAME="''${SHELL_NAME}''${SHELL_NAME:+>}windows-cross"
+            '';
+          };
+
+        # Per-project services and tooling, kept out of the global profile
+        # because they are large and only wanted inside specific projects.
+        project-tools = pkgs.mkShellNoCC {
+          packages = [
+            pkgs.clickhouse
+            pkgs.cbtemulator
+            pkgs.firecracker
+            pkgs.pulumi
+            pkgs.pulumiPackages.pulumi-go
+          ];
+
+          shellHook = ''
+            export SHELL_NAME="''${SHELL_NAME}''${SHELL_NAME:+>}project-tools"
+          '';
+        };
+
         encore-rel =
           let
             encore-pkgs = import nixpkgs {

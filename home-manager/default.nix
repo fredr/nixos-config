@@ -62,8 +62,6 @@
     dive
     websocat
     dig
-    pulumi
-    pulumiPackages.pulumi-go
     cloudflared
     podman-compose
     (runCommand "podman-docker-compose-compat" { } ''
@@ -72,12 +70,9 @@
     '')
     podman-desktop
     podman-tui
-    cbtemulator
     overmind
-    firecracker
     pgcli
     buf
-    clickhouse
     dust
     grpcurl
     bubblewrap
@@ -92,13 +87,6 @@
     gcc
     llvm
     rustup
-    (pkgsCross.mingwW64.stdenv.cc.override {
-      extraBuildCommands = ''
-        printf '%s ' '-L${pkgsCross.mingwW64.windows.mcfgthreads}/lib' >> $out/nix-support/cc-ldflags
-        printf '%s ' '-isystem ${pkgsCross.mingwW64.windows.pthreads}/include' >> $out/nix-support/cc-cflags-before
-        printf '%s ' '-isystem ${pkgsCross.mingwW64.windows.mcfgthreads.dev}/include' >> $out/nix-support/cc-cflags-before
-      '';
-    })
     go
     bun
     nodejs_22
