@@ -50,19 +50,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
   end,
 })
 
--- Rust-specific keymap overrides (registered after base LspAttach, so it fires second)
-vim.api.nvim_create_autocmd('LspAttach', {
-  callback = function(args)
-    local client = vim.lsp.get_client_by_id(args.data.client_id)
-    if client.name ~= 'rust_analyzer' then return end
-    local bufnr = args.buf
-    vim.keymap.set('n', '<leader>ca', '<Cmd>RustLsp codeAction<CR>',
-      { buffer = bufnr, desc = '(rs)LSP: [C]ode [A]ction' })
-    vim.keymap.set('n', 'K', '<Cmd>RustLsp hover actions<CR>',
-      { buffer = bufnr, desc = '(rs)LSP: Hover Documentation' })
-  end,
-})
-
 -- Server configurations (nvim-lspconfig provides cmd/filetypes/root_markers)
 vim.lsp.config('lua_ls', {
   settings = {
@@ -88,33 +75,3 @@ vim.lsp.config('nixd', {
 })
 
 vim.lsp.enable({ 'gopls', 'lua_ls', 'nixd' })
-
-vim.g.rustaceanvim = {
-  -- LSP configuration
-  server = {
-    default_settings = {
-      -- rust-analyzer language server configuration
-      ['rust-analyzer'] = {
-        procMacro = {
-          enable = true,
-        },
-        diagnostics = {
-          enable = true,
-          enableExperimental = true,
-        },
-        cargo = {
-          allFeatures = true,
-          autoreload = true,
-          runBuildScripts = true,
-        },
-        checkOnSave = {
-          command = "clippy",
-          enable = true,
-          extraArgs = { "--target-dir", "/home/fredr/rust-analyzer/rust-analyzer-check" },
-        },
-      },
-    },
-  },
-}
-
-require("typescript-tools").setup {}

@@ -4,9 +4,6 @@
     nixd
     nixfmt-rfc-style
     lua-language-server
-    # pick neovim from unstable to get 0.10
-    unstable.neovim-unwrapped
-    prettierd
   ];
 
   programs.neovim =
@@ -24,6 +21,8 @@
 
       package = neovim-unwrapped;
 
+      withRuby = false;
+
       plugins = with pkgs.unstable.vimPlugins; [
         vim-fugitive
         vim-rhubarb
@@ -35,23 +34,6 @@
             require("fidget").setup {}
           '';
         }
-        {
-          plugin = conform-nvim;
-          type = "lua";
-          config = ''
-            require("conform").setup({
-              formatters_by_ft = {
-                javascript = { "prettierd" },
-                typescript = { "prettierd" },
-              },
-              format_on_save = {
-                timeout_ms = 500,
-                lsp_fallback = true,
-              },
-            })
-          '';
-        }
-
         (nvim-treesitter.withPlugins (
           plugins: with plugins; [
             nix
@@ -70,10 +52,6 @@
         ))
         nvim-treesitter-textobjects
         nvim-treesitter-context
-
-        rust-vim
-        rustaceanvim
-        typescript-tools-nvim
 
         {
           plugin = nvim-lspconfig;
@@ -110,25 +88,7 @@
         nordic-nvim
 
         vim-nix
-        {
-          plugin = crates-nvim;
-          type = "lua";
-          config = ''
-            require('crates').setup()
-          '';
-        }
 
-        {
-          plugin = copilot-lua;
-          type = "lua";
-          config = builtins.readFile ./copilot.lua;
-        }
-        {
-          plugin = CopilotChat-nvim;
-          type = "lua";
-          config = builtins.readFile ./copilot-chat.lua;
-        }
-        copilot-cmp
         {
           plugin = render-markdown-nvim;
           type = "lua";
@@ -138,7 +98,7 @@
             })
 
             require('render-markdown').setup({
-              file_types = { 'markdown', 'copilot-chat' }
+              file_types = { 'markdown' }
             })
           '';
         }

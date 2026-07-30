@@ -51,6 +51,5 @@ cmp.setup {
     { name = 'cmp-vsnip' },
     { name = 'luasnip' },
     { name = 'path' },
-    { name = 'copilot' },
   },
 }
