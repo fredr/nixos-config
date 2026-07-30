@@ -3,6 +3,11 @@
     enable = true;
     package = pkgs.waybar;
 
+    systemd = {
+      enable = true;
+      target = "sway-session.target";
+    };
+
     settings = {
       mainBar = {
         layer = "top";

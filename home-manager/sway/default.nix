@@ -1,6 +1,5 @@
 { pkgs, lib, config, ... }: {
   # Protect sway-related services from systemd-oomd
-  systemd.user.services.sway-session.Service.ManagedOOMPreference = "avoid";
   systemd.user.services.waybar.Service.ManagedOOMPreference = "avoid";
   systemd.user.services.swayidle.Service.ManagedOOMPreference = "avoid";
 
@@ -142,7 +141,7 @@
 
     timeouts = [
       { timeout = 300; command = "${pkgs.chayang}/bin/chayang && ${pkgs.swaylock}/bin/swaylock -f"; }
-      { timeout = 600; command = "${pkgs.sway}/bin/swaymsg \"output * dpms off\""; resumeCommand = "${pkgs.sway}/bin/swaymsg \"output * dpms on, output * enable\""; }
+      { timeout = 600; command = "${pkgs.sway}/bin/swaymsg \"output * dpms off\""; resumeCommand = "${pkgs.sway}/bin/swaymsg \"output * dpms on\""; }
       { timeout = 900; command = "${pkgs.systemd}/bin/systemctl suspend"; }
     ];
     events = [
@@ -178,6 +177,14 @@
         else
           ${pkgs.obsidian}/bin/obsidian
         fi
+      '';
+
+      reload_sway = pkgs.writeShellScript "reload-sway" ''
+        idx=$(${pkgs.sway}/bin/swaymsg -t get_inputs \
+          | ${pkgs.jq}/bin/jq -r '[.[] | select(.type == "keyboard") | .xkb_active_layout_index] | first // 0')
+        ${pkgs.sway}/bin/swaymsg reload
+        ${pkgs.kanshi}/bin/kanshictl reload
+        ${pkgs.sway}/bin/swaymsg input type:keyboard xkb_switch_layout "$idx"
       '';
 
       toggle_firefox = pkgs.writeShellScript "toggle-firefox-scratchpad" ''
@@ -261,6 +268,7 @@
 
         keybindings = lib.mkOptionDefault {
           "${mod}+Tab" = "exec ${rofi} -show window";
+          "${mod}+Shift+c" = "exec ${reload_sway}";
           "${mod}+Shift+Escape" = "exec swaynag -t warning -m 'Lock system?' -B 'Yes' 'swaylock -f; pkill swaynag'";
 
           # Print selection to clipboard
@@ -296,7 +304,13 @@
 
         menu = "'${rofi} -modi drun,window,run -show drun'";
 
-        bars = [{ command = "${pkgs.waybar}/bin/waybar"; }];
+        # waybar runs as a systemd user service, see waybar.nix
+        bars = [ ];
+
+        workspaceOutputAssign = [
+          { workspace = "1"; output = "eDP-1"; }
+          { workspace = "10"; output = "HDMI-A-1"; }
+        ];
 
         gaps = {
           inner = 5;

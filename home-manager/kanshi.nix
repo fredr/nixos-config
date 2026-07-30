@@ -1,4 +1,12 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+let
+  # Outputs are destroyed and re-created across suspend/resume, which leaves
+  # waybar's sway/workspaces module empty (Alexays/Waybar#3163). kanshi
+  # re-applies a profile once the outputs have settled, so that is the right
+  # moment to rebuild the bar.
+  restartWaybar = "${pkgs.systemd}/bin/systemctl --user restart waybar.service";
+in
+{
   services.kanshi = {
     enable = true;
 
@@ -6,6 +14,8 @@
       {
         profile = {
           name = "none";
+
+          exec = [ restartWaybar ];
 
           outputs = [
             {
@@ -21,10 +31,7 @@
         profile = {
           name = "home";
 
-          exec = [
-            "${pkgs.sway}/bin/swaymsg workspace 1, move workspace to eDP-1"
-            "${pkgs.sway}/bin/swaymsg workspace 10, move workspace to HDMI-A-1"
-          ];
+          exec = [ restartWaybar ];
 
           outputs = [
             {
@@ -45,5 +52,3 @@
     ];
   };
 }
-
-
