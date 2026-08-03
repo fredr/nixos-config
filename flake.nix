@@ -2,11 +2,11 @@
   description = "NixOS configuration";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.11";
+      url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -115,6 +115,54 @@
             overlays
           ];
         };
+
+      # Every ./pkgs/<name>/update.sh pins a version and hash for something
+      # nixpkgs does not carry, so they rewrite files in the checkout rather
+      # than producing a store path. This just runs all of them in one go.
+      update-pkgs = pkgs.writeShellApplication {
+        name = "update-pkgs";
+        runtimeInputs = with pkgs; [
+          git
+          curl
+          jq
+          gnused
+          gnutar
+          gzip
+          nodejs # npm, for lockfile resolution
+          prefetch-npm-deps
+          nix
+        ];
+        text = ''
+          root="$(git rev-parse --show-toplevel 2>/dev/null || true)"
+          if [ -z "$root" ] || [ ! -f "$root/flake.nix" ]; then
+            echo "error: run this from inside the nixos-config checkout" >&2
+            exit 1
+          fi
+
+          shopt -s nullglob
+          scripts=("$root"/pkgs/*/update.sh)
+          if [ ''${#scripts[@]} -eq 0 ]; then
+            echo "no pkgs/*/update.sh found"
+            exit 0
+          fi
+
+          failed=()
+          for script in "''${scripts[@]}"; do
+            name="$(basename "$(dirname "$script")")"
+            echo "==> $name"
+            "$script" || failed+=("$name")
+          done
+
+          if [ ''${#failed[@]} -gt 0 ]; then
+            echo
+            echo "failed: ''${failed[*]}" >&2
+            exit 1
+          fi
+
+          echo
+          echo "all updates done - review with 'git diff', then rebuild"
+        '';
+      };
     in
     {
       nixosConfigurations = {
@@ -131,6 +179,16 @@
 
       # `nix fmt`
       formatter."${system}" = pkgs.nixfmt-tree;
+
+      packages."${system}" = {
+        inherit update-pkgs;
+      };
+
+      # `nix run .#update-pkgs`
+      apps."${system}".update-pkgs = {
+        type = "app";
+        program = nixpkgs.lib.getExe update-pkgs;
+      };
 
       devShells."${system}" = {
         # Cross-compiling to x86_64-pc-windows-gnu. The mingw toolchain and

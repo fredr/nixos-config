@@ -153,13 +153,9 @@
         command = "${pkgs.systemd}/bin/systemctl suspend";
       }
     ];
-    events = [
-      {
-        event = "before-sleep";
-        command = "${pkgs.swaylock}/bin/swaylock -f";
-      }
-    ];
-
+    events = {
+      "before-sleep" = "${pkgs.swaylock}/bin/swaylock -f";
+    };
   };
 
   wayland.windowManager.sway =

@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 {
   imports = [
     ./firefox.nix
@@ -90,9 +90,9 @@
     go
     bun
     nodejs_22
-    nodePackages.pnpm
-    nodePackages.yarn
-    nodePackages.vercel
+    pnpm
+    yarn
+    mypkgs.vercel
     python3
     typescript
     zig
@@ -196,14 +196,17 @@
       gtk-application-prefer-dark-theme = 1;
     };
 
-    gtk4.extraConfig = {
-      gtk-application-prefer-dark-theme = 1;
+    gtk4 = {
+      theme = config.gtk.theme;
+      extraConfig = {
+        gtk-application-prefer-dark-theme = 1;
+      };
     };
   };
 
   dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
 
-  home.stateVersion = "25.11";
+  home.stateVersion = "26.05";
 
   # Home manager manages home manager
   programs.home-manager.enable = true;

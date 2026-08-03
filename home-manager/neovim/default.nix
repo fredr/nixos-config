@@ -2,7 +2,7 @@
   home.packages = with pkgs; [
     gopls
     nixd
-    nixfmt-rfc-style
+    nixfmt
     lua-language-server
   ];
 
@@ -104,6 +104,6 @@
         }
       ];
 
-      extraLuaConfig = builtins.readFile ./init.lua;
+      initLua = builtins.readFile ./init.lua;
     };
 }
