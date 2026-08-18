@@ -2,6 +2,7 @@
 {
   imports = [
     ./firefox.nix
+    ./mime.nix
     ./sway
     ./git.nix
     ./alacritty.nix
