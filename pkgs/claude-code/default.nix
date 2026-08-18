@@ -14,9 +14,9 @@
 # nix-prefetch-url https://downloads.claude.ai/claude-code-releases/<VERSION>/linux-x64/claude
 
 let
-  version = "2.1.226";
+  version = "2.1.234";
   platform = "linux-x64";
-  hash = "0mamln3fgfywb960kp98lh6yf1a1q85732wqppl915nffw8yr6sf";
+  hash = "0jn8fm3j0wv9rc7lb5g979rbykybsi22h82vkivbzmcmlqg60wrl";
 in
 stdenv.mkDerivation {
   pname = "claude-code";
