@@ -46,10 +46,6 @@
         };
       };
 
-      encore-overlay = final: _prev: {
-        encore = encore.packages.${final.stdenv.hostPlatform.system}.encore;
-      };
-
       # https://github.com/NixOS/nixpkgs/issues/505078
       obsidian-fix = final: prev: {
         obsidian = prev.obsidian.overrideAttrs (old: {
@@ -274,7 +270,7 @@
           let
             encore-pkgs = import nixpkgs {
               inherit system;
-              overlays = [ encore-overlay ];
+              overlays = [ encore.overlays.default ];
             };
           in
           encore-pkgs.mkShellNoCC {
