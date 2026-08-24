@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }: {
+{ pkgs, lib, config, ... }: {
   # Protect sway-related services from systemd-oomd
   systemd.user.services.waybar.Service.ManagedOOMPreference = "avoid";
   systemd.user.services.swayidle.Service.ManagedOOMPreference = "avoid";
@@ -198,6 +198,36 @@
           ${pkgs.firefox}/bin/firefox --name scratchpad_firefox --no-remote -P scratchpad
         fi
       '';
+
+      # slimnotes is not packaged yet (unpublished), so this runs the cargo build
+      # from the working tree. That binary dlopens wayland/vulkan at startup and
+      # gets their paths from the dev shell, which sway's exec does not have — so
+      # the library path is reproduced here. Both go away once it is a package;
+      # the list mirrors `libraries` in the project's flake.nix.
+      slimnotes = "${config.home.homeDirectory}/projects/slimnotes/target/release/slimnotes";
+      slimnotesLibs = pkgs.lib.makeLibraryPath (
+        with pkgs;
+        [
+          fontconfig
+          freetype
+          wayland
+          libxkbcommon
+          xorg.libxcb
+          xorg.libX11
+          xorg.libXext
+          libGL
+          vulkan-loader
+          openssl
+          zlib
+        ]
+      );
+      toggle_slimnotes = pkgs.writeShellScript "toggle-slimnotes-scratchpad" ''
+        if ${pkgs.sway}/bin/swaymsg -t get_tree | ${pkgs.jq}/bin/jq -e '.. | select(.app_id? == "scratchpad_slimnotes")' > /dev/null; then
+          ${pkgs.sway}/bin/swaymsg '[app_id="scratchpad_slimnotes"]' scratchpad show
+        else
+          LD_LIBRARY_PATH="${slimnotesLibs}:/run/opengl-driver/lib" ${slimnotes} --app-id scratchpad_slimnotes
+        fi
+      '';
     in
     {
       enable = true;
@@ -307,6 +337,7 @@
           "${mod}+t" = "exec ${toggle_terminal}";
           "${mod}+o" = "exec ${toggle_obsidian}";
           "${mod}+i" = "exec ${toggle_firefox}";
+          "${mod}+n" = "exec ${toggle_slimnotes}";
         };
 
         # Window commands (for_window rules)
@@ -326,6 +357,12 @@
           {
             criteria = {
               app_id = "scratchpad_firefox";
+            };
+            command = "move scratchpad, scratchpad show";
+          }
+          {
+            criteria = {
+              app_id = "scratchpad_slimnotes";
             };
             command = "move scratchpad, scratchpad show";
           }
