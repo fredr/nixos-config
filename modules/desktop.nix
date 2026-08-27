@@ -1,13 +1,14 @@
 { pkgs, ... }:
 {
-  # sway is launched from the tty login shell, so it lives in a logind session
-  # scope (/user.slice/user-1000.slice/session-N.scope) along with every GUI app
-  # started from it. That makes the scope by far the largest reclaim candidate
-  # under user.slice, i.e. oomd's first pick would be the entire desktop.
-  # Drop-ins on the "session-" prefix apply to every session-N.scope logind
-  # creates. These scopes are root-owned and so are the monitored ancestors
-  # (-.slice, user.slice), so the xattr is honoured - see the ownership rules in
-  # systemd.resource-control(5). Takes effect on next login.
+  # sway runs under uwsm (see programs.uwsm below), so the compositor and the
+  # apps live in the user manager's units, not in the logind session scope. What
+  # is left in /user.slice/user-1000.slice/session-N.scope is the login shell and
+  # the `uwsm start` process it waits in — small, but killing it still tears the
+  # whole session down, so it stays off oomd's list. Drop-ins on the "session-"
+  # prefix apply to every session-N.scope logind creates. These scopes are
+  # root-owned and so are the monitored ancestors (-.slice, user.slice), so the
+  # xattr is honoured - see the ownership rules in systemd.resource-control(5).
+  # Takes effect on next login.
   systemd.units."session-.scope" = {
     overrideStrategy = "asDropin";
     text = ''
@@ -34,8 +35,33 @@
 
   # Start sway on login at the first tty; sway itself is configured in
   # home-manager (home-manager/sway).
+  #
+  # uwsm wraps the compositor in a `wayland-wm@sway.service` user unit and binds
+  # it into graphical-session.target. Two consequences worth the indirection:
+  #
+  # - The unit's stdout/stderr are the journal, and everything sway execs
+  #   inherits those fds. Before this sway inherited the tty, so a crashing app
+  #   wrote its panic to /dev/tty1 and nowhere else — unreadable after the fact.
+  #   Now: journalctl --user -u wayland-wm@sway.service
+  # - graphical-session.target is actually reached, so user services bind to it
+  #   directly instead of needing sway to start a sway-session.target of its own.
+  #
+  # No programs.uwsm.waylandCompositors entry: that option only generates a
+  # wayland-sessions desktop entry for display managers, and there is none here.
+  # The module also switches services.dbus.implementation to "broker", which this
+  # config was already using.
+  programs.uwsm.enable = true;
+
+  # `uwsm check may-start` replaces the old `[ "$(tty)" = /dev/tty1 ]` test: it
+  # checks the VT (1 unless given others), that this is a login shell, that the
+  # system reached graphical.target, and that no graphical session is active yet.
+  # -q keeps logins on other TTYs quiet. `sway` resolves off PATH to the
+  # home-manager wrapper, so extraSessionCommands and wrapperFeatures still
+  # apply; -F hardcodes the resolved path into the generated unit.
   programs.zsh.loginShellInit = ''
-    [ "$(tty)" = "/dev/tty1" ] && exec sway
+    if uwsm check may-start -q; then
+      exec uwsm start -F -- sway
+    fi
   '';
 
   # Enable gnome-keyring for system-wide secret management

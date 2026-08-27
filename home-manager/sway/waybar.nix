@@ -5,7 +5,11 @@
 
     systemd = {
       enable = true;
-      targets = [ "sway-session.target" ];
+      # sway-session.target is gone with the sway module's systemd integration
+      # (uwsm owns the session now, see modules/desktop.nix). uwsm reaches
+      # graphical-session.target properly, which is what swayidle already binds
+      # to via wayland.systemd.target.
+      targets = [ "graphical-session.target" ];
     };
 
     settings = {

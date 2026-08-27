@@ -166,12 +166,27 @@
       slurp = "${pkgs.slurp}/bin/slurp";
       grim = "${pkgs.grim}/bin/grim";
 
+      # home-manager.useGlobalPkgs is on, so this is the same derivation the
+      # NixOS programs.uwsm module installs — no version skew between the two.
+      uwsm = "${pkgs.uwsm}/bin/uwsm";
+
+      # Launch an app in its own unit under app-graphical.slice instead of
+      # letting processes pile up inside the compositor's unit. A scope (uwsm's
+      # default) is forked by the caller, so the app still inherits sway's
+      # environment and its journal-connected stdout/stderr — unlike a service,
+      # which would start from the user manager's environment and lose anything
+      # set inline here (slimnotes below is a service for that reason, and pays
+      # for it by declaring its environment explicitly). Passing an absolute path
+      # keeps uwsm from resolving the first argument as a Desktop Entry ID; the
+      # unit name comes from that path's basename unless given `-a <name>`.
+      app = "${uwsm} app --";
+
       # scratchpad toggle scripts
       toggle_terminal = pkgs.writeShellScript "toggle-terminal-scratchpad" ''
         if ${pkgs.sway}/bin/swaymsg -t get_tree | ${pkgs.jq}/bin/jq -e '.. | select(.app_id? == "scratchpad_terminal")' > /dev/null; then
           ${pkgs.sway}/bin/swaymsg '[app_id="scratchpad_terminal"]' scratchpad show
         else
-          ${pkgs.alacritty}/bin/alacritty --class scratchpad_terminal
+          ${app} ${pkgs.alacritty}/bin/alacritty --class scratchpad_terminal
         fi
       '';
 
@@ -179,7 +194,7 @@
         if ${pkgs.sway}/bin/swaymsg -t get_tree | ${pkgs.jq}/bin/jq -e '.. | select(.app_id? == "obsidian")' > /dev/null; then
           ${pkgs.sway}/bin/swaymsg '[app_id="obsidian"]' scratchpad show
         else
-          ${pkgs.obsidian}/bin/obsidian
+          ${app} ${pkgs.obsidian}/bin/obsidian
         fi
       '';
 
@@ -195,7 +210,7 @@
         if ${pkgs.sway}/bin/swaymsg -t get_tree | ${pkgs.jq}/bin/jq -e '.. | select(.app_id? == "scratchpad_firefox")' > /dev/null; then
           ${pkgs.sway}/bin/swaymsg '[app_id="scratchpad_firefox"]' scratchpad show
         else
-          ${pkgs.firefox}/bin/firefox --name scratchpad_firefox --no-remote -P scratchpad
+          ${app} ${pkgs.firefox}/bin/firefox --name scratchpad_firefox --no-remote -P scratchpad
         fi
       '';
 
@@ -204,6 +219,15 @@
       # gets their paths from the dev shell, which sway's exec does not have — so
       # the library path is reproduced here. Both go away once it is a package;
       # the list mirrors `libraries` in the project's flake.nix.
+      #
+      # Unlike the other scratchpads this one runs as a service rather than a
+      # scope, because it is the one under active development: an abnormal exit
+      # then leaves a failed unit behind (systemctl --user --failed) instead of
+      # just a window that silently disappeared. A service starts from the user
+      # manager's environment though — uwsm forwards only its own session vars —
+      # so the two below have to be declared as unit properties rather than set
+      # inline, or the dlopens fail. WAYLAND_DISPLAY and friends are already
+      # there, put in by the `uwsm finalize` exec above.
       slimnotes = "${config.home.homeDirectory}/projects/slimnotes/target/release/slimnotes";
       slimnotesLibs = pkgs.lib.makeLibraryPath (
         with pkgs;
@@ -225,36 +249,22 @@
         if ${pkgs.sway}/bin/swaymsg -t get_tree | ${pkgs.jq}/bin/jq -e '.. | select(.app_id? == "scratchpad_slimnotes")' > /dev/null; then
           ${pkgs.sway}/bin/swaymsg '[app_id="scratchpad_slimnotes"]' scratchpad show
         else
-          LD_LIBRARY_PATH="${slimnotesLibs}:/run/opengl-driver/lib" ${slimnotes} --app-id scratchpad_slimnotes
+          ${uwsm} app -t service -a slimnotes \
+            -p "Environment=RUST_BACKTRACE=1" \
+            -p "Environment=LD_LIBRARY_PATH=${slimnotesLibs}:/run/opengl-driver/lib" \
+            -- ${slimnotes} --app-id scratchpad_slimnotes
         fi
       '';
     in
     {
       enable = true;
 
-      systemd = {
-        enable = true;
-
-        # Environment imported into the systemd/D-Bus user environment before
-        # sway-session.target starts, so portals and user services see it. The
-        # first eight are the module defaults.
-        variables = [
-          "DISPLAY"
-          "WAYLAND_DISPLAY"
-          "SWAYSOCK"
-          "XDG_CURRENT_DESKTOP"
-          "XDG_SESSION_TYPE"
-          "NIXOS_OZONE_WL"
-          "XCURSOR_THEME"
-          "XCURSOR_SIZE"
-
-          "SSH_AUTH_SOCK"
-          "PATH"
-          "XDG_DATA_DIRS"
-          "XDG_CONFIG_DIRS"
-          "GIO_EXTRA_MODULES"
-        ];
-      };
+      # uwsm owns the session (see programs.uwsm in modules/desktop.nix), so the
+      # module's own integration is off: it would start a second, competing
+      # sway-session.target that BindsTo graphical-session.target, and its
+      # `systemctl --user import-environment` exec is what `uwsm finalize`
+      # replaces below.
+      systemd.enable = false;
 
       extraSessionCommands = ''
         # Set SSH_AUTH_SOCK to gnome-keyring's SSH agent socket
@@ -268,6 +278,19 @@
 
       config = {
         defaultWorkspace = "workspace number 1";
+
+        # uwsm's replacement for the module's `systemctl --user
+        # import-environment`: exports WAYLAND_DISPLAY and DISPLAY plus the vars
+        # named here into the systemd user environment, then notifies the
+        # compositor unit that startup is complete — without this the unit fails
+        # on its startup timeout and the session dies. XDG_CURRENT_DESKTOP and
+        # XDG_SESSION_TYPE are set by uwsm itself, so only the remainder of what
+        # systemd.variables used to carry is listed.
+        startup = [
+          {
+            command = "${uwsm} finalize SWAYSOCK NIXOS_OZONE_WL XCURSOR_THEME XCURSOR_SIZE SSH_AUTH_SOCK PATH XDG_DATA_DIRS XDG_CONFIG_DIRS GIO_EXTRA_MODULES";
+          }
+        ];
 
         modifier = mod;
         terminal = "alacritty";
