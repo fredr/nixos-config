@@ -236,9 +236,9 @@
           freetype
           wayland
           libxkbcommon
-          xorg.libxcb
-          xorg.libX11
-          xorg.libXext
+          libxcb
+          libx11
+          libxext
           libGL
           vulkan-loader
           openssl
