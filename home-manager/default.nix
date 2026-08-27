@@ -19,6 +19,10 @@
   home.sessionVariables = {
     # Read by Electron/Chromium apps (zed, obsidian, slack, discord, chrome).
     NIXOS_OZONE_WL = "1";
+
+    # gnome-keyring's SSH agent socket. Here rather than in sway's wrapper so
+    # uwsm's env preloader picks it up for user services too.
+    SSH_AUTH_SOCK = "$XDG_RUNTIME_DIR/gcr/ssh";
   };
 
   home.packages = with pkgs; [

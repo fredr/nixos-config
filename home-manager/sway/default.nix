@@ -166,19 +166,13 @@
       slurp = "${pkgs.slurp}/bin/slurp";
       grim = "${pkgs.grim}/bin/grim";
 
-      # home-manager.useGlobalPkgs is on, so this is the same derivation the
-      # NixOS programs.uwsm module installs — no version skew between the two.
+      # Same derivation the NixOS programs.uwsm module installs (useGlobalPkgs).
       uwsm = "${pkgs.uwsm}/bin/uwsm";
 
-      # Launch an app in its own unit under app-graphical.slice instead of
-      # letting processes pile up inside the compositor's unit. A scope (uwsm's
-      # default) is forked by the caller, so the app still inherits sway's
-      # environment and its journal-connected stdout/stderr — unlike a service,
-      # which would start from the user manager's environment and lose anything
-      # set inline here (slimnotes below is a service for that reason, and pays
-      # for it by declaring its environment explicitly). Passing an absolute path
-      # keeps uwsm from resolving the first argument as a Desktop Entry ID; the
-      # unit name comes from that path's basename unless given `-a <name>`.
+      # Launch apps in their own unit under app-graphical.slice rather than
+      # inside the compositor's. A scope (the default) is forked by the caller,
+      # so it inherits sway's environment and journal-connected stderr. Absolute
+      # paths only, or uwsm resolves the first argument as a Desktop Entry ID.
       app = "${uwsm} app --";
 
       # scratchpad toggle scripts
@@ -220,14 +214,9 @@
       # the library path is reproduced here. Both go away once it is a package;
       # the list mirrors `libraries` in the project's flake.nix.
       #
-      # Unlike the other scratchpads this one runs as a service rather than a
-      # scope, because it is the one under active development: an abnormal exit
-      # then leaves a failed unit behind (systemctl --user --failed) instead of
-      # just a window that silently disappeared. A service starts from the user
-      # manager's environment though — uwsm forwards only its own session vars —
-      # so the two below have to be declared as unit properties rather than set
-      # inline, or the dlopens fail. WAYLAND_DISPLAY and friends are already
-      # there, put in by the `uwsm finalize` exec above.
+      # A service rather than a scope like the others, so a crash leaves a failed
+      # unit behind rather than just a vanished window. Services don't inherit the
+      # caller's environment, hence the explicit Environment= properties.
       slimnotes = "${config.home.homeDirectory}/projects/slimnotes/target/release/slimnotes";
       slimnotesLibs = pkgs.lib.makeLibraryPath (
         with pkgs;
@@ -259,17 +248,14 @@
     {
       enable = true;
 
-      # uwsm owns the session (see programs.uwsm in modules/desktop.nix), so the
-      # module's own integration is off: it would start a second, competing
-      # sway-session.target that BindsTo graphical-session.target, and its
-      # `systemctl --user import-environment` exec is what `uwsm finalize`
-      # replaces below.
+      # uwsm owns the session (see programs.uwsm in modules/desktop.nix); this
+      # would start a competing sway-session.target and import-environment.
       systemd.enable = false;
 
+      # Only wlroots reads this, so it can stay in sway's own environment. Vars
+      # that user services need go in home.sessionVariables instead, where the
+      # uwsm env preloader picks them up.
       extraSessionCommands = ''
-        # Set SSH_AUTH_SOCK to gnome-keyring's SSH agent socket
-        export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/gcr/ssh"
-
         # flickering in zed, see https://github.com/swaywm/sway/issues/8755
         export WLR_RENDER_NO_EXPLICIT_SYNC=1
       '';
@@ -279,18 +265,12 @@
       config = {
         defaultWorkspace = "workspace number 1";
 
-        # uwsm's replacement for the module's `systemctl --user
-        # import-environment`: exports WAYLAND_DISPLAY and DISPLAY plus the vars
-        # named here into the systemd user environment, then notifies the
-        # compositor unit that startup is complete — without this the unit fails
-        # on its startup timeout and the session dies. XDG_CURRENT_DESKTOP and
-        # XDG_SESSION_TYPE are set by uwsm itself, so only the remainder of what
-        # systemd.variables used to carry is listed.
-        startup = [
-          {
-            command = "${uwsm} finalize SWAYSOCK NIXOS_OZONE_WL XCURSOR_THEME XCURSOR_SIZE SSH_AUTH_SOCK PATH XDG_DATA_DIRS XDG_CONFIG_DIRS GIO_EXTRA_MODULES";
-          }
-        ];
+        # Exports WAYLAND_DISPLAY/DISPLAY to the systemd user environment and
+        # marks the compositor unit started; without it the unit times out.
+        # Needs no arguments: uwsm's sway plugin covers SWAYSOCK and XCURSOR_*,
+        # and the env preloader already carries everything from the login shell.
+        # Only vars sway sets late belong in the list.
+        startup = [ { command = "${uwsm} finalize"; } ];
 
         modifier = mod;
         terminal = "alacritty";

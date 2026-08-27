@@ -1,14 +1,12 @@
 { pkgs, ... }:
 {
-  # sway runs under uwsm (see programs.uwsm below), so the compositor and the
-  # apps live in the user manager's units, not in the logind session scope. What
-  # is left in /user.slice/user-1000.slice/session-N.scope is the login shell and
-  # the `uwsm start` process it waits in — small, but killing it still tears the
-  # whole session down, so it stays off oomd's list. Drop-ins on the "session-"
-  # prefix apply to every session-N.scope logind creates. These scopes are
-  # root-owned and so are the monitored ancestors (-.slice, user.slice), so the
-  # xattr is honoured - see the ownership rules in systemd.resource-control(5).
-  # Takes effect on next login.
+  # sway and the apps live in the user manager's units (uwsm, below), so
+  # session-N.scope holds only the login shell and the `uwsm start` it waits in.
+  # Small, but killing it still tears the session down. Drop-ins on the
+  # "session-" prefix apply to every session-N.scope logind creates. These scopes
+  # are root-owned and so are the monitored ancestors (-.slice, user.slice), so
+  # the xattr is honoured - see the ownership rules in
+  # systemd.resource-control(5). Takes effect on next login.
   systemd.units."session-.scope" = {
     overrideStrategy = "asDropin";
     text = ''
@@ -21,8 +19,8 @@
   # from sway's own wrapper, so X11 clients (steam, xclip) still work.
   #
   # But services.xserver used to pull in services.graphical-desktop, and nothing
-  # else in this config sets what that turned on, so both of these have to be
-  # declared explicitly:
+  # else in this config sets what that turned on, so all three of these have to
+  # be declared explicitly:
   #
   # - hardware.graphics is what creates the /run/opengl-driver symlink. Without
   #   it there is no Mesa EGL/GBM for wlroots to find, so `exec sway` on tty1
@@ -30,34 +28,31 @@
   #   prompt. Not optional.
   # - fonts.enableDefaultPackages, or fonts.packages is empty and you lose
   #   DejaVu, Liberation and the Noto colour emoji font.
+  # - systemd.defaultUnit, which graphical-desktop only raises to
+  #   graphical.target when a display manager is enabled. Without it the machine
+  #   boots to multi-user.target, and `uwsm check may-start` below refuses to
+  #   start sway because graphical.target was never reached.
   hardware.graphics.enable = true;
   fonts.enableDefaultPackages = true;
+  systemd.defaultUnit = "graphical.target";
 
   # Start sway on login at the first tty; sway itself is configured in
   # home-manager (home-manager/sway).
   #
-  # uwsm wraps the compositor in a `wayland-wm@sway.service` user unit and binds
-  # it into graphical-session.target. Two consequences worth the indirection:
+  # uwsm runs sway as a `wayland-wm@sway.service` user unit bound into
+  # graphical-session.target, which gives the compositor journal-backed
+  # stdout/stderr that everything it execs inherits — otherwise an app's crash
+  # output goes to the tty and nowhere readable. See
+  # `journalctl --user -u wayland-wm@sway.service`.
   #
-  # - The unit's stdout/stderr are the journal, and everything sway execs
-  #   inherits those fds. Before this sway inherited the tty, so a crashing app
-  #   wrote its panic to /dev/tty1 and nowhere else — unreadable after the fact.
-  #   Now: journalctl --user -u wayland-wm@sway.service
-  # - graphical-session.target is actually reached, so user services bind to it
-  #   directly instead of needing sway to start a sway-session.target of its own.
-  #
-  # No programs.uwsm.waylandCompositors entry: that option only generates a
-  # wayland-sessions desktop entry for display managers, and there is none here.
-  # The module also switches services.dbus.implementation to "broker", which this
-  # config was already using.
+  # No waylandCompositors entry: it only generates a desktop entry for display
+  # managers, and there is none here.
   programs.uwsm.enable = true;
 
-  # `uwsm check may-start` replaces the old `[ "$(tty)" = /dev/tty1 ]` test: it
-  # checks the VT (1 unless given others), that this is a login shell, that the
-  # system reached graphical.target, and that no graphical session is active yet.
-  # -q keeps logins on other TTYs quiet. `sway` resolves off PATH to the
-  # home-manager wrapper, so extraSessionCommands and wrapperFeatures still
-  # apply; -F hardcodes the resolved path into the generated unit.
+  # may-start checks the VT, login shell, graphical.target, and that no session
+  # is running yet; -q keeps other TTYs quiet. `sway` is the home-manager wrapper
+  # on PATH, and -F pins its resolved path into the unit, since the user
+  # manager's PATH may not find it.
   programs.zsh.loginShellInit = ''
     if uwsm check may-start -q; then
       exec uwsm start -F -- sway
