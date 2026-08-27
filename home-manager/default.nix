@@ -163,6 +163,7 @@
   programs.atuin.enable = true;
   programs.atuin.settings = {
     filter_mode = "session";
+    search_mode = "fulltext";
     style = "compact";
     show_preview = true;
     enter_accept = false;
