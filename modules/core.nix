@@ -41,6 +41,21 @@
     enableUserSlices = true;
   };
 
+  # Replaces the drop-in the nixos module writes for the user manager's own root
+  # slice. It only wires up memory pressure, so zram could fill to the last page
+  # and hand the kill to the kernel instead; and its 80% pressure limit is late
+  # enough that the kernel usually wins that race (50% is Fedora's value).
+  # Keeping this on the user root slice rather than the system one confines the
+  # candidate search to user@$UID.service, so oomd kills the offending app
+  # instead of the whole session.
+  systemd.user.units."slice".text = lib.mkForce ''
+    [Slice]
+    ManagedOOMSwap=kill
+    ManagedOOMMemoryPressure=kill
+    ManagedOOMMemoryPressureLimit=50%
+  '';
+  systemd.slices.user.sliceConfig.ManagedOOMMemoryPressureLimit = "50%";
+
   # Enable flakes
   nix.settings.experimental-features = [
     "nix-command"

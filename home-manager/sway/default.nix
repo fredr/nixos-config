@@ -1,4 +1,10 @@
-{ pkgs, lib, config, ... }: {
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
+{
   # Protect sway-related services from systemd-oomd
   systemd.user.services.waybar.Service.ManagedOOMPreference = "avoid";
   systemd.user.services.swayidle.Service.ManagedOOMPreference = "avoid";
@@ -30,6 +36,12 @@
       drun-display-format = "{name}";
       modi = "window,drun,run";
       show-icons = true;
+
+      # Run mode launches into app-graphical.slice instead of the compositor's
+      # cgroup. drun has no equivalent hook and rofi has no systemd integration
+      # of its own, so desktop entries still land in sway's cgroup — survivable
+      # only because of OOMPolicy=continue (see modules/desktop.nix).
+      run-command = "${pkgs.uwsm}/bin/uwsm app -- {cmd}";
     };
   };
 
@@ -273,7 +285,9 @@
         startup = [ { command = "${uwsm} finalize"; } ];
 
         modifier = mod;
-        terminal = "alacritty";
+        # Via uwsm app, so $mod+Return lands in app-graphical.slice like the
+        # scratchpads do, and not in the compositor's own cgroup.
+        terminal = "${app} ${pkgs.alacritty}/bin/alacritty";
 
         left = "h";
         down = "j";

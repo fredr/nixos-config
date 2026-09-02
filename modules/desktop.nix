@@ -15,6 +15,19 @@
     '';
   };
 
+  # The compositor's unit, from uwsm. OOMPolicy defaults to "stop", so a kernel
+  # OOM kill of any process in this cgroup stops the unit — i.e. the whole
+  # session, since sway execs its children. "continue" lets the victim die
+  # alone. The preference makes oomd pick app cgroups over the compositor.
+  systemd.user.units."wayland-wm@.service" = {
+    overrideStrategy = "asDropin";
+    text = ''
+      [Service]
+      OOMPolicy=continue
+      ManagedOOMPreference=avoid
+    '';
+  };
+
   # No services.xserver here: this is a Wayland-only session. XWayland comes
   # from sway's own wrapper, so X11 clients (steam, xclip) still work.
   #
