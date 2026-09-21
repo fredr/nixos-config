@@ -36,7 +36,6 @@
 
       git-untracked-branches = "git fetch -p ; git branch -r | awk '{print $1}' | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk '{print $1}'";
 
-      encore-dev-ls = "git -C ~/projects/encoredev/encore worktree list";
       encore-rel = "nix develop ~/nixos-config#encore-rel -c zsh";
 
       windows-cross = "nix develop ~/nixos-config#windows-cross -c zsh";

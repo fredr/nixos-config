@@ -2,7 +2,38 @@
 # it gets syntax highlighting and shellcheck; anything needing a store path
 # lives in home.sessionVariables / home.sessionPath in zsh.nix.
 
+# Which repo owns a worktree — the first `worktree list` entry is always the
+# main one. Lets removal/listing work for forks without being told the repo.
+function _encore-worktree-repo() {
+  git -C "$1" worktree list --porcelain 2>/dev/null | head -1 | cut -d' ' -f2-
+}
+
 function encore-dev() {
+  # Worktrees are cut from the encore repo unless -r/--repo names another one
+  # (e.g. a fork); a bare name there resolves under ~/projects/encoredev.
+  local base_repo=~/projects/encoredev/encore
+
+  while [[ "$1" == -* ]]; do
+    case "$1" in
+      -r|--repo)
+        if [ -z "$2" ]; then
+          echo "Error: $1 requires a repository"
+          return 1
+        fi
+        base_repo="$2"
+        shift 2
+        ;;
+      *)
+        echo "Error: unknown option '$1'"
+        return 1
+        ;;
+    esac
+  done
+
+  if [[ "$base_repo" != */* ]]; then
+    base_repo=~/projects/encoredev/"$base_repo"
+  fi
+
   if [ -z "$1" ]; then
     nix develop ~/nixos-config#encore-dev -c zsh
     return
@@ -16,7 +47,6 @@ function encore-dev() {
     return 1
   fi
 
-  local encore_main=~/projects/encoredev/encore
   local worktree_base=~/projects/encoredev/encore.worktrees
   local worktree_dir="$worktree_base/$name"
 
@@ -40,10 +70,16 @@ function encore-dev() {
     echo "Error: '$name' links to a path that no longer exists: $(readlink "$worktree_dir")"
     return 1
   elif [ ! -d "$worktree_dir" ]; then
+    if ! git -C "$base_repo" rev-parse --git-dir >/dev/null 2>&1; then
+      echo "Error: '$base_repo' is not a git repository"
+      return 1
+    fi
+
     local branch="fredr/$name"
-    echo "Creating worktree '$name' (branch '$branch') from main..."
+    local base_ref="$(git -C "$base_repo" rev-parse --abbrev-ref HEAD)"
+    echo "Creating worktree '$name' (branch '$branch') from $base_ref in $base_repo..."
     mkdir -p "$worktree_base"
-    git -C "$encore_main" worktree add -b "$branch" "$worktree_dir"
+    git -C "$base_repo" worktree add -b "$branch" "$worktree_dir" "$base_ref" || return 1
     new_worktree=1
   fi
 
@@ -60,7 +96,6 @@ function encore-dev-rm() {
   fi
 
   local name="$1"
-  local encore_main=~/projects/encoredev/encore
   local worktree_dir=~/projects/encoredev/encore.worktrees/$name
 
   if [ ! -e "$worktree_dir" ] && [ ! -L "$worktree_dir" ]; then
@@ -72,9 +107,29 @@ function encore-dev-rm() {
     rm "$worktree_dir"
     echo "Removed path link '$name'"
   else
-    git -C "$encore_main" worktree remove --force "$worktree_dir"
-    echo "Removed worktree '$name'"
+    local base_repo="$(_encore-worktree-repo "$worktree_dir")"
+    if [ -z "$base_repo" ]; then
+      echo "Error: '$name' is not a git worktree"
+      return 1
+    fi
+    git -C "$base_repo" worktree remove --force "$worktree_dir" || return 1
+    echo "Removed worktree '$name' (from $base_repo)"
   fi
+}
+
+# Lists every entry under encore.worktrees, not just one repo's worktrees,
+# since -r/--repo means they can come from several repos.
+function encore-dev-ls() {
+  local entry base_repo
+  for entry in ~/projects/encoredev/encore.worktrees/*(N); do
+    if [ -L "$entry" ]; then
+      printf '%-24s -> %s\n' "${entry:t}" "$(readlink "$entry")"
+    else
+      base_repo="$(_encore-worktree-repo "$entry")"
+      printf '%-24s %-12s %s\n' "${entry:t}" "${base_repo:t}" \
+        "$(git -C "$entry" rev-parse --abbrev-ref HEAD 2>/dev/null)"
+    fi
+  done
 }
 
 function encore-cd() {
