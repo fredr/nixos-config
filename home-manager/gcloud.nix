@@ -7,6 +7,7 @@ let
       bigtable
       cbt
       pubsub-emulator
+      cloud-sql-proxy
     ]
   );
 in
