@@ -9,6 +9,7 @@
   codelldb = pkgs.callPackage ./codelldb { };
   claude-code = pkgs.callPackage ./claude-code { };
   vercel = pkgs.callPackage ./vercel { };
+  screenpipe = pkgs.callPackage ./screenpipe { };
 
   # Encore-specific tool versions
   protoc-encore = pkgs.callPackage ./protoc-encore { };

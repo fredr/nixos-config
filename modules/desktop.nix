@@ -102,6 +102,17 @@
     pulse.enable = true;
   };
 
+  # The a11y bus. screenpipe reads the accessibility tree as its primary text
+  # source and only falls back to OCR without it; with this off, the nixos
+  # module sets NO_AT_BRIDGE=1 and GTK_A11Y=none session-wide, which disables
+  # the GTK bridge outright.
+  services.gnome.at-spi2-core.enable = true;
+
+  # Read access to /dev/input/*, for screenpipe's keystroke and app-switch
+  # capture. Also lets anything else running as this user read every input
+  # device, keyboard included.
+  users.users.fredr.extraGroups = [ "input" ];
+
   programs.thunar.enable = true;
   programs.thunar.plugins = with pkgs; [
     thunar-archive-plugin

@@ -38,6 +38,7 @@
     mypkgs.claude-code
     nitch
     dysk
+    mypkgs.screenpipe
 
     which
     tree
