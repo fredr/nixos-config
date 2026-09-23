@@ -134,17 +134,38 @@
     })
   ];
 
-  home.file.".claude/settings.json".text = builtins.toJSON {
-    permissions = {
-      defaultMode = "default";
-      allow = [ "Read" ];
-    };
-    enabledPlugins = {
-      "gopls-lsp@claude-plugins-official" = true;
-      "rust-analyzer-lsp@claude-plugins-official" = true;
-    };
-    effortLevel = "high";
-  };
+  # Claude Code writes to settings.json at runtime (/effort, /model, ...), so it
+  # can't be a read-only store symlink. Instead merge the managed keys into the
+  # existing file on activation.
+  home.activation.claudeSettings =
+    let
+      managed = pkgs.writeText "claude-managed.json" (
+        builtins.toJSON {
+          permissions = {
+            defaultMode = "default";
+            allow = [ "Read" ];
+          };
+          enabledPlugins = {
+            "gopls-lsp@claude-plugins-official" = true;
+            "rust-analyzer-lsp@claude-plugins-official" = true;
+          };
+        }
+      );
+    in
+    config.lib.dag.entryAfter [ "linkGeneration" ] ''
+      settings="$HOME/.claude/settings.json"
+      run mkdir -p "$HOME/.claude"
+      existing='{}'
+      if [ -e "$settings" ]; then
+        existing="$(cat "$settings")"
+      fi
+      # Replace a leftover store symlink with a regular file
+      [ -L "$settings" ] && run rm "$settings"
+      merged="$(echo "$existing" | ${pkgs.jq}/bin/jq -S --slurpfile m ${managed} '. * $m[0]')"
+      if [ -z "''${DRY_RUN:-}" ]; then
+        echo "$merged" > "$settings"
+      fi
+    '';
 
   xdg.configFile."containers/registries.conf".text = ''
     unqualified-search-registries = ["docker.io"]
