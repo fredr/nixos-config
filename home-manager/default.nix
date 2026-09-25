@@ -2,6 +2,7 @@
 {
   imports = [
     ./firefox.nix
+    ./chrome.nix
     ./mime.nix
     ./sway
     ./git.nix
@@ -117,7 +118,6 @@
     obs-studio
     mplayer
     spotify
-    google-chrome
 
     mypkgs.mirror
 
