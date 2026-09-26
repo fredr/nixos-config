@@ -20,12 +20,24 @@
     "usb_storage"
     "sd_mod"
   ];
-  boot.initrd.kernelModules = [ ];
+  # dm-crypt picks its AES implementation when the initrd opens cryptroot and
+  # keeps it until reboot, and the default LUKS modules don't include AES-NI.
+  boot.initrd.kernelModules = [ "aesni_intel" ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
+  boot.initrd.luks.devices."cryptroot" = {
+    # nvme0n1p2, encrypted in place with `cryptsetup reencrypt --encrypt`. That
+    # keeps the partition's PARTUUID, while the ext4 now lives inside the mapping.
+    device = "/dev/disk/by-partuuid/14c05200-e15e-40cf-8189-23f35baf7a0c";
+    # Let fstrim reach the SSD, at the cost of revealing which blocks are free.
+    allowDiscards = true;
+    # Skip dm-crypt's work queues; better latency on NVMe.
+    bypassWorkqueues = true;
+  };
+
   fileSystems."/" = {
-    device = "/dev/disk/by-uuid/daf57f3e-e984-4a83-bd6f-71904008065d";
+    device = "/dev/mapper/cryptroot";
     fsType = "ext4";
   };
 
