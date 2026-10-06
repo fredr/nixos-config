@@ -50,7 +50,21 @@
     ];
   };
 
-  swapDevices = [ ];
+  # Swapfile for hibernation. It sits inside cryptroot, so the hibernation image
+  # is encrypted too. zram (priority 5) is still used first; this one only takes
+  # the overflow. Changing `size` recreates the file elsewhere on disk, which
+  # invalidates resume_offset.
+  swapDevices = [
+    {
+      device = "/var/lib/swapfile";
+      size = 32 * 1024; # MiB, matches RAM
+    }
+  ];
+
+  # Resume from that swapfile. The offset is where the file starts on disk, in
+  # 4 KiB blocks: the first physical_offset from `filefrag -v /var/lib/swapfile`.
+  boot.resumeDevice = "/dev/mapper/cryptroot";
+  boot.kernelParams = [ "resume_offset=308873" ];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's
