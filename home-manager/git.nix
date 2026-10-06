@@ -29,4 +29,23 @@
     };
   };
 
+  programs.jujutsu = {
+    enable = true;
+
+    settings = {
+      user = {
+        inherit (config.programs.git.settings.user) name email;
+      };
+      ui.editor = "nvim";
+      # jj rewrites commits constantly, so sign on push instead of on every
+      # snapshot.
+      signing = {
+        behavior = "drop";
+        backend = "ssh";
+        key = host.pubKey;
+        backends.ssh.allowed-signers = "${config.home.homeDirectory}/.ssh/allowed_signers";
+      };
+      git.sign-on-push = true;
+    };
+  };
 }
