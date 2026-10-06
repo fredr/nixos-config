@@ -6,7 +6,7 @@
 }:
 
 let
-  version = "59.25.4";
+  version = "62.4.0";
 in
 buildNpmPackage {
   pname = "vercel";
@@ -14,10 +14,10 @@ buildNpmPackage {
 
   src = fetchurl {
     url = "https://registry.npmjs.org/vercel/-/vercel-${version}.tgz";
-    hash = "sha256-/QbAZClr3aseHuQm1MhrU2WoJYZTHrpMglfRmnfdZKU=";
+    hash = "sha256-ypAC78AxWnZcDgugHFK9dOSfZoP/h2PaBlKZdt9SqZI=";
   };
 
-  npmDepsHash = "sha256-ulupYBES2rPE1VSCqD2jf21i/6h9lnx5CqrfUye/YI4=";
+  npmDepsHash = "sha256-UPSkxJmtAm7OX0zEQwnBqy55HGZPD964tpTEnq9cW6E=";
 
   # npm tarballs ship no lockfile, so ./update.sh resolves one and vendors it
   # next to this file. devDependencies have to go: they reference
