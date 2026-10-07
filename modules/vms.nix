@@ -20,6 +20,9 @@
 
   services.spice-vdagentd.enable = true;
 
+  # libvirt looks up passt in PATH for <backend type='passt'/> interfaces
+  systemd.services.libvirtd.path = [ pkgs.passt ];
+
   # nested virtualization
   boot.extraModprobeConfig = "options kvm_intel nested=1";
 
@@ -32,5 +35,6 @@
     pkgs.virtio-win
     pkgs.win-spice
     pkgs.swtpm
+    pkgs.passt
   ];
 }
