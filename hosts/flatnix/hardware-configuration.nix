@@ -66,6 +66,12 @@
   boot.resumeDevice = "/dev/mapper/cryptroot";
   boot.kernelParams = [ "resume_offset=308873" ];
 
+  # Closing the lid suspends, then hibernates after an hour, so the LUKS key
+  # doesn't sit in RAM for long. On AC too: HandleLidSwitchExternalPower
+  # defaults to HandleLidSwitch.
+  services.logind.settings.Login.HandleLidSwitch = "suspend-then-hibernate";
+  systemd.sleep.settings.Sleep.HibernateDelaySec = "1h";
+
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's
   # still possible to use this option, but it's recommended to use it in conjunction
