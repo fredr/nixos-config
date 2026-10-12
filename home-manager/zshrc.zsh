@@ -175,12 +175,95 @@ function nix_shell() {
   fi
 }
 
-ZSH_THEME_GIT_PROMPT_PREFIX=" %{$fg[green]%}"
+ZSH_THEME_GIT_PROMPT_PREFIX=" %{$fg[yellow]%}git:%{$fg[green]%}"
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_DIRTY=" %{$fg[red]%}!"
 ZSH_THEME_GIT_PROMPT_CLEAN=""
 
-PROMPT='%(?,,%{$fg[red]%}!%{$reset_color%} )%{$fg[blue]%}%~%{$reset_color%}$(git_prompt_info)$(nix_shell)
+# The prompt only reads jj state: snapshotting from a background prompt job
+# could race with jj commands run in the shell or by other tools. The dirty
+# marker comes from git instead, which sees file edits right away.
+zstyle ':omz:plugins:jj' ignore-working-copy yes
+
+# Sets REPLY to the jj workspace root of $PWD. Stops at the nearest .git so a
+# git repo nested in a jj one (or the reverse) shows its own VCS.
+function _vcs_jj_root() {
+  local dir=$PWD
+  while :; do
+    if [[ -d $dir/.jj ]]; then
+      REPLY=$dir
+      return 0
+    fi
+    [[ -e $dir/.git || $dir == / ]] && return 1
+    dir=${dir:h}
+  done
+}
+
+# Change id of @, the nearest bookmarks at or below it plus how many commits
+# @ sits above them, and conflict/divergent/dirty markers.
+function _vcs_jj_prompt_info() {
+  local root=$1 out
+  # One line per commit from the nearest bookmarked ancestors up to @ (the -r
+  # here is unioned with the helper's own -r @), as tab separated fields:
+  # kind, change id prefix, rest of change id, flags, bookmarks.
+  out=$(jj_prompt_template_raw '
+    if(current_working_copy,
+      "@\t" ++ change_id.shortest(4).prefix() ++ "\t" ++ change_id.shortest(4).rest()
+        ++ "\t" ++ if(conflict, "c") ++ if(divergent, "d") ++ if(empty, "e"),
+      "-\t\t\t")
+    ++ "\t" ++ local_bookmarks.join(" ") ++ "\n"' \
+    -r 'heads(::@ & bookmarks())::@' --color=never) || return 0
+
+  local line id_prefix id_rest flags
+  local -a fields refs
+  local -i distance=0
+  for line in "${(@f)out}"; do
+    fields=("${(@ps:\t:)line}")
+    if [[ $fields[1] == @ ]]; then
+      id_prefix=$fields[2] id_rest=$fields[3] flags=$fields[4]
+    fi
+    if [[ -n $fields[5] ]]; then
+      refs+=("$fields[5]")
+    else
+      (( ++distance ))
+    fi
+  done
+  [[ -n $id_prefix ]] || return 0
+
+  local info=" %{$fg[yellow]%}jj:%{$fg_bold[magenta]%}${id_prefix}%{$reset_color%}%F{8}${id_rest}%f"
+  if (( $#refs )); then
+    info+=" %{$fg[green]%}${${(j: :)refs}:gs/%/%%}"
+    (( distance )) && info+="+$distance"
+  fi
+  [[ $flags == *c* ]] && info+=" %{$fg[red]%}conflict"
+  [[ $flags == *d* ]] && info+=" %{$fg[red]%}divergent"
+  # Colocated repos keep git's HEAD and index at @-, so git status is exactly
+  # @'s changes. Otherwise fall back to jj's view as of its last snapshot.
+  if [[ -e $root/.git ]]; then
+    info+=$(parse_git_dirty)
+  elif [[ $flags != *e* ]]; then
+    info+=$ZSH_THEME_GIT_PROMPT_DIRTY
+  fi
+  echo -n "${info}%{$reset_color%}"
+}
+
+# Runs as an oh-my-zsh async handler, like its own git prompt. The git side
+# calls _omz_git_prompt_info since the public git_prompt_info only returns the
+# output of oh-my-zsh's handler, which isn't registered unless $PROMPT uses it.
+function _vcs_prompt_info() {
+  if _vcs_jj_root; then
+    _vcs_jj_prompt_info "$REPLY"
+  else
+    _omz_git_prompt_info
+  fi
+}
+_omz_register_handler _vcs_prompt_info
+
+function vcs_prompt_info() {
+  echo -n "${_OMZ_ASYNC_OUTPUT[_vcs_prompt_info]}"
+}
+
+PROMPT='%(?,,%{$fg[red]%}!%{$reset_color%} )%{$fg[blue]%}%~%{$reset_color%}$(vcs_prompt_info)$(nix_shell)
 %{$fg[magenta]%}>%{$reset_color%} '
 
 RPROMPT=""

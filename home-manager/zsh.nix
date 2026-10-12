@@ -23,6 +23,7 @@
 
       plugins = [
         "git-prompt"
+        "jj"
       ];
     };
 
