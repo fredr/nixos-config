@@ -2,10 +2,18 @@
 # it gets syntax highlighting and shellcheck; anything needing a store path
 # lives in home.sessionVariables / home.sessionPath in zsh.nix.
 
-# Which repo owns a worktree — the first `worktree list` entry is always the
-# main one. Lets removal/listing work for forks without being told the repo.
+# Which repo owns a worktree, so removal/listing work for forks without being
+# told the repo. A secondary jj workspace's .jj/repo is a file holding the
+# path (relative to .jj) of the main repo's .jj/repo; for git, the first
+# `worktree list` entry is always the main one.
 function _encore-worktree-repo() {
-  git -C "$1" worktree list --porcelain 2>/dev/null | head -1 | cut -d' ' -f2-
+  if [[ -f $1/.jj/repo ]]; then
+    local repo_path=$(<$1/.jj/repo)
+    [[ $repo_path == /* ]] || repo_path=$1/.jj/$repo_path
+    echo ${repo_path:A:h:h}
+  else
+    git -C "$1" worktree list --porcelain 2>/dev/null | head -1 | cut -d' ' -f2-
+  fi
 }
 
 function encore-dev() {
@@ -70,16 +78,22 @@ function encore-dev() {
     echo "Error: '$name' links to a path that no longer exists: $(readlink "$worktree_dir")"
     return 1
   elif [ ! -d "$worktree_dir" ]; then
-    if ! git -C "$base_repo" rev-parse --git-dir >/dev/null 2>&1; then
-      echo "Error: '$base_repo' is not a git repository"
+    # jj workspaces start from trunk() with no bookmark; one gets made when
+    # the change is pushed. Repos not yet on jj still get a git worktree.
+    if [ -d "$base_repo/.jj" ]; then
+      echo "Creating workspace '$name' from trunk() in $base_repo..."
+      mkdir -p "$worktree_base"
+      jj -R "$base_repo" workspace add --name "$name" -r 'trunk()' "$worktree_dir" || return 1
+    elif git -C "$base_repo" rev-parse --git-dir >/dev/null 2>&1; then
+      local branch="fredr/$name"
+      local base_ref="$(git -C "$base_repo" rev-parse --abbrev-ref HEAD)"
+      echo "Creating worktree '$name' (branch '$branch') from $base_ref in $base_repo..."
+      mkdir -p "$worktree_base"
+      git -C "$base_repo" worktree add -b "$branch" "$worktree_dir" "$base_ref" || return 1
+    else
+      echo "Error: '$base_repo' is not a jj or git repository"
       return 1
     fi
-
-    local branch="fredr/$name"
-    local base_ref="$(git -C "$base_repo" rev-parse --abbrev-ref HEAD)"
-    echo "Creating worktree '$name' (branch '$branch') from $base_ref in $base_repo..."
-    mkdir -p "$worktree_base"
-    git -C "$base_repo" worktree add -b "$branch" "$worktree_dir" "$base_ref" || return 1
     new_worktree=1
   fi
 
@@ -98,6 +112,11 @@ function encore-dev-rm() {
   local name="$1"
   local worktree_dir=~/projects/encoredev/encore.worktrees/$name
 
+  if [[ "$name" == */* || "$name" == . || "$name" == .. ]]; then
+    echo "Error: invalid name '$name'"
+    return 1
+  fi
+
   if [ ! -e "$worktree_dir" ] && [ ! -L "$worktree_dir" ]; then
     echo "Entry '$name' does not exist"
     return 1
@@ -106,6 +125,14 @@ function encore-dev-rm() {
   if [ -L "$worktree_dir" ]; then
     rm "$worktree_dir"
     echo "Removed path link '$name'"
+  elif [ -f "$worktree_dir/.jj/repo" ]; then
+    # Only secondary workspaces have .jj/repo as a file, so this never
+    # deletes a main checkout. forget snapshots first, which keeps any
+    # uncommitted edits in the repo after the directory is gone.
+    local base_repo="$(_encore-worktree-repo "$worktree_dir")"
+    jj -R "$worktree_dir" workspace forget || return 1
+    rm -rf "$worktree_dir"
+    echo "Removed workspace '$name' (from $base_repo)"
   else
     local base_repo="$(_encore-worktree-repo "$worktree_dir")"
     if [ -z "$base_repo" ]; then
@@ -120,15 +147,23 @@ function encore-dev-rm() {
 # Lists every entry under encore.worktrees, not just one repo's worktrees,
 # since -r/--repo means they can come from several repos.
 function encore-dev-ls() {
-  local entry base_repo
+  local entry base_repo ref
   for entry in ~/projects/encoredev/encore.worktrees/*(N); do
     if [ -L "$entry" ]; then
       printf '%-24s -> %s\n' "${entry:t}" "$(readlink "$entry")"
-    else
-      base_repo="$(_encore-worktree-repo "$entry")"
-      printf '%-24s %-12s %s\n' "${entry:t}" "${base_repo:t}" \
-        "$(git -C "$entry" rev-parse --abbrev-ref HEAD 2>/dev/null)"
+      continue
     fi
+    base_repo="$(_encore-worktree-repo "$entry")"
+    if [ -d "$entry/.jj" ]; then
+      # Change id of @ and the nearest bookmarks at or below it.
+      ref="$(jj -R "$entry" log --ignore-working-copy --no-graph \
+        -r '@ | heads(::@ & bookmarks())' \
+        -T 'separate(" ", if(current_working_copy, change_id.shortest(8)), local_bookmarks.join(" ")) ++ " "' \
+        2>/dev/null)"
+    else
+      ref="$(git -C "$entry" rev-parse --abbrev-ref HEAD 2>/dev/null)"
+    fi
+    printf '%-24s %-12s %s\n' "${entry:t}" "${base_repo:t}" "$ref"
   done
 }
 
