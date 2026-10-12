@@ -1,5 +1,12 @@
-{ config, host, ... }:
 {
+  config,
+  host,
+  pkgs,
+  ...
+}:
+{
+  home.packages = [ pkgs.difftastic ];
+
   home.file.".ssh/allowed_signers".text = "* ${host.pubKey}";
 
   programs.git = {
@@ -37,6 +44,12 @@
         inherit (config.programs.git.settings.user) name email;
       };
       ui.editor = "nvim";
+      ui.diff-formatter = [
+        "difft"
+        "--color=always"
+        "$left"
+        "$right"
+      ];
       # jj rewrites commits constantly, so sign on push instead of on every
       # snapshot.
       signing = {
