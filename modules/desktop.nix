@@ -19,12 +19,31 @@
   # OOM kill of any process in this cgroup stops the unit — i.e. the whole
   # session, since sway execs its children. "continue" lets the victim die
   # alone. The preference makes oomd pick app cgroups over the compositor.
+  # X-RestartIfChanged: see below.
   systemd.user.units."wayland-wm@.service" = {
     overrideStrategy = "asDropin";
     text = ''
       [Service]
       OOMPolicy=continue
       ManagedOOMPreference=avoid
+      X-RestartIfChanged=false
+    '';
+  };
+
+  # switch-to-configuration restarts changed units in /etc/systemd/user for
+  # every logged-in user. This uwsm unit (and wayland-wm@ above) starts
+  # wayland-session-shutdown.target when it stops, so restarting it - any
+  # nixpkgs bump that touches uwsm - logs you out mid-switch. That kills the
+  # terminal running nixos-rebuild, switch-to-configuration panics on the
+  # broken stderr, and the system services it stopped never come back. Both
+  # pick up their new definitions on next login instead. (uwsm's third such
+  # unit, wayland-wm-env@, sets RefuseManualStop, which the switch already
+  # skips.)
+  systemd.user.units."wayland-session-bindpid@.service" = {
+    overrideStrategy = "asDropin";
+    text = ''
+      [Service]
+      X-RestartIfChanged=false
     '';
   };
 
