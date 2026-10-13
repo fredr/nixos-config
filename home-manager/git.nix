@@ -44,12 +44,14 @@
         inherit (config.programs.git.settings.user) name email;
       };
       ui.editor = "nvim";
-      ui.diff-formatter = [
-        "difft"
-        "--color=always"
-        "$left"
-        "$right"
+      # Without -X less uses the alternate screen, so the terminal turns
+      # trackpad scrolling into arrow keys.
+      ui.pager = [
+        "less"
+        "-FR"
       ];
+      # Uses jj's built-in merge-tools.difft args, which pass --width=$width.
+      ui.diff-formatter = "difft";
       # jj rewrites commits constantly, so sign on push instead of on every
       # snapshot.
       signing = {
