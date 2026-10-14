@@ -224,4 +224,10 @@
     style = ./waybar.css;
   };
 
+  # The bluetooth module shows connected devices, so blueman's
+  # connect/disconnect popups are just noise.
+  dconf.settings."org/blueman/general".plugin-list = [
+    "NetUsage"
+    "!ConnectionNotifier"
+  ];
 }
