@@ -1,9 +1,12 @@
 {
   pkgs,
   lib,
-  config,
+  inputs,
   ...
 }:
+let
+  slimnotes = inputs.slimnotes.packages.${pkgs.stdenv.hostPlatform.system}.default;
+in
 {
   # Protect sway-related services from systemd-oomd
   systemd.user.services.waybar.Service.ManagedOOMPreference = "avoid";
@@ -18,6 +21,7 @@
     swayimg
     gcr # Provides org.gnome.keyring.SystemPrompter
     playerctl
+    slimnotes
   ];
 
   imports = [
@@ -221,40 +225,16 @@
         fi
       '';
 
-      # slimnotes is not packaged yet (unpublished), so this runs the cargo build
-      # from the working tree. That binary dlopens wayland/vulkan at startup and
-      # gets their paths from the dev shell, which sway's exec does not have — so
-      # the library path is reproduced here. Both go away once it is a package;
-      # the list mirrors `libraries` in the project's flake.nix.
-      #
       # A service rather than a scope like the others, so a crash leaves a failed
       # unit behind rather than just a vanished window. Services don't inherit the
-      # caller's environment, hence the explicit Environment= properties.
-      slimnotes = "${config.home.homeDirectory}/projects/slimnotes/target/release/slimnotes";
-      slimnotesLibs = pkgs.lib.makeLibraryPath (
-        with pkgs;
-        [
-          fontconfig
-          freetype
-          wayland
-          libxkbcommon
-          libxcb
-          libx11
-          libxext
-          libGL
-          vulkan-loader
-          openssl
-          zlib
-        ]
-      );
+      # caller's environment, hence the explicit Environment= property.
       toggle_slimnotes = pkgs.writeShellScript "toggle-slimnotes-scratchpad" ''
         if ${pkgs.sway}/bin/swaymsg -t get_tree | ${pkgs.jq}/bin/jq -e '.. | select(.app_id? == "scratchpad_slimnotes")' > /dev/null; then
           ${pkgs.sway}/bin/swaymsg '[app_id="scratchpad_slimnotes"]' scratchpad show
         else
           ${uwsm} app -t service -a slimnotes \
             -p "Environment=RUST_BACKTRACE=1" \
-            -p "Environment=LD_LIBRARY_PATH=${slimnotesLibs}:/run/opengl-driver/lib" \
-            -- ${slimnotes} --app-id scratchpad_slimnotes
+            -- ${lib.getExe slimnotes} --app-id scratchpad_slimnotes
         fi
       '';
     in

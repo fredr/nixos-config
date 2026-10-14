@@ -24,6 +24,11 @@
       url = "github:fredr/airbat";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    slimnotes = {
+      url = "github:fredr/slimnotes";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
