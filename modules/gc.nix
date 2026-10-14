@@ -17,7 +17,10 @@
     description = "Sweep stale Cargo build artifacts";
     wantedBy = [ "nix-gc.service" ];
     after = [ "nix-gc.service" ];
-    path = [ pkgs.cargo pkgs.cargo-sweep ];
+    path = [
+      pkgs.cargo
+      pkgs.cargo-sweep
+    ];
     # cargo-sweep shells out to `cargo metadata`, which must not hit the network.
     environment.CARGO_NET_OFFLINE = "true";
     serviceConfig = {
