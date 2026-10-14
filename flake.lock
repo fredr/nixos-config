@@ -213,11 +213,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1791968327,
-        "narHash": "sha256-V+nxy+wL/MYkSrRcMFdyKzqXaB2b+pWZaPgxZwoQqZc=",
+        "lastModified": 1791972920,
+        "narHash": "sha256-QydxPNe1IYjQp/O7H1kh0G7pSQfcETq4Z99BfQZ8q3o=",
         "owner": "fredr",
         "repo": "slimnotes",
-        "rev": "1529c59717f08449d557ae58ca4459c179450e33",
+        "rev": "490b9f7d6dff97e1fa5dce291363059fd4530de5",
         "type": "github"
       },
       "original": {
