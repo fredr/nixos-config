@@ -284,7 +284,10 @@
             };
           in
           encore-pkgs.mkShellNoCC {
-            packages = [ encore-pkgs.encore ];
+            packages = [
+              encore-pkgs.encore
+              encore-pkgs.encore-alpha
+            ];
 
             shellHook = ''
               export SHELL_NAME="''${SHELL_NAME}''${SHELL_NAME:+>}encore-rel"
