@@ -32,6 +32,7 @@
           "idle_inhibitor"
           "pulseaudio"
           "bluetooth"
+          "custom/airbat"
           "network"
           "cpu"
           "memory"

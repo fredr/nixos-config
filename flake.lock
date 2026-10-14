@@ -1,5 +1,26 @@
 {
   "nodes": {
+    "airbat": {
+      "inputs": {
+        "flake-utils": "flake-utils",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1791962255,
+        "narHash": "sha256-N5mJXn5XvR1IQ01f/TNrKtUvWAx7jc2Mox84m5JSXuo=",
+        "owner": "fredr",
+        "repo": "airbat",
+        "rev": "28dcacc9e44323818e53da45b0803cfce29a185e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "fredr",
+        "repo": "airbat",
+        "type": "github"
+      }
+    },
     "encore": {
       "inputs": {
         "nixpkgs": [
@@ -38,6 +59,24 @@
       "original": {
         "owner": "hercules-ci",
         "repo": "flake-parts",
+        "type": "github"
+      }
+    },
+    "flake-utils": {
+      "inputs": {
+        "systems": "systems"
+      },
+      "locked": {
+        "lastModified": 1731533236,
+        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
         "type": "github"
       }
     },
@@ -117,11 +156,27 @@
     },
     "root": {
       "inputs": {
+        "airbat": "airbat",
         "encore": "encore",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "nur": "nur"
+      }
+    },
+    "systems": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
       }
     }
   },

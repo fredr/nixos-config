@@ -19,6 +19,11 @@
       url = "github:encoredev/encore-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    airbat = {
+      url = "github:fredr/airbat";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =

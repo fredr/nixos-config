@@ -63,6 +63,7 @@ tooltip label {
 #backlight,
 #network,
 #bluetooth,
+#custom-airbat,
 #pulseaudio,
 #privacy,
 #mpris,
@@ -210,6 +211,27 @@ tooltip label {
 }
 
 #battery.critical:not(.charging) {
+    color: @red;
+    animation: blink 1.5s steps(12) infinite;
+}
+
+#custom-airbat {
+    color: @sky;
+}
+
+#custom-airbat.connecting {
+    color: alpha(@text, 0.35);
+}
+
+#custom-airbat.error {
+    color: alpha(@red, 0.6);
+}
+
+#custom-airbat.warning:not(.charging) {
+    color: @yellow;
+}
+
+#custom-airbat.critical:not(.charging) {
     color: @red;
     animation: blink 1.5s steps(12) infinite;
 }

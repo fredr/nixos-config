@@ -22,6 +22,7 @@
 
   imports = [
     ./waybar.nix
+    ./airbat.nix
   ];
 
   programs.rofi = {
