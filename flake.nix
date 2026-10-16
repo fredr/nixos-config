@@ -29,6 +29,11 @@
       url = "github:fredr/slimnotes";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    spacepilot = {
+      url = "git+file:///home/fredr/projects/spacepilot";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =

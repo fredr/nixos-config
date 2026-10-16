@@ -6,6 +6,7 @@
 }:
 let
   slimnotes = inputs.slimnotes.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  spacepilot = inputs.spacepilot.packages.${pkgs.stdenv.hostPlatform.system}.default;
 in
 {
   # Protect sway-related services from systemd-oomd
@@ -22,6 +23,7 @@ in
     gcr # Provides org.gnome.keyring.SystemPrompter
     playerctl
     slimnotes
+    spacepilot
   ];
 
   imports = [
