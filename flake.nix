@@ -274,6 +274,7 @@
             pkgs.firecracker
             pkgs.pulumi
             pkgs.pulumiPackages.pulumi-go
+            pkgs.mypkgs.protoc-encore
           ];
 
           shellHook = ''

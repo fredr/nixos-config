@@ -6,11 +6,11 @@
 
 stdenv.mkDerivation rec {
   pname = "protoc-encore";
-  version = "32.1";
+  version = "36.1";
 
   src = fetchzip {
     url = "https://github.com/protocolbuffers/protobuf/releases/download/v${version}/protoc-${version}-linux-x86_64.zip";
-    hash = "sha256-+nzX+bcCBfIewSNHxE/bez8STbL+LyIdXOfxrNAyknE=";
+    hash = "sha256-7+K5lW33xnypIB+aIx3i32xmoQ/6vktOLT7T2TbIAbc=";
     stripRoot = false;
   };
 
