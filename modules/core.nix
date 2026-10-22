@@ -73,6 +73,12 @@
   # Enable networking
   networking.networkmanager.enable = true;
 
+  # Give each Wi-Fi network its own MAC address (hashed from the connection
+  # profile and a per-host secret), so we can't be tracked across networks by
+  # MAC, while staying stable per network so captive portals and DHCP leases
+  # keep working.
+  networking.networkmanager.wifi.macAddress = "stable";
+
   # Firewall
   networking.firewall.enable = true;
 
