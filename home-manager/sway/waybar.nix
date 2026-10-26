@@ -28,6 +28,7 @@
         ];
         modules-center = [ ];
         modules-right = [
+          "custom/pomodoro"
           "privacy"
           "idle_inhibitor"
           "pulseaudio"

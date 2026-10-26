@@ -29,6 +29,7 @@ in
   imports = [
     ./waybar.nix
     ./airbat.nix
+    ./uair.nix
   ];
 
   programs.rofi = {
@@ -151,6 +152,26 @@ in
       separator-color = "00000000";
       indicator-radius = 100;
       indicator-thickness = 7;
+    };
+  };
+
+  # D-Bus activated on the first notification, so it needs no unit of its own.
+  services.mako = {
+    enable = true;
+    settings = {
+      background-color = "#1e1e2e";
+      text-color = "#cdd6f4";
+      border-color = "#313244";
+      progress-color = "over #313244";
+      border-size = 2;
+      border-radius = 12;
+      default-timeout = 5000;
+
+      "urgency=critical" = {
+        border-color = "#f38ba8";
+        # Stays until clicked away, so a finished pomodoro isn't missed.
+        default-timeout = 0;
+      };
     };
   };
 
@@ -338,6 +359,11 @@ in
           "${mod}+o" = "exec ${toggle_obsidian}";
           "${mod}+i" = "exec ${toggle_firefox}";
           "${mod}+n" = "exec ${toggle_slimnotes}";
+
+          # Pomodoro, see uair.nix
+          "${mod}+p" = "exec ${pkgs.uair}/bin/uairctl toggle";
+          "${mod}+Shift+p" = "exec ${pkgs.uair}/bin/uairctl next";
+          "${mod}+Ctrl+p" = "exec ${pkgs.uair}/bin/uairctl jump 0";
         };
 
         # Window commands (for_window rules)

@@ -9,6 +9,7 @@
 @define-color yellow #f9e2af;
 @define-color teal #94e2d5;
 @define-color sky #89dceb;
+@define-color peach #fab387;
 
 * {
     font-family: "Symbols Nerd Font", FontAwesome, "Inter", "Roboto", sans-serif;
@@ -64,6 +65,7 @@ tooltip label {
 #network,
 #bluetooth,
 #custom-airbat,
+#custom-pomodoro,
 #pulseaudio,
 #privacy,
 #mpris,
@@ -234,6 +236,14 @@ tooltip label {
 #custom-airbat.critical:not(.charging) {
     color: @red;
     animation: blink 1.5s steps(12) infinite;
+}
+
+#custom-pomodoro {
+    color: @peach;
+}
+
+#custom-pomodoro.paused {
+    color: alpha(@text, 0.35);
 }
 
 #clock {
