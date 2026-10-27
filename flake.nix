@@ -30,6 +30,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    hunk = {
+      url = "github:modem-dev/hunk";
+      # hunk's own flake tracks unstable
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+
     spacepilot = {
       url = "git+file:///home/fredr/projects/spacepilot";
       inputs.nixpkgs.follows = "nixpkgs";

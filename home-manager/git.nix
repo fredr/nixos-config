@@ -1,11 +1,27 @@
 {
   config,
   host,
+  inputs,
   pkgs,
   ...
 }:
 {
+  imports = [ inputs.hunk.homeManagerModules.default ];
+
   home.packages = [ pkgs.difftastic ];
+
+  # `hunk diff [revset]` / `hunk show [revset]` for reviewing changes
+  programs.hunk = {
+    enable = true;
+    enableClaudeIntegration = true;
+    enableJujutsuIntegration = true;
+    # Note stepping ships unbound. ( and ) are free in both review and
+    # history, and sit next to { and } (previous/next annotated hunk).
+    settings.keybindings = {
+      "hunk.review.nextNote" = ")";
+      "hunk.review.previousNote" = "(";
+    };
+  };
 
   home.file.".ssh/allowed_signers".text = "* ${host.pubKey}";
 
@@ -44,14 +60,6 @@
         inherit (config.programs.git.settings.user) name email;
       };
       ui.editor = "nvim";
-      # Without -X less uses the alternate screen, so the terminal turns
-      # trackpad scrolling into arrow keys.
-      ui.pager = [
-        "less"
-        "-FR"
-      ];
-      # Uses jj's built-in merge-tools.difft args, which pass --width=$width.
-      ui.diff-formatter = "difft";
       # jj rewrites commits constantly, so sign on push instead of on every
       # snapshot.
       signing = {
