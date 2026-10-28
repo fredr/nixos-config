@@ -36,6 +36,13 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
+    delta = {
+      url = "github:zed-industries/delta-nix";
+      # Must share the system nixpkgs: delta loads host GPU drivers from
+      # /run/opengl-driver, which break against an older glibc.
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     spacepilot = {
       url = "git+file:///home/fredr/projects/spacepilot";
       inputs.nixpkgs.follows = "nixpkgs";

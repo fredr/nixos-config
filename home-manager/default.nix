@@ -1,4 +1,9 @@
-{ config, pkgs, ... }:
+{
+  config,
+  inputs,
+  pkgs,
+  ...
+}:
 {
   imports = [
     ./firefox.nix
@@ -37,6 +42,7 @@
     llm
     killall
     mypkgs.claude-code
+    inputs.delta.packages.${pkgs.stdenv.hostPlatform.system}.delta
     nitch
     dysk
 
