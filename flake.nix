@@ -307,6 +307,7 @@
             packages = [
               encore-pkgs.encore
               encore-pkgs.encore-alpha
+              encore-pkgs.encore-beta
             ];
 
             shellHook = ''
