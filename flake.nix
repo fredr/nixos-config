@@ -322,6 +322,7 @@
             protobuf = pkgs.mypkgs.protoc-encore;
             protoc-gen-go = pkgs.mypkgs.protoc-gen-go-encore;
             protoc-gen-go-grpc = pkgs.mypkgs.protoc-gen-go-grpc-encore;
+            uv = pkgs.mypkgs.uv-encore;
 
             encoreDev = "/home/fredr/projects/encoredev";
 
@@ -351,6 +352,7 @@
               protoc-gen-go-grpc
               pkgs.semgrep
               sqlc
+              uv
               pkgs.mypkgs.goimports
             ];
 

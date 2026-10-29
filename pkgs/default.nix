@@ -15,4 +15,5 @@
   sqlc-encore = pkgs.callPackage ./sqlc-encore { };
   protoc-gen-go-encore = pkgs.callPackage ./protoc-gen-go-encore { };
   protoc-gen-go-grpc-encore = pkgs.callPackage ./protoc-gen-go-grpc-encore { };
+  uv-encore = pkgs.callPackage ./uv-encore { };
 }
