@@ -350,7 +350,6 @@
               protobuf
               protoc-gen-go
               protoc-gen-go-grpc
-              pkgs.semgrep
               sqlc
               uv
               pkgs.mypkgs.goimports

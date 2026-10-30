@@ -99,6 +99,8 @@
     gcc
     llvm
     rustup
+    sccache
+    mold
     go
     bun
     nodejs_22
@@ -171,6 +173,28 @@
         echo "$merged" > "$settings"
       fi
     '';
+
+  # sccache caches compiled dependencies across checkouts, so a fresh worktree
+  # doesn't rebuild them all. mold replaces rustc's default rust-lld for the
+  # native target only; cross builds (zigbuild, musl) keep their own linkers.
+  home.file.".cargo/config.toml".text = ''
+    [build]
+    rustc-wrapper = "${pkgs.sccache}/bin/sccache"
+
+    [target.x86_64-unknown-linux-gnu]
+    rustflags = [
+      "-C", "linker-features=-lld",
+      "-C", "link-arg=-fuse-ld=mold",
+      "-C", "link-arg=-B${pkgs.mold}/bin",
+    ]
+  '';
+
+  # The default 10 GiB is too small for several worktrees' dev, test and
+  # release dependencies.
+  xdg.configFile."sccache/config".text = ''
+    [cache.disk]
+    size = 53687091200 # 50 GiB
+  '';
 
   xdg.configFile."containers/registries.conf".text = ''
     unqualified-search-registries = ["docker.io"]
