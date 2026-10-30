@@ -30,10 +30,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    hunk = {
-      url = "github:modem-dev/hunk";
-      # hunk's own flake tracks unstable
+    oyo = {
+      url = "github:ahkohd/oyo";
+      # oyo's own flake tracks unstable
       inputs.nixpkgs.follows = "nixpkgs-unstable";
+      inputs.rust-overlay.inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
     delta = {

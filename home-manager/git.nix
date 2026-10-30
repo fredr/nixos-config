@@ -5,23 +5,36 @@
   pkgs,
   ...
 }:
+let
+  oyoDocs = "${inputs.oyo}/crates/oyo/docs";
+in
 {
-  imports = [ inputs.hunk.homeManagerModules.default ];
+  home.packages = [
+    pkgs.difftastic
+    inputs.oyo.packages.${pkgs.stdenv.hostPlatform.system}.default
+  ];
 
-  home.packages = [ pkgs.difftastic ];
-
-  # `hunk diff [revset]` / `hunk show [revset]` for reviewing changes
-  programs.hunk = {
-    enable = true;
-    enableClaudeIntegration = true;
-    enableJujutsuIntegration = true;
-    # Note stepping ships unbound. ( and ) are free in both review and
-    # history, and sit next to { and } (previous/next annotated hunk).
-    settings.keybindings = {
-      "hunk.review.nextNote" = ")";
-      "hunk.review.previousNote" = "(";
+  # `oy` reviews the current change, `oy <revset>` any other
+  xdg.configFile."oyo/config.toml".source = (pkgs.formats.toml { }).generate "oyo-config.toml" {
+    # Dark catppuccin is Mocha, matching alacritty. Syntax colours follow it.
+    ui.theme.name = "catppuccin";
+    # ( and ) step between comments as they did in hunk; { and } still work.
+    keybindings.normal = {
+      focus_next_comment = [
+        "}"
+        ")"
+      ];
+      focus_prev_comment = [
+        "{"
+        "("
+      ];
     };
   };
+
+  # The skills `oy skill path` points agents at, from the same revision as oy.
+  home.file.".claude/skills/oyo-code-review/SKILL.md".source = "${oyoDocs}/SKILL.md";
+  home.file.".claude/skills/oyo-tui-control/SKILL.md".source = "${oyoDocs}/CONTROL.md";
+  home.file.".claude/skills/oyo-code-walkthrough/SKILL.md".source = "${oyoDocs}/WALKTHROUGH.md";
 
   home.file.".ssh/allowed_signers".text = "* ${host.pubKey}";
 
@@ -60,6 +73,14 @@
         inherit (config.programs.git.settings.user) name email;
       };
       ui.editor = "nvim";
+      # Without -X less uses the alternate screen, so the terminal turns
+      # trackpad scrolling into arrow keys.
+      ui.pager = [
+        "less"
+        "-FR"
+      ];
+      # Uses jj's built-in merge-tools.difft args, which pass --width=$width.
+      ui.diff-formatter = "difft";
       # jj rewrites commits constantly, so sign on push instead of on every
       # snapshot.
       signing = {
