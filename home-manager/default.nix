@@ -101,7 +101,7 @@
     rustup
     sccache
     mold
-    go
+    go_1_27
     bun
     nodejs_22
     pnpm

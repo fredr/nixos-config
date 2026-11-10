@@ -93,6 +93,13 @@
         });
       };
 
+      # gopls breaks when built with an older Go than the one it runs against,
+      # and nixpkgs builds it with go_latest, which lags behind the go_1_27
+      # we install. Drop this once go_latest catches up.
+      gopls-go-1-27 = final: prev: {
+        gopls = prev.gopls.override { buildGoLatestModule = final.buildGo127Module; };
+      };
+
       mypkgs = final: _prev: {
         mypkgs = import ./pkgs {
           pkgs = final.pkgs;
@@ -113,6 +120,7 @@
           unstable-packages
           obsidian-fix
           electron-bin-fix
+          gopls-go-1-27
           mypkgs
         ];
       };
