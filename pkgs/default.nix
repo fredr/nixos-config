@@ -9,6 +9,7 @@
   codelldb = pkgs.callPackage ./codelldb { };
   claude-code = pkgs.callPackage ./claude-code { };
   vercel = pkgs.callPackage ./vercel { };
+  paper-desktop = pkgs.callPackage ./paper-desktop { };
 
   # Encore-specific tool versions
   protoc-encore = pkgs.callPackage ./protoc-encore { };

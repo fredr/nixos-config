@@ -121,6 +121,7 @@
 
     gimp
     obsidian
+    mypkgs.paper-desktop
     pavucontrol
     obs-studio
     mplayer
