@@ -352,6 +352,16 @@
           pkgs.mkShellNoCC {
             buildInputs = with pkgs; [
               llvmPackages.clang
+              # PgDog's pg_internals build script runs PostgreSQL's configure
+              # with its defaults, which require these.
+              icu
+              readline
+              zlib
+            ];
+            nativeBuildInputs = with pkgs; [
+              pkg-config
+              bison
+              flex
             ];
             packages = [
               pkgs.mypkgs.stringer
