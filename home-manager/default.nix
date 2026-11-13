@@ -169,7 +169,11 @@
       fi
       # Replace a leftover store symlink with a regular file
       [ -L "$settings" ] && run rm "$settings"
-      merged="$(echo "$existing" | ${pkgs.jq}/bin/jq -S --slurpfile m ${managed} '. * $m[0]')"
+      # jq's * replaces arrays, which would drop permissions approved at runtime
+      merged="$(echo "$existing" | ${pkgs.jq}/bin/jq -S --slurpfile m ${managed} '
+        . as $e | ($e * $m[0])
+        | .permissions.allow = (($e.permissions.allow // []) + $m[0].permissions.allow | unique)
+      ')"
       if [ -z "''${DRY_RUN:-}" ]; then
         echo "$merged" > "$settings"
       fi
