@@ -128,8 +128,12 @@ function encore-dev-rm() {
   elif [ -f "$worktree_dir/.jj/repo" ]; then
     # Only secondary workspaces have .jj/repo as a file, so this never
     # deletes a main checkout. forget snapshots first, which keeps any
-    # uncommitted edits in the repo after the directory is gone.
+    # uncommitted edits in the repo after the directory is gone. That
+    # snapshot fails once another workspace has rewritten this one's @, so
+    # update-stale runs first; it is a no-op otherwise, and when stale it
+    # saves unsnapshotted edits as a divergent commit rather than dropping them.
     local base_repo="$(_encore-worktree-repo "$worktree_dir")"
+    jj -R "$worktree_dir" workspace update-stale --quiet || return 1
     jj -R "$worktree_dir" workspace forget || return 1
     rm -rf "$worktree_dir"
     echo "Removed workspace '$name' (from $base_repo)"
