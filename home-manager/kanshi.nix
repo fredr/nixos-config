@@ -49,6 +49,28 @@ in
           ];
         };
       }
+      {
+        profile = {
+          name = "aoc";
+
+          exec = [ restartWaybar ];
+
+          outputs = [
+            {
+              criteria = "eDP-1";
+              position = "0,1080";
+              mode = "1920x1200@60.001Hz";
+              status = "enable";
+            }
+            {
+              criteria = "AOC 2790 AMTK39A000860";
+              position = "0,0";
+              mode = "1920x1080@60Hz";
+              status = "enable";
+            }
+          ];
+        };
+      }
     ];
   };
 }
