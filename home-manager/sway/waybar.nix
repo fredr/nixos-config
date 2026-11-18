@@ -41,6 +41,7 @@
           "sway/language"
           "battery"
           "battery#bat2"
+          "custom/calendar"
           "clock"
           "tray"
         ];

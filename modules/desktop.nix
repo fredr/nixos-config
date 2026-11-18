@@ -97,6 +97,11 @@
   # Enable PAM integration for automatic keyring unlock on login
   security.pam.services.login.enableGnomeKeyring = true;
 
+  # Google accounts for the waybar calendar: GOA holds the logins (in the
+  # keyring) and evolution-data-server syncs their calendars.
+  services.gnome.gnome-online-accounts.enable = true;
+  services.gnome.evolution-data-server.enable = true;
+
   # Polkit needed for sway
   # see https://nixos.wiki/wiki/Sway
   security.polkit.enable = true;

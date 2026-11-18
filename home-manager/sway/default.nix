@@ -30,6 +30,7 @@ in
     ./waybar.nix
     ./airbat.nix
     ./uair.nix
+    ./calendar.nix
   ];
 
   programs.rofi = {

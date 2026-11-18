@@ -66,6 +66,7 @@ tooltip label {
 #bluetooth,
 #custom-airbat,
 #custom-pomodoro,
+#custom-calendar,
 #pulseaudio,
 #privacy,
 #mpris,
@@ -244,6 +245,22 @@ tooltip label {
 
 #custom-pomodoro.paused {
     color: alpha(@text, 0.35);
+}
+
+#custom-calendar {
+    color: @blue;
+}
+
+#custom-calendar.soon {
+    color: @yellow;
+}
+
+#custom-calendar.ongoing {
+    color: @green;
+}
+
+#custom-calendar.error {
+    color: alpha(@red, 0.6);
 }
 
 #clock {
