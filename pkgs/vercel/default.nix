@@ -3,6 +3,8 @@
   buildNpmPackage,
   fetchurl,
   jq,
+  autoPatchelfHook,
+  stdenv,
 }:
 
 let
@@ -34,6 +36,12 @@ buildNpmPackage {
 
   # dist/ is already an esbuild bundle in the published tarball.
   dontNpmBuild = true;
+
+  # Since v66 dist/vc.js only launches the prebuilt binary from
+  # @vercel/vc-native-<platform>, which links against a generic glibc loader
+  # and libstdc++.
+  nativeBuildInputs = [ autoPatchelfHook ];
+  buildInputs = [ stdenv.cc.cc.lib ];
 
   meta = {
     description = "Vercel CLI - deploy and manage Vercel projects from the terminal";
