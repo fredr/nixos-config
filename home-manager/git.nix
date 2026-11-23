@@ -11,7 +11,19 @@ in
 {
   home.packages = [
     pkgs.difftastic
-    inputs.oyo.packages.${pkgs.stdenv.hostPlatform.system}.default
+    # nixpkgs' cargo setup hook forces the -sys crates to link system libraries
+    # through pkg-config instead of vendoring them, and oyo's flake provides none.
+    (inputs.oyo.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
+      nativeBuildInputs = old.nativeBuildInputs ++ [ pkgs.unstable.pkg-config ];
+      buildInputs =
+        old.buildInputs
+        ++ (with pkgs.unstable; [
+          libgit2
+          oniguruma
+          sqlite
+          zlib
+        ]);
+    }))
   ];
 
   # `oy` reviews the current change, `oy <revset>` any other

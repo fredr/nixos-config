@@ -61,6 +61,7 @@ tooltip label {
 #battery,
 #cpu,
 #memory,
+#disk,
 #backlight,
 #network,
 #bluetooth,
@@ -191,6 +192,10 @@ tooltip label {
 
 #memory {
     color: @mauve;
+}
+
+#disk {
+    color: @peach;
 }
 
 #backlight {

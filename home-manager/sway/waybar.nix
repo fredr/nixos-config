@@ -37,6 +37,7 @@
           "network"
           "cpu"
           "memory"
+          "disk"
           "backlight"
           "sway/language"
           "battery"
@@ -135,16 +136,21 @@
           tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
         };
         "cpu" = {
-          format = " {usage}%";
+          format = "󰻠 {usage}%";
           tooltip = true;
-          tooltip-format = "CPU: {usage}%";
+          tooltip-format = "CPU: {usage}%\nLoad: {load}\nFrequency: {avg_frequency} GHz (max {max_frequency} GHz)";
           on-click = "${pkgs.alacritty}/bin/alacritty -e ${pkgs.btop}/bin/btop";
         };
         "memory" = {
-          format = " {}%";
+          format = "󰍛 {}%";
           tooltip = true;
-          tooltip-format = "Memory: {used:0.1f}GiB / {total:0.1f}GiB ({percentage}%)";
+          tooltip-format = "Memory: {used:0.1f}GiB / {total:0.1f}GiB ({percentage}%)\nAvailable: {avail:0.1f}GiB\nSwap: {swapUsed:0.1f}GiB / {swapTotal:0.1f}GiB ({swapPercentage}%)";
           on-click = "${pkgs.alacritty}/bin/alacritty -e ${pkgs.btop}/bin/btop";
+        };
+        "disk" = {
+          path = "/";
+          format = "󰋊 {percentage_used}%";
+          tooltip-format = "Disk {path}: {used} / {total} ({percentage_used}%)\nFree: {free} ({percentage_free}%)";
         };
         "backlight" = {
           format = "{icon}";
