@@ -79,6 +79,7 @@ in
 
   programs.jujutsu = {
     enable = true;
+    package = pkgs.unstable.jujutsu;
 
     settings = {
       user = {
@@ -101,7 +102,7 @@ in
         key = host.pubKey;
         backends.ssh.allowed-signers = "${config.home.homeDirectory}/.ssh/allowed_signers";
       };
-      git.sign-on-push = true;
+      revsets.git-sign-on-push = "~signed() & mine()";
     };
   };
 }
