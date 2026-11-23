@@ -11,8 +11,8 @@
 
 let
   pname = "paper-desktop";
-  version = "0.5.18";
-  hash = "1f8ahjbayhpl2v03d7vqpxkm23ki1wxcrn7y3b76avqvmzwpq4jg";
+  version = "0.5.19";
+  hash = "0jz0bar790ypmvngml3i0zcikc6i6r38rkxj8h09y207fri599k0";
 
   src = fetchurl {
     url = "https://download.paper.design/linux/appImage/x64";
