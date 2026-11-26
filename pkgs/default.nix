@@ -1,5 +1,5 @@
 { pkgs }:
-{
+rec {
   mirror = pkgs.callPackage ./mirror { };
   stringer = pkgs.callPackage ./stringer { };
   goimports = pkgs.callPackage ./goimports { };
@@ -10,6 +10,8 @@
   claude-code = pkgs.callPackage ./claude-code { };
   vercel = pkgs.callPackage ./vercel { };
   paper-desktop = pkgs.callPackage ./paper-desktop { };
+  herdr-core = pkgs.callPackage ./herdr-core { };
+  herdr-app = pkgs.callPackage ./herdr-app { inherit herdr-core; };
 
   # Encore-specific tool versions
   protoc-encore = pkgs.callPackage ./protoc-encore { };

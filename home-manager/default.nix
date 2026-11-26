@@ -17,6 +17,7 @@
     ./gcloud.nix
     ./kanshi.nix
     ./zed.nix
+    ./herdr.nix
   ];
 
   home.username = "fredr";
